@@ -1,39 +1,29 @@
 package com.etherblood.rules.abilities.razorLeaf;
 
-import com.etherblood.entities.SimpleComponentMap;
-import com.etherblood.events.EventQueue;
+import com.etherblood.rules.GameEventHandler;
 import com.etherblood.rules.battle.DamageEvent;
-import com.etherblood.rules.movement.SetPositionEvent;
-import com.etherblood.rules.stats.PokemonTypes;
-import java.util.function.Consumer;
+import com.etherblood.rules.components.Components;
+import com.etherblood.rules.stats.Elements;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author Philipp
  */
-public class RazorLeafHandler implements Consumer<RazorLeafAction> {
+public class RazorLeafHandler extends GameEventHandler<RazorLeafAction> {
 
-    private final Logger log;
-    private final EventQueue events;
-    private final SimpleComponentMap razorLeafAbility, actionPoints;
-
-    public RazorLeafHandler(Logger log, EventQueue events, SimpleComponentMap razorLeafAbility, SimpleComponentMap actionPoints) {
-        this.log = log;
-        this.events = events;
-        this.razorLeafAbility = razorLeafAbility;
-        this.actionPoints = actionPoints;
-    }
+    private static final Logger LOG = LoggerFactory.getLogger(RazorLeafHandler.class);
 
     @Override
-    public void accept(RazorLeafAction event) {
-        int level = razorLeafAbility.get(event.actor);
+    public void handle(RazorLeafAction event) {
+        int level = data.component(Components.Abilities.RAZORLEAF).get(event.actor);
         int cost = RazorLeafAction.cost(level);
-        int ap = actionPoints.getOrElse(event.actor, 0);
+        int ap = data.component(Components.Stats.ActionPoints.ACTIVE).getOrElse(event.actor, 0);
         assert ap >= cost;
-        log.info("used {} ap of {}", cost, event.actor);
-        actionPoints.set(event.actor, ap - cost);
-        events.response(new DamageEvent(event.actor, event.target, RazorLeafAction.attack(level), PokemonTypes.GRASS));
+        LOG.info("used {} ap of {}", cost, event.actor);
+        data.component(Components.Stats.ActionPoints.ACTIVE).set(event.actor, ap - cost);
+        events.response(new DamageEvent(event.actor, event.target, RazorLeafAction.attack(level), Elements.EARTH));
     }
 
 }

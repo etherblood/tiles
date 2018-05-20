@@ -1,35 +1,26 @@
 package com.etherblood.rules.abilities.endTurn;
 
-import com.etherblood.entities.SimpleComponentMap;
-import com.etherblood.events.EventQueue;
+import com.etherblood.rules.GameEventHandler;
+import com.etherblood.rules.components.Components;
 import com.etherblood.rules.game.turns.TurnEndEvent;
-import java.util.function.Consumer;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author Philipp
  */
-public class PassTurnHandler implements Consumer<PassTurnAction> {
+public class PassTurnHandler extends GameEventHandler<PassTurnAction> {
 
-    private final Logger log;
-    private final EventQueue events;
-    private final SimpleComponentMap activeTurnKey, memberOf;
-
-    public PassTurnHandler(Logger log, EventQueue events, SimpleComponentMap activeTurnKey, SimpleComponentMap memberOf) {
-        this.log = log;
-        this.events = events;
-        this.activeTurnKey = activeTurnKey;
-        this.memberOf = memberOf;
-    }
+    private static final Logger LOG = LoggerFactory.getLogger(PassTurnHandler.class);
 
     @Override
-    public void accept(PassTurnAction event) {
-        log.info("passed turn of {}", event.actor);
-        activeTurnKey.remove(event.actor);
-        if (!activeTurnKey.exists()) {
-            log.info("all actors passed, ending turn...", event.actor);
-            events.trigger(new TurnEndEvent(memberOf.get(event.actor)));
+    public void handle(PassTurnAction event) {
+        LOG.info("passed turn of {}", event.actor);
+        data.component(Components.ACTIVE_TURN).remove(event.actor);
+        if (!data.component(Components.ACTIVE_TURN).exists()) {
+            LOG.info("all actors passed, ending turn...", event.actor);
+            events.trigger(new TurnEndEvent(data.component(Components.MEMBER_OF).get(event.actor)));
         }
     }
 

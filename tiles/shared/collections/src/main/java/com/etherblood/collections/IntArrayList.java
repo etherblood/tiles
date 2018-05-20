@@ -12,11 +12,12 @@ import java.util.stream.IntStream;
  */
 public class IntArrayList implements Iterable<Integer> {
 
+    private static final int DEFAULT_CAPACITY = 8;
     private int size = 0;
     private int[] data;
 
     public IntArrayList() {
-        this(8);
+        this(DEFAULT_CAPACITY);
     }
 
     public IntArrayList(int capacity) {
@@ -96,7 +97,7 @@ public class IntArrayList implements Iterable<Integer> {
     }
 
     private void grow() {
-        int[] nextData = new int[data.length * 2];
+        int[] nextData = new int[Math.max(data.length * 2, DEFAULT_CAPACITY)];
         System.arraycopy(data, 0, nextData, 0, data.length);
         data = nextData;
     }
@@ -108,7 +109,7 @@ public class IntArrayList implements Iterable<Integer> {
     public int[] data() {
         return data;
     }
-    
+
     public void foreach(IntConsumer consumer) {
         for (int i = 0; i < size; i++) {
             consumer.accept(data[i]);

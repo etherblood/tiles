@@ -1,36 +1,25 @@
 package com.etherblood.rules.game.turns;
 
 import com.etherblood.collections.IntArrayList;
-import com.etherblood.entities.SimpleComponentMap;
 import com.etherblood.events.Event;
-import com.etherblood.events.EventQueue;
-import java.util.function.Consumer;
-import java.util.function.IntUnaryOperator;
+import com.etherblood.rules.GameEventHandler;
+import com.etherblood.rules.components.Components;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author Philipp
  */
-public class StartTurnOfRandomTeamHandler<T extends Event> implements Consumer<T> {
+public class StartTurnOfRandomTeamHandler extends GameEventHandler<Event> {
 
-    private final Logger log;
-    private final EventQueue events;
-    private final IntUnaryOperator random;
-    private final SimpleComponentMap teamKey;
-
-    public StartTurnOfRandomTeamHandler(Logger log, EventQueue events, IntUnaryOperator random, SimpleComponentMap teamKey) {
-        this.log = log;
-        this.events = events;
-        this.teamKey = teamKey;
-        this.random = random;
-    }
+    private static final Logger LOG = LoggerFactory.getLogger(StartTurnOfRandomTeamHandler.class);
 
     @Override
-    public void accept(T event) {
-        IntArrayList teams = teamKey.entities();
+    public void handle(Event event) {
+        IntArrayList teams = data.component(Components.NEXT_TEAM).entities();
         int team = teams.get(random.applyAsInt(teams.size()));
-        log.info("selected {} as starting team", team);
+        LOG.info("selected {} as starting team", team);
         events.response(new TurnStartEvent(team));
     }
 

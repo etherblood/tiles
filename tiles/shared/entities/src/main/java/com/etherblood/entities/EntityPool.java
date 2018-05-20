@@ -9,17 +9,17 @@ import java.util.function.IntSupplier;
  */
 public class EntityPool {
 
-    private final IntSupplier random;
+    private final IntSupplier entitySequence;
     private final IntSet entities = new IntSet();
 
-    public EntityPool(IntSupplier random) {
-        this.random = random;
+    public EntityPool(IntSupplier entitySequence) {
+        this.entitySequence = entitySequence;
     }
 
     public int create() {
         int entityKey;
         do {
-            entityKey = random.getAsInt();
+            entityKey = entitySequence.getAsInt();
         } while (entities.hasKey(entityKey));
         entities.set(entityKey);
         return entityKey;

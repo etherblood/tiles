@@ -1,31 +1,22 @@
 package com.etherblood.rules.game.turns;
 
-import com.etherblood.rules.stats.movepoints.*;
-import com.etherblood.entities.SimpleComponentMap;
-import com.etherblood.events.EventQueue;
-import java.util.function.Consumer;
+import com.etherblood.rules.GameEventHandler;
+import com.etherblood.rules.components.Components;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author Philipp
  */
-public class TurnEndHandler implements Consumer<TurnEndEvent> {
+public class TurnEndHandler extends GameEventHandler<TurnEndEvent> {
 
-    private final Logger log;
-    private final EventQueue events;
-    private final SimpleComponentMap nextTeam;
-
-    public TurnEndHandler(Logger log, EventQueue events, SimpleComponentMap nextTeam) {
-        this.log = log;
-        this.events = events;
-        this.nextTeam = nextTeam;
-    }
+    private static final Logger LOG = LoggerFactory.getLogger(TurnEndHandler.class);
 
     @Override
-    public void accept(TurnEndEvent event) {
-        log.info("ended turn turn of {}", event.team);
-        events.trigger(new TurnStartEvent(nextTeam.get(event.team)));
+    public void handle(TurnEndEvent event) {
+        LOG.info("ended turn turn of {}", event.team);
+        events.trigger(new TurnStartEvent(data.component(Components.NEXT_TEAM).get(event.team)));
     }
 
 }

@@ -13,12 +13,14 @@ public class SimpleComponentMap implements ComponentMap {
 
     private final IntToIntMap components = new IntToIntMap();
 
-    SimpleComponentMap() {
-    }
-
     @Override
     public boolean has(int entity) {
         return components.hasKey(entity);
+    }
+
+    @Override
+    public boolean hasValue(int entity, int value) {
+        return getOrElse(entity, ~value) == value;
     }
 
     @Override
@@ -41,6 +43,7 @@ public class SimpleComponentMap implements ComponentMap {
         components.remove(entity);
     }
 
+    @Override
     public IntArrayList entities(IntPredicate... predicates) {
         IntArrayList list = new IntArrayList(components.size());
         components.foreachKey(entity -> {
@@ -55,23 +58,15 @@ public class SimpleComponentMap implements ComponentMap {
         return list;
     }
 
+    @Override
     public boolean exists(IntPredicate... predicates) {
         for (PrimitiveIterator.OfInt iterator = components.iterator(); iterator.hasNext();) {
             int entity = iterator.nextInt();
-            if (all(entity, predicates)) {
+            if (Util.all(entity, predicates)) {
                 return true;
             }
         }
         return false;
-    }
-
-    private static boolean all(int entity, IntPredicate... predicates) {
-        for (IntPredicate predicate : predicates) {
-            if (!predicate.test(entity)) {
-                return false;
-            }
-        }
-        return true;
     }
 
 }

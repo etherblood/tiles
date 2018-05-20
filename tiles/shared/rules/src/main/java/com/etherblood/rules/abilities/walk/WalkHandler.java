@@ -1,35 +1,26 @@
 package com.etherblood.rules.abilities.walk;
 
-import com.etherblood.entities.SimpleComponentMap;
-import com.etherblood.events.EventQueue;
+import com.etherblood.rules.GameEventHandler;
+import com.etherblood.rules.components.Components;
 import com.etherblood.rules.movement.SetPositionEvent;
-import java.util.function.Consumer;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author Philipp
  */
-public class WalkHandler implements Consumer<WalkAction> {
+public class WalkHandler extends GameEventHandler<WalkAction> {
 
-    private final Logger log;
-    private final EventQueue events;
-    private final SimpleComponentMap activeTurnKey, movePointsKey;
-
-    public WalkHandler(Logger log, EventQueue events, SimpleComponentMap activeTurnKey, SimpleComponentMap movePointsKey) {
-        this.log = log;
-        this.events = events;
-        this.activeTurnKey = activeTurnKey;
-        this.movePointsKey = movePointsKey;
-    }
+    private static final Logger LOG = LoggerFactory.getLogger(WalkHandler.class);
 
     @Override
-    public void accept(WalkAction event) {
-        assert activeTurnKey.has(event.actor);
-        int movePoints = movePointsKey.getOrElse(event.actor, 0);
+    public void handle(WalkAction event) {
+        assert data.component(Components.ACTIVE_TURN).has(event.actor);
+        int movePoints = data.component(Components.Stats.MovePoints.ACTIVE).getOrElse(event.actor, 0);
         assert movePoints >= 1;
-        log.info("used 1 mp of {}", event.actor);
-        movePointsKey.set(event.actor, movePoints - 1);
+        LOG.info("used 1 mp of {}", event.actor);
+        data.component(Components.Stats.MovePoints.ACTIVE).set(event.actor, movePoints - 1);
         events.response(new SetPositionEvent(event.actor, event.to));
     }
 

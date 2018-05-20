@@ -10,6 +10,5 @@
     <packaging>pom</packaging>
     <modules>
         <module>test-client</module>
-        <module>ui-api</module>
     </modules>
 </project>

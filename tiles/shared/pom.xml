@@ -13,6 +13,5 @@
         <module>events</module>
         <module>collections</module>
         <module>rules</module>
-        <module>templates</module>
     </modules>
 </project>

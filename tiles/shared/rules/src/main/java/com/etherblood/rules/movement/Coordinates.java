@@ -7,17 +7,21 @@ package com.etherblood.rules.movement;
 public class Coordinates {
 
     public static int of(int x, int y) {
-        assert (x & 0xffff) == x;
-        assert (y & 0xffff) == y;
-        return x | (y << 16);
+        assert (short) x == x;
+        assert (short) y == y;
+        return of((short) x, (short) y);
     }
 
-    public static int x(int position) {
-        return position & 0xffff;
+    public static int of(short x, short y) {
+        return Short.toUnsignedInt(x) | (y << 16);
     }
 
-    public static int y(int position) {
-        return position >>> 16;
+    public static short x(int position) {
+        return (short) position;
+    }
+
+    public static short y(int position) {
+        return (short) (position >>> 16);
     }
 
     public static int manhattenDistance(int posA, int posB) {

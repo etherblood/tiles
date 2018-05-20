@@ -1,12 +1,13 @@
 package com.etherblood.rules.stats.movepoints;
 
 import com.etherblood.events.Event;
+import com.etherblood.rules.HasEntity;
 
 /**
  *
  * @author Philipp
  */
-public class ResetActiveMovePointsEvent extends Event {
+public class ResetActiveMovePointsEvent extends Event implements HasEntity {
 
     public int target;
 
@@ -17,6 +18,11 @@ public class ResetActiveMovePointsEvent extends Event {
     @Override
     public String toString() {
         return getClass().getSimpleName() + "{target=" + target + '}';
+    }
+
+    @Override
+    public int entity() {
+        return target;
     }
 
 }

@@ -1,7 +1,7 @@
 package com.etherblood.rules.battle;
 
 import com.etherblood.events.Event;
-import com.etherblood.rules.stats.PokemonTypes;
+import com.etherblood.rules.stats.Elements;
 
 /**
  *
@@ -10,9 +10,9 @@ import com.etherblood.rules.stats.PokemonTypes;
 public class DamageEvent extends Event {
 
     public int attacker, defender, damage;
-    public PokemonTypes type;
+    public Elements type;
 
-    public DamageEvent(int attacker, int defender, int attack, PokemonTypes type) {
+    public DamageEvent(int attacker, int defender, int attack, Elements type) {
         this.attacker = attacker;
         this.defender = defender;
         this.damage = attack;
