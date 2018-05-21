@@ -2,77 +2,40 @@ package com.etherblood.sandbox;
 
 import com.etherblood.rules.RandomTracker;
 import com.etherblood.collections.MapBuilder;
-import com.etherblood.entities.ComponentDefinition;
+import com.etherblood.entities.ComponentMap;
 import com.etherblood.entities.EntityData;
 import com.etherblood.entities.EntityPool;
-import com.etherblood.entities.SimpleComponentMap;
-import com.etherblood.events.Event;
-import com.etherblood.events.EventQueue;
+import com.etherblood.events.EventDefinition;
 import com.etherblood.events.EventQueueImpl;
+import com.etherblood.rules.abilities.Action;
 import com.etherblood.rules.abilities.ActionAggregator;
 import com.etherblood.rules.abilities.ActionGenerator;
-import com.etherblood.rules.abilities.endTurn.PassTurnAction;
 import com.etherblood.rules.abilities.endTurn.PassTurnGenerator;
 import com.etherblood.rules.abilities.endTurn.PassTurnHandler;
-import com.etherblood.rules.abilities.razorLeaf.RazorLeafAction;
-import com.etherblood.rules.abilities.razorLeaf.RazorLeafGenerator;
-import com.etherblood.rules.abilities.razorLeaf.RazorLeafHandler;
-import com.etherblood.rules.abilities.walk.WalkAction;
+import com.etherblood.rules.abilities.razorLeaf.RazorleafGenerator;
+import com.etherblood.rules.abilities.razorLeaf.RazorleafHandler;
 import com.etherblood.rules.abilities.walk.WalkGenerator;
 import com.etherblood.rules.abilities.walk.WalkHandler;
-import com.etherblood.rules.battle.DamageEvent;
 import com.etherblood.rules.battle.DamageHandler;
 import com.etherblood.rules.components.Components;
 import com.etherblood.rules.components.GameEventDispatcher;
-import com.etherblood.rules.game.GameStartEvent;
 import com.etherblood.rules.game.turns.StartTurnOfRandomTeamHandler;
-import com.etherblood.rules.game.turns.TurnEndEvent;
 import com.etherblood.rules.game.turns.TurnEndHandler;
-import com.etherblood.rules.game.turns.TurnStartEvent;
 import com.etherblood.rules.game.turns.TurnStartHandler;
 import com.etherblood.rules.movement.Coordinates;
-import com.etherblood.rules.movement.SetPositionEvent;
 import com.etherblood.rules.stats.RefreshAllStatHandler;
 import com.etherblood.rules.stats.ResetActiveStatHandler;
 import com.etherblood.rules.stats.SetComponentHandler;
 import com.etherblood.rules.stats.UpdateBuffedStatHandler;
-import com.etherblood.rules.stats.actionpoints.ResetActiveActionPointsEvent;
-import com.etherblood.rules.stats.actionpoints.SetActiveActionPointsEvent;
-import com.etherblood.rules.stats.actionpoints.SetBuffedActionPointsEvent;
-import com.etherblood.rules.stats.actionpoints.UpdateBuffedActionPointsEvent;
-import com.etherblood.rules.stats.health.ResetActiveHealthEvent;
-import com.etherblood.rules.stats.health.SetActiveHealthEvent;
-import com.etherblood.rules.stats.health.SetBuffedHealthEvent;
-import com.etherblood.rules.stats.health.UpdateBuffedHealthEvent;
-import com.etherblood.rules.stats.movepoints.ResetActiveMovePointsEvent;
-import com.etherblood.rules.stats.movepoints.SetActiveMovePointsEvent;
-import com.etherblood.rules.stats.movepoints.SetBuffedMovePointsEvent;
-import com.etherblood.rules.stats.movepoints.UpdateBuffedMovePointsEvent;
-import com.etherblood.rules.stats.power.air.ResetActiveAirPowerEvent;
-import com.etherblood.rules.stats.power.air.UpdateBuffedAirPowerEvent;
-import com.etherblood.rules.stats.power.earth.ResetActiveEarthPowerEvent;
-import com.etherblood.rules.stats.power.earth.UpdateBuffedEarthPowerEvent;
-import com.etherblood.rules.stats.power.fire.ResetActiveFirePowerEvent;
-import com.etherblood.rules.stats.power.fire.UpdateBuffedFirePowerEvent;
-import com.etherblood.rules.stats.power.water.ResetActiveWaterPowerEvent;
-import com.etherblood.rules.stats.power.water.UpdateBuffedWaterPowerEvent;
-import com.etherblood.rules.stats.toughness.air.ResetActiveAirToughnessEvent;
-import com.etherblood.rules.stats.toughness.air.UpdateBuffedAirToughnessEvent;
-import com.etherblood.rules.stats.toughness.earth.ResetActiveEarthToughnessEvent;
-import com.etherblood.rules.stats.toughness.earth.UpdateBuffedEarthToughnessEvent;
-import com.etherblood.rules.stats.toughness.fire.ResetActiveFireToughnessEvent;
-import com.etherblood.rules.stats.toughness.fire.UpdateBuffedFireToughnessEvent;
-import com.etherblood.rules.stats.toughness.water.ResetActiveWaterToughnessEvent;
-import com.etherblood.rules.stats.toughness.water.UpdateBuffedWaterToughnessEvent;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.PrintStream;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.function.Function;
@@ -92,7 +55,7 @@ public class Main {
      */
     public static void main(String[] args) throws IOException, IllegalArgumentException, IllegalAccessException {
         System.setProperty("org.slf4j.simpleLogger.logFile", "System.out");
-        System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "debug");
+        System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "info");
         String matchName = "matchName";
         Function<Class<?>, Logger> loggerFactory = clazz -> LoggerFactory.getLogger(matchName + " " + clazz.getSimpleName());
 
@@ -109,81 +72,71 @@ public class Main {
         EntityData data = new EntityData(Components.DEFINITIONS);
 
         EntityDebugObjectMapper debugMapper = new EntityDebugObjectMapper();
-//        debugMapper.registerWithReflection(components);
-//        debugMapper.register(components.controlledBy, "controlledBy");
-//        debugMapper.register(components.memberOf, "memberOf");
-//        debugMapper.register(components.nextTeam, "nextTeam");
-//        debugMapper.register(components.mapSize, "mapSize", p -> new Point(Coordinates.x(p), Coordinates.y(p)));
-//        debugMapper.register(components.mapObstacle, "mapObstacle", x -> empty);
-//        debugMapper.register(components.position, "position", p -> new Point(Coordinates.x(p), Coordinates.y(p)));
-//        debugMapper.register(components.buffOn, "buffOn");
-//        debugMapper.register(components.activeTurn, "activeTurn", x -> empty);
-//        
-//        debugMapper.register(components.spriteId, "spriteId");
-//        debugMapper.register(components.stats.health, "health");
-//        debugMapper.register(components.stats.actionPoints, "actionPoints");
-//        debugMapper.register(components.stats.movePoints, "movePoints");
-//        debugMapper.register(components.stats.elements.air, "air");
-//        debugMapper.register(components.stats.elements.fire, "fire");
-//        debugMapper.register(components.stats.elements.water, "water");
-//        debugMapper.register(components.stats.elements.earth, "earth");
-//
-//        debugMapper.register(components.abilities.passTurn, "passTurnAbility");
-//        debugMapper.register(components.abilities.walk, "walkAbility");
-//        debugMapper.register(components.abilities.razorLeaf, "razorLeafAbility");
-        ActionGenerator<Event> actions = new ActionAggregator(
-                new RazorLeafGenerator(data),
-                new WalkGenerator(data, p -> Coordinates.inBounds(p, Coordinates.of(mapWidth, mapHeight)) && !data.component(Components.POSITION).exists(e -> data.component(Components.POSITION).hasValue(e, p))),
-                new PassTurnGenerator(data));
+        Map<String, EventDefinition> eventMap = new EventDefGenerator().generate();
+        EventDefinition[] eventDefinitions = new EventDefinition[eventMap.size()];
+        for (EventDefinition value : eventMap.values()) {
+            eventDefinitions[value.index()] = value;
+        }
+        for (EventDefinition eventDefinition : eventDefinitions) {
+            Objects.requireNonNull(eventDefinition);
+        }
+        ActionGenerator actions = new ActionAggregator(
+                new RazorleafGenerator(data, eventMap.get("RazorleafAction").id()),
+                new WalkGenerator(data, p -> Coordinates.inBounds(p, Coordinates.of(mapWidth, mapHeight)) && !data.component(Components.POSITION).exists(e -> data.component(Components.POSITION).hasValue(e, p)), eventMap.get("WalkAction").id()),
+                new PassTurnGenerator(data, eventMap.get("PassTurnAction").id()));
 
-        GameEventDispatcher dispatcher = new GameEventDispatcher(data, random::nextInt);
-        EventQueue events = new EventQueueImpl(dispatcher::accept, loggerFactory.apply(EventQueueImpl.class));
-        dispatcher.setQueue(events);
+        EventQueueImpl events = new EventQueueImpl(eventDefinitions);
+        GameEventDispatcher dispatcher = new GameEventDispatcher(data, events, random::nextInt);
 
-        dispatcher.addHandlers(SetActiveHealthEvent.class, new SetComponentHandler<>("activeHealth", Components.Stats.Health.ACTIVE));
-        dispatcher.addHandlers(SetBuffedHealthEvent.class, new SetComponentHandler<>("buffedHealth", Components.Stats.Health.BUFFED));
-        dispatcher.addHandlers(UpdateBuffedHealthEvent.class, new UpdateBuffedStatHandler<>("health", Components.Stats.Health.BASE, Components.Stats.Health.ADDITIVE, SetBuffedHealthEvent::new));
-        dispatcher.addHandlers(ResetActiveHealthEvent.class, new ResetActiveStatHandler<>("health", Components.Stats.Health.BUFFED, SetActiveHealthEvent::new));
+        dispatcher.setHandlers(eventMap.get("SetActiveHealth").id(), new SetComponentHandler("activeHealth", Components.Stats.Health.ACTIVE));
+        dispatcher.setHandlers(eventMap.get("SetBuffedHealth").id(), new SetComponentHandler("buffedHealth", Components.Stats.Health.BUFFED));
+        dispatcher.setHandlers(eventMap.get("UpdateBuffedHealth").id(), new UpdateBuffedStatHandler("health", Components.Stats.Health.BASE, Components.Stats.Health.ADDITIVE, eventMap.get("SetBuffedHealth").id()));
+        dispatcher.setHandlers(eventMap.get("ResetActiveHealth").id(), new ResetActiveStatHandler("health", Components.Stats.Health.BUFFED, eventMap.get("SetActiveHealth").id()));
 
-        dispatcher.addHandlers(SetActiveActionPointsEvent.class, new SetComponentHandler<>("activeActionPoints", Components.Stats.ActionPoints.ACTIVE));
-        dispatcher.addHandlers(SetBuffedActionPointsEvent.class, new SetComponentHandler<>("buffedActionPoints", Components.Stats.ActionPoints.BUFFED));
-        dispatcher.addHandlers(UpdateBuffedActionPointsEvent.class, new UpdateBuffedStatHandler<>("actionPoints", Components.Stats.ActionPoints.BASE, Components.Stats.ActionPoints.ADDITIVE, SetBuffedActionPointsEvent::new));
-        dispatcher.addHandlers(ResetActiveActionPointsEvent.class, new ResetActiveStatHandler<>("actionPoints", Components.Stats.ActionPoints.BUFFED, SetActiveActionPointsEvent::new));
+        dispatcher.setHandlers(eventMap.get("SetActiveActionPoints").id(), new SetComponentHandler("activeActionPoints", Components.Stats.ActionPoints.ACTIVE));
+        dispatcher.setHandlers(eventMap.get("SetBuffedActionPoints").id(), new SetComponentHandler("buffedActionPoints", Components.Stats.ActionPoints.BUFFED));
+        dispatcher.setHandlers(eventMap.get("UpdateBuffedActionPoints").id(), new UpdateBuffedStatHandler("actionPoints", Components.Stats.ActionPoints.BASE, Components.Stats.ActionPoints.ADDITIVE, eventMap.get("SetBuffedActionPoints").id()));
+        dispatcher.setHandlers(eventMap.get("ResetActiveActionPoints").id(), new ResetActiveStatHandler("actionPoints", Components.Stats.ActionPoints.BUFFED, eventMap.get("SetActiveActionPoints").id()));
 
-        dispatcher.addHandlers(SetActiveMovePointsEvent.class, new SetComponentHandler<>("activeMovePoints", Components.Stats.MovePoints.ACTIVE));
-        dispatcher.addHandlers(SetBuffedMovePointsEvent.class, new SetComponentHandler<>("buffedMovePoints", Components.Stats.MovePoints.BUFFED));
-        dispatcher.addHandlers(UpdateBuffedMovePointsEvent.class, new UpdateBuffedStatHandler<>("movePoints", Components.Stats.MovePoints.BASE, Components.Stats.MovePoints.ADDITIVE, SetBuffedMovePointsEvent::new));
-        dispatcher.addHandlers(ResetActiveMovePointsEvent.class, new ResetActiveStatHandler<>("movePoints", Components.Stats.MovePoints.BUFFED, SetActiveMovePointsEvent::new));
+        dispatcher.setHandlers(eventMap.get("SetActiveMovePoints").id(), new SetComponentHandler("activeMovePoints", Components.Stats.MovePoints.ACTIVE));
+        dispatcher.setHandlers(eventMap.get("SetBuffedMovePoints").id(), new SetComponentHandler("buffedMovePoints", Components.Stats.MovePoints.BUFFED));
+        dispatcher.setHandlers(eventMap.get("UpdateBuffedMovePoints").id(), new UpdateBuffedStatHandler("movePoints", Components.Stats.MovePoints.BASE, Components.Stats.MovePoints.ADDITIVE, eventMap.get("SetBuffedMovePoints").id()));
+        dispatcher.setHandlers(eventMap.get("ResetActiveMovePoints").id(), new ResetActiveStatHandler("movePoints", Components.Stats.MovePoints.BUFFED, eventMap.get("SetActiveMovePoints").id()));
 
-        dispatcher.addHandlers(SetPositionEvent.class, new SetComponentHandler<>("position", Components.POSITION));
+        dispatcher.setHandlers(eventMap.get("SetPosition").id(), new SetComponentHandler("position", Components.POSITION));
 
-        dispatcher.addHandlers(DamageEvent.class,
-                //                new ApplyDamageTypeHandler(types),
+        dispatcher.setHandlers(eventMap.get("EarthDamage").id(),
+                new DamageHandler());
+        dispatcher.setHandlers(eventMap.get("FireDamage").id(),
+                new DamageHandler());
+        dispatcher.setHandlers(eventMap.get("AirDamage").id(),
+                new DamageHandler());
+        dispatcher.setHandlers(eventMap.get("WaterDamage").id(),
                 new DamageHandler());
 
-        dispatcher.addHandlers(WalkAction.class, new WalkHandler());
-        dispatcher.addHandlers(PassTurnAction.class, new PassTurnHandler());
-        dispatcher.addHandlers(RazorLeafAction.class, new RazorLeafHandler());
+        dispatcher.setHandlers(eventMap.get("WalkAction").id(), new WalkHandler(eventMap.get("SetPosition")));
+        dispatcher.setHandlers(eventMap.get("PassTurnAction").id(), new PassTurnHandler(eventMap.get("EndTurn")));
+        dispatcher.setHandlers(eventMap.get("RazorleafAction").id(), new RazorleafHandler(eventMap.get("EarthDamage").id()));
 
-        dispatcher.addHandlers(GameStartEvent.class,
-                new RefreshAllStatHandler<>("health", Components.Stats.Health.BASE, Components.Stats.Health.ACTIVE, Components.Stats.Health.BUFFED, Components.Stats.Health.ADDITIVE, UpdateBuffedHealthEvent::new, ResetActiveHealthEvent::new),
-                new RefreshAllStatHandler<>("movePoints", Components.Stats.MovePoints.BASE, Components.Stats.MovePoints.ACTIVE, Components.Stats.MovePoints.BUFFED, Components.Stats.MovePoints.ADDITIVE, UpdateBuffedMovePointsEvent::new, ResetActiveMovePointsEvent::new),
-                new RefreshAllStatHandler<>("actionPoints", Components.Stats.ActionPoints.BASE, Components.Stats.ActionPoints.ACTIVE, Components.Stats.ActionPoints.BUFFED, Components.Stats.ActionPoints.ADDITIVE, UpdateBuffedActionPointsEvent::new, ResetActiveActionPointsEvent::new),
-                new RefreshAllStatHandler<>("airPower", Components.Stats.Power.Air.BASE, Components.Stats.Power.Air.ACTIVE, Components.Stats.Power.Air.BUFFED, Components.Stats.Power.Air.ADDITIVE, UpdateBuffedAirPowerEvent::new, ResetActiveAirPowerEvent::new),
-                new RefreshAllStatHandler<>("earthPower", Components.Stats.Power.Earth.BASE, Components.Stats.Power.Earth.ACTIVE, Components.Stats.Power.Earth.BUFFED, Components.Stats.Power.Earth.ADDITIVE, UpdateBuffedEarthPowerEvent::new, ResetActiveEarthPowerEvent::new),
-                new RefreshAllStatHandler<>("firePower", Components.Stats.Power.Fire.BASE, Components.Stats.Power.Fire.ACTIVE, Components.Stats.Power.Fire.BUFFED, Components.Stats.Power.Fire.ADDITIVE, UpdateBuffedFirePowerEvent::new, ResetActiveFirePowerEvent::new),
-                new RefreshAllStatHandler<>("waterPower", Components.Stats.Power.Water.BASE, Components.Stats.Power.Water.ACTIVE, Components.Stats.Power.Water.BUFFED, Components.Stats.Power.Water.ADDITIVE, UpdateBuffedWaterPowerEvent::new, ResetActiveWaterPowerEvent::new),
-                new RefreshAllStatHandler<>("airToughness", Components.Stats.Toughness.Air.BASE, Components.Stats.Toughness.Air.ACTIVE, Components.Stats.Toughness.Air.BUFFED, Components.Stats.Toughness.Air.ADDITIVE, UpdateBuffedAirToughnessEvent::new, ResetActiveAirToughnessEvent::new),
-                new RefreshAllStatHandler<>("earthToughness", Components.Stats.Toughness.Earth.BASE, Components.Stats.Toughness.Earth.ACTIVE, Components.Stats.Toughness.Earth.BUFFED, Components.Stats.Toughness.Earth.ADDITIVE, UpdateBuffedEarthToughnessEvent::new, ResetActiveEarthToughnessEvent::new),
-                new RefreshAllStatHandler<>("fireToughness", Components.Stats.Toughness.Fire.BASE, Components.Stats.Toughness.Fire.ACTIVE, Components.Stats.Toughness.Fire.BUFFED, Components.Stats.Toughness.Fire.ADDITIVE, UpdateBuffedFireToughnessEvent::new, ResetActiveFireToughnessEvent::new),
-                new RefreshAllStatHandler<>("waterToughness", Components.Stats.Toughness.Water.BASE, Components.Stats.Toughness.Water.ACTIVE, Components.Stats.Toughness.Water.BUFFED, Components.Stats.Toughness.Water.ADDITIVE, UpdateBuffedWaterToughnessEvent::new, ResetActiveWaterToughnessEvent::new),
-                new StartTurnOfRandomTeamHandler());
-        dispatcher.addHandlers(TurnEndEvent.class,
-                new RefreshAllStatHandler<>("movePoints", Components.Stats.MovePoints.BASE, Components.Stats.MovePoints.ACTIVE, Components.Stats.MovePoints.BUFFED, Components.Stats.MovePoints.ADDITIVE, UpdateBuffedMovePointsEvent::new, ResetActiveMovePointsEvent::new),
-                new RefreshAllStatHandler<>("actionPoints", Components.Stats.ActionPoints.BASE, Components.Stats.ActionPoints.ACTIVE, Components.Stats.ActionPoints.BUFFED, Components.Stats.ActionPoints.ADDITIVE, UpdateBuffedActionPointsEvent::new, ResetActiveActionPointsEvent::new),
-                new TurnEndHandler());
+        dispatcher.setHandlers(eventMap.get("GameStart").id(),
+                new RefreshAllStatHandler("health", Components.Stats.Health.BASE, Components.Stats.Health.ACTIVE, Components.Stats.Health.BUFFED, Components.Stats.Health.ADDITIVE, eventMap.get("UpdateBuffedHealth").id(), eventMap.get("ResetActiveHealth").id()),
+                new RefreshAllStatHandler("movePoints", Components.Stats.MovePoints.BASE, Components.Stats.MovePoints.ACTIVE, Components.Stats.MovePoints.BUFFED, Components.Stats.MovePoints.ADDITIVE, eventMap.get("UpdateBuffedMovePoints").id(), eventMap.get("ResetActiveMovePoints").id()),
+                new RefreshAllStatHandler("actionPoints", Components.Stats.ActionPoints.BASE, Components.Stats.ActionPoints.ACTIVE, Components.Stats.ActionPoints.BUFFED, Components.Stats.ActionPoints.ADDITIVE, eventMap.get("UpdateBuffedActionPoints").id(), eventMap.get("ResetActiveActionPoints").id()),
+                new RefreshAllStatHandler("airPower", Components.Stats.Power.Air.BASE, Components.Stats.Power.Air.ACTIVE, Components.Stats.Power.Air.BUFFED, Components.Stats.Power.Air.ADDITIVE, eventMap.get("UpdateBuffedAirPower").id(), eventMap.get("ResetActiveAirPower").id()),
+                new RefreshAllStatHandler("earthPower", Components.Stats.Power.Earth.BASE, Components.Stats.Power.Earth.ACTIVE, Components.Stats.Power.Earth.BUFFED, Components.Stats.Power.Earth.ADDITIVE, eventMap.get("UpdateBuffedEarthPower").id(), eventMap.get("ResetActiveEarthPower").id()),
+                new RefreshAllStatHandler("firePower", Components.Stats.Power.Fire.BASE, Components.Stats.Power.Fire.ACTIVE, Components.Stats.Power.Fire.BUFFED, Components.Stats.Power.Fire.ADDITIVE, eventMap.get("UpdateBuffedFirePower").id(), eventMap.get("ResetActiveFirePower").id()),
+                new RefreshAllStatHandler("waterPower", Components.Stats.Power.Water.BASE, Components.Stats.Power.Water.ACTIVE, Components.Stats.Power.Water.BUFFED, Components.Stats.Power.Water.ADDITIVE, eventMap.get("UpdateBuffedWaterPower").id(), eventMap.get("ResetActiveWaterPower").id()),
+                new RefreshAllStatHandler("airToughness", Components.Stats.Toughness.Air.BASE, Components.Stats.Toughness.Air.ACTIVE, Components.Stats.Toughness.Air.BUFFED, Components.Stats.Toughness.Air.ADDITIVE, eventMap.get("UpdateBuffedAirToughness").id(), eventMap.get("ResetActiveAirToughness").id()),
+                new RefreshAllStatHandler("earthToughness", Components.Stats.Toughness.Earth.BASE, Components.Stats.Toughness.Earth.ACTIVE, Components.Stats.Toughness.Earth.BUFFED, Components.Stats.Toughness.Earth.ADDITIVE, eventMap.get("UpdateBuffedEarthToughness").id(), eventMap.get("ResetActiveEarthToughness").id()),
+                new RefreshAllStatHandler("fireToughness", Components.Stats.Toughness.Fire.BASE, Components.Stats.Toughness.Fire.ACTIVE, Components.Stats.Toughness.Fire.BUFFED, Components.Stats.Toughness.Fire.ADDITIVE, eventMap.get("UpdateBuffedFireToughness").id(), eventMap.get("ResetActiveFireToughness").id()),
+                new RefreshAllStatHandler("waterToughness", Components.Stats.Toughness.Water.BASE, Components.Stats.Toughness.Water.ACTIVE, Components.Stats.Toughness.Water.BUFFED, Components.Stats.Toughness.Water.ADDITIVE, eventMap.get("UpdateBuffedWaterToughness").id(), eventMap.get("ResetActiveWaterToughness").id()),
+                new StartTurnOfRandomTeamHandler(eventMap.get("TurnStart")));
+        dispatcher.setHandlers(eventMap.get("TurnEnd").id(),
+                new RefreshAllStatHandler("movePoints", Components.Stats.MovePoints.BASE, Components.Stats.MovePoints.ACTIVE, Components.Stats.MovePoints.BUFFED, Components.Stats.MovePoints.ADDITIVE, eventMap.get("UpdateBuffedMovePoints").id(), eventMap.get("ResetActiveMovePoints").id()),
+                new RefreshAllStatHandler("actionPoints", Components.Stats.ActionPoints.BASE, Components.Stats.ActionPoints.ACTIVE, Components.Stats.ActionPoints.BUFFED, Components.Stats.ActionPoints.ADDITIVE, eventMap.get("UpdateBuffedActionPoints").id(), eventMap.get("ResetActiveActionPoints").id()),
+                new TurnEndHandler(eventMap.get("TurnStart")));
 
-        dispatcher.addHandlers(TurnStartEvent.class, new TurnStartHandler());
+        dispatcher.setHandlers(eventMap.get("TurnStart").id(), new TurnStartHandler());
 
 //        dispatcher.addHandlers(RefreshBuffedPowerEvent.class, new RefreshBuffedPowerHandler(loggerFactory.apply(RefreshBuffedPowerHandler.class), events, types, buffOn));
 //        dispatcher.addHandlers(SetAdditivePowerEvent.class, new SetAdditivePowerHandler(loggerFactory.apply(SetAdditivePowerHandler.class), events, types, buffOn));
@@ -244,10 +197,11 @@ public class Main {
                 .with(squirtle, '3')
                 .build();
         Logger log = loggerFactory.apply(Main.class);
-        events.action(new GameStartEvent());
+        events.action(eventMap.get("GameStart").id());
         while (true) {
             logState(log, debugMapper, data, actorShortcuts, mapWidth, mapHeight);
-//            events.action(chooseAction(activeTurn, actions));
+            Action action = chooseAction(data.component(Components.ACTIVE_TURN), actions);
+            events.action(action.eventId, action.eventArgs);
         }
 
     }
@@ -262,7 +216,7 @@ public class Main {
         }
     }
 
-    private static Event chooseAction(SimpleComponentMap activeTurn, ActionGenerator<Event> actions) {
+    private static Action chooseAction(ComponentMap activeTurn, ActionGenerator actions) {
         for (int actor : activeTurn.entities()) {
             System.out.println("availableActions of " + actor + ": " + actions.availableActions(actor));
         }

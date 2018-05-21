@@ -1,9 +1,7 @@
 package com.etherblood.rules.stats;
 
-import com.etherblood.events.Event;
+import com.etherblood.events.handlers.BinaryHandler;
 import com.etherblood.rules.GameEventHandler;
-import com.etherblood.rules.HasEntity;
-import com.etherblood.rules.HasValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,7 +9,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Philipp
  */
-public class SetComponentHandler<T extends Event & HasEntity & HasValue> extends GameEventHandler<T> {
+public class SetComponentHandler extends GameEventHandler implements BinaryHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(SetComponentHandler.class);
     private final String statName;
@@ -23,9 +21,9 @@ public class SetComponentHandler<T extends Event & HasEntity & HasValue> extends
     }
 
     @Override
-    public void handle(T event) {
-        data.component(component).set(event.entity(), event.value());
-        LOG.info("setting {} of {} to {}", statName, event.entity(), event.value());
+    public void handle(int entity, int value) {
+        data.component(component).setWithDefault(entity, value, 0);
+        LOG.info("setting {} of {} to {}", statName, entity, value);
     }
 
 }

@@ -1,33 +1,31 @@
 package com.etherblood.rules.stats;
 
-import com.etherblood.events.Event;
+import com.etherblood.events.handlers.UnaryHandler;
 import com.etherblood.rules.GameEventHandler;
-import com.etherblood.rules.stats.Util.IntIntFunction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.etherblood.rules.HasEntity;
 
 /**
  *
  * @author Philipp
  */
-public class ResetActiveStatHandler<T extends Event & HasEntity> extends GameEventHandler<T> {
+public class ResetActiveStatHandler extends GameEventHandler implements UnaryHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(ResetActiveStatHandler.class);
 
     private final String statName;
     private final int buffed;
-    private final IntIntFunction<Event> setActiveSupply;
+    private final int setActiveSupply;
 
-    public ResetActiveStatHandler(String statName, int buffed, IntIntFunction<Event> setActiveEvent) {
+    public ResetActiveStatHandler(String statName, int buffed, int setActiveEvent) {
         this.statName = statName;
         this.buffed = buffed;
         this.setActiveSupply = setActiveEvent;
     }
 
     @Override
-    public void handle(T event) {
-        LOG.info("resetting {} of {}", statName, event.entity());
-        events.response(setActiveSupply.apply(event.entity(), data.component(buffed).getOrElse(event.entity(), 0)));
+    public void handle(int entity) {
+        LOG.info("resetting {} of {}", statName, entity);
+        events.response(setActiveSupply, entity, data.component(buffed).getOrElse(entity, 0));
     }
 }

@@ -1,10 +1,9 @@
 package com.etherblood.rules.stats;
 
 import com.etherblood.collections.IntSet;
-import com.etherblood.events.Event;
+import com.etherblood.events.handlers.NullaryHandler;
 import com.etherblood.rules.GameEventHandler;
 import com.etherblood.rules.components.Components;
-import java.util.function.IntFunction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,15 +11,15 @@ import org.slf4j.LoggerFactory;
  *
  * @author Philipp
  */
-public class RefreshAllStatHandler<T extends Event> extends GameEventHandler<T> {
+public class RefreshAllStatHandler extends GameEventHandler implements NullaryHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(RefreshAllStatHandler.class);
 
     private final String statName;
     private final int base, active, buffed, additive;
-    private final IntFunction<Event> updateBuffedSupply, resetActiveSupply;
+    private final int updateBuffedSupply, resetActiveSupply;
 
-    public RefreshAllStatHandler(String statName, int base, int active, int buffed, int additive, IntFunction<Event> updateBuffedSupply, IntFunction<Event> resetActiveSupply) {
+    public RefreshAllStatHandler(String statName, int base, int active, int buffed, int additive, int updateBuffedSupply, int resetActiveSupply) {
         this.statName = statName;
         this.base = base;
         this.active = active;
@@ -31,7 +30,7 @@ public class RefreshAllStatHandler<T extends Event> extends GameEventHandler<T> 
     }
     
     @Override
-    public void handle(T event) {
+    public void handle() {
         IntSet entities = new IntSet();
         for (int entity : data.component(base).entities()) {
             entities.set(entity);
@@ -49,10 +48,10 @@ public class RefreshAllStatHandler<T extends Event> extends GameEventHandler<T> 
         LOG.info("refreshing {} for {}", statName, entities);
 
         entities.foreach(entity -> {
-            events.trigger(updateBuffedSupply.apply(entity));
+            events.trigger(updateBuffedSupply, entity);
         });
         entities.foreach(entity -> {
-            events.trigger(resetActiveSupply.apply(entity));
+            events.trigger(resetActiveSupply, entity);
         });
     }
 
