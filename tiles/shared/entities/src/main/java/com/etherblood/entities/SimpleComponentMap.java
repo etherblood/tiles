@@ -10,7 +10,7 @@ import java.util.OptionalInt;
 public class SimpleComponentMap implements ComponentMap {
 
     private final IntToIntMap components = new IntToIntMap();
-    private final SimpleAggregator aggregator = new SimpleAggregator(components);
+    private final SimpleEntityQuery aggregator = new SimpleEntityQuery(components);
 
     @Override
     public boolean has(int entity) {
@@ -51,7 +51,7 @@ public class SimpleComponentMap implements ComponentMap {
 //    }
 
     @Override
-    public Aggregator query() {
+    public EntityQuery query() {
         return aggregator;
     }
 

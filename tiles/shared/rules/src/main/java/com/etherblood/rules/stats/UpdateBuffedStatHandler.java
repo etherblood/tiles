@@ -27,7 +27,7 @@ public class UpdateBuffedStatHandler extends GameEventHandler implements UnaryHa
     @Override
     public void handle(int entity) {
         int baseValue = data.getOptional(entity, base).orElse(0);
-        int additiveValue = data.query(additive).compute(Integer::sum, x -> data.hasValue(x, Components.BUFF_ON, entity)).orElse(0);
+        int additiveValue = data.query(additive).aggregate(Integer::sum, x -> data.hasValue(x, Components.BUFF_ON, entity)).orElse(0);
         LOG.info("updating buffed {} of {} to {}, base is {}, additive is {}", statName, entity, baseValue + additiveValue, baseValue, additiveValue);
         events.response(setBuffedSupply, entity, baseValue + additiveValue);
     }

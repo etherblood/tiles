@@ -36,5 +36,5 @@ public interface EntityData {
         }
     }
 
-    Aggregator query(int component);
+    EntityQuery query(int component);
 }

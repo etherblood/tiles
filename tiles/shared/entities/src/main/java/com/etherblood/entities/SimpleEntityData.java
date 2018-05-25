@@ -46,7 +46,7 @@ public class SimpleEntityData implements EntityData {
     }
 
     @Override
-    public Aggregator query(int component) {
+    public EntityQuery query(int component) {
         return component(component).query();
     }
 

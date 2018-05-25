@@ -20,6 +20,6 @@ public interface ComponentMapView {
         return has(entity) && get(entity) == value;
     }
 
-    Aggregator query();
+    EntityQuery query();
     
 }
