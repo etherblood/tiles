@@ -40,8 +40,8 @@ public class SimpleAggregator implements Aggregator {
     @Override
     public boolean exists(IntPredicate predicate) {
         PrimitiveIterator.OfInt iterator = source.iterator();
-        while(iterator.hasNext()) {
-            if(predicate.test(iterator.nextInt())) {
+        while (iterator.hasNext()) {
+            if (predicate.test(iterator.nextInt())) {
                 return true;
             }
         }
@@ -56,7 +56,7 @@ public class SimpleAggregator implements Aggregator {
     @Override
     public OptionalInt compute(IntBinaryOperator operator, IntPredicate predicate) {
         AtomicInteger state = new AtomicInteger();
-        AtomicBoolean first = new AtomicBoolean();
+        AtomicBoolean first = new AtomicBoolean(true);
         source.foreach((entity, value) -> {
             if (predicate.test(entity)) {
                 if (first.get()) {
@@ -79,5 +79,22 @@ public class SimpleAggregator implements Aggregator {
             }
         });
         out.sort();
+    }
+
+    @Override
+    public OptionalInt unique(IntPredicate predicate) {
+        AtomicInteger state = new AtomicInteger();
+        AtomicBoolean found = new AtomicBoolean();
+        source.foreach((entity, value) -> {
+            if (predicate.test(entity)) {
+                if (found.get()) {
+                    throw new AssertionError("multiple results found for unique query");
+                } else {
+                    state.set(value);
+                    found.set(true);
+                }
+            }
+        });
+        return found.get() ? OptionalInt.empty() : OptionalInt.of(state.get());
     }
 }

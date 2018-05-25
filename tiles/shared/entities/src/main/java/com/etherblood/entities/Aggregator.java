@@ -31,6 +31,12 @@ public interface Aggregator {
         return compute(operator, x -> true);
     }
 
+    OptionalInt unique(IntPredicate predicate);
+
+    default OptionalInt unique() {
+        return unique(x -> true);
+    }
+
     void list(IntArrayList out, IntPredicate predicate);
 
     default void list(IntArrayList out) {
