@@ -22,7 +22,7 @@ public class SetComponentHandler extends GameEventHandler implements BinaryHandl
 
     @Override
     public void handle(int entity, int value) {
-        data.component(component).setWithDefault(entity, value, 0);
+        data.setWithDefault(entity, component, value, 0);
         LOG.info("setting {} of {} to {}", statName, entity, value);
     }
 

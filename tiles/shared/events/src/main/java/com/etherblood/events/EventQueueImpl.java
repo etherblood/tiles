@@ -21,7 +21,7 @@ public class EventQueueImpl implements EventQueue {
 
     private final EventDefinition[] eventDefinitions;
     private final IntArrayQueue[] eventStack;
-    private final ArrayHandler[][] handlers;
+    private final Object[][] handlers;
     private int depth = 0;
     private boolean cancelled;
 
@@ -31,10 +31,10 @@ public class EventQueueImpl implements EventQueue {
         for (int i = 0; i < DEPTH_LIMIT; i++) {
             eventStack[i] = new IntArrayQueue();
         }
-        handlers = new ArrayHandler[eventDefinitions.length][];
+        handlers = new Object[eventDefinitions.length][];
     }
 
-    public void registerHandlers(int eventId, ArrayHandler... handlers) {
+    public void registerHandlers(int eventId, Object[] handlers) {
         this.handlers[EventDefinition.eventIndex(eventId)] = handlers;
     }
 
@@ -47,7 +47,7 @@ public class EventQueueImpl implements EventQueue {
             int eventId = queue.pop();
             int index = EventDefinition.eventIndex(eventId);
             int argumentCount = EventDefinition.eventArgumentCount(eventId);
-            ArrayHandler[] currentHandlers = handlers[index];
+            Object[] currentHandlers = handlers[index];
             if (currentHandlers == null) {
                 LOG.warn("no handlers found for {}", eventDefinitions[index].getName());
                 for (int i = 0; i < argumentCount; i++) {
@@ -108,7 +108,7 @@ public class EventQueueImpl implements EventQueue {
                             args[i] = queue.pop();
                         }
                         LOG.debug("handling {}", eventDefinitions[index].lazyString(args));
-                        for (ArrayHandler handler : currentHandlers) {
+                        for (ArrayHandler handler : (ArrayHandler[]) currentHandlers) {
                             handler.handle(args);
                             if (cancelled) {
                                 break;

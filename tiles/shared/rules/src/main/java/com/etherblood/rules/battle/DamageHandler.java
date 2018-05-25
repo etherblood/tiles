@@ -16,8 +16,8 @@ public class DamageHandler extends GameEventHandler implements BinaryHandler{
 
     @Override
     public void handle(int target, int damage) {
-        int hp = data.component(Components.Stats.Health.ACTIVE).getOrElse(target, 0);
-        data.component(Components.Stats.Health.ACTIVE).set(target, hp - damage);
+        int hp = data.getOptional(target, Components.Stats.Health.ACTIVE).orElse(0);
+        data.set(target, Components.Stats.Health.ACTIVE, hp - damage);
         LOG.info("{} took {} damage", target, damage);
     }
 

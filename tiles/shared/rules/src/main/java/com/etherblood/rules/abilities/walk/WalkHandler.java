@@ -22,11 +22,11 @@ public class WalkHandler extends GameEventHandler implements BinaryHandler {
 
     @Override
     public void handle(int actor, int to) {
-        assert data.component(Components.ACTIVE_TURN).has(actor);
-        int movePoints = data.component(Components.Stats.MovePoints.ACTIVE).getOrElse(actor, 0);
+        assert data.has(actor, Components.ACTIVE_TURN);
+        int movePoints = data.getOptional(actor, Components.Stats.MovePoints.ACTIVE).orElse(0);
         assert movePoints >= 1;
         LOG.info("used 1 mp of {}", actor);
-        data.component(Components.Stats.MovePoints.ACTIVE).set(actor, movePoints - 1);
+        data.set(actor, Components.Stats.MovePoints.ACTIVE, movePoints - 1);
         events.response(setPosition.id(), actor, to);
     }
 

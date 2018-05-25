@@ -98,15 +98,15 @@ public class EventDefinition {
 
     }
     
-    static int eventIndex(int eventId) {
+    public static int eventIndex(int eventId) {
         return eventId & 0xFFFF;
     }
     
-    static int eventArgumentCount(int eventId) {
+    public static int eventArgumentCount(int eventId) {
         return eventId >> 16;
     }
     
-    static int eventId(int index, int argumentCount) {
+    public static int eventId(int index, int argumentCount) {
         return index | (argumentCount << 16);
     }
 

@@ -22,7 +22,7 @@ public class PassTurnGenerator implements ActionGenerator {
 
     @Override
     public void availableActions(int actor, Consumer<Action> consumer) {
-        if (data.component(Components.Abilities.PASS_TURN).has(actor)) {
+        if (data.has(actor, Components.Abilities.PASS_TURN)) {
             consumer.accept(new Action(passTurnAction, actor));
         }
     }

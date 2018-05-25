@@ -23,7 +23,7 @@ public class TurnEndHandler extends GameEventHandler implements UnaryHandler{
     @Override
     public void handle(int team) {
         LOG.info("ended turn turn of {}", team);
-        events.trigger(turnStart.id(), data.component(Components.NEXT_TEAM).get(team));
+        events.trigger(turnStart.id(), data.get(team, Components.NEXT_TEAM));
     }
 
 }

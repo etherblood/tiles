@@ -23,10 +23,10 @@ public class PassTurnHandler extends GameEventHandler implements UnaryHandler {
     @Override
     public void handle(int actor) {
         LOG.info("passed turn of {}", actor);
-        data.component(Components.ACTIVE_TURN).remove(actor);
-        if (!data.component(Components.ACTIVE_TURN).exists()) {
+        data.remove(actor, Components.ACTIVE_TURN);
+        if (!data.query(Components.ACTIVE_TURN).exists()) {
             LOG.info("all actors passed, ending turn...", actor);
-            events.trigger(endTurn.id(), data.component(Components.MEMBER_OF).get(actor));
+            events.trigger(endTurn.id(), data.get(actor, Components.MEMBER_OF));
         }
     }
 

@@ -1,9 +1,7 @@
 package com.etherblood.entities;
 
-import com.etherblood.collections.IntArrayList;
 import com.etherblood.collections.IntToIntMap;
-import java.util.PrimitiveIterator;
-import java.util.function.IntPredicate;
+import java.util.OptionalInt;
 
 /**
  *
@@ -12,6 +10,7 @@ import java.util.function.IntPredicate;
 public class SimpleComponentMap implements ComponentMap {
 
     private final IntToIntMap components = new IntToIntMap();
+    private final SimpleAggregator aggregator = new SimpleAggregator(components);
 
     @Override
     public boolean has(int entity) {
@@ -20,12 +19,8 @@ public class SimpleComponentMap implements ComponentMap {
 
     @Override
     public boolean hasValue(int entity, int value) {
-        return getOrElse(entity, ~value) == value;
-    }
-
-    @Override
-    public int getOrElse(int entity, int defaultValue) {
-        return components.getOrElse(entity, defaultValue);
+        OptionalInt optional = getOptional(entity);
+        return optional.isPresent() && optional.getAsInt() == value;
     }
 
     @Override
@@ -43,30 +38,21 @@ public class SimpleComponentMap implements ComponentMap {
         components.remove(entity);
     }
 
-    @Override
-    public IntArrayList entities(IntPredicate... predicates) {
-        IntArrayList list = new IntArrayList(components.size());
-        components.foreachKey(entity -> {
-            for (IntPredicate predicate : predicates) {
-                if (!predicate.test(entity)) {
-                    return;
-                }
-            }
-            list.add(entity);
-        });
-        list.sort();
-        return list;
-    }
+//    @Deprecated
+//    public IntArrayList entities(IntPredicate predicate) {
+//        IntArrayList list = new IntArrayList(components.size());
+//        components.foreachKey(entity -> {
+//            if (predicate.test(entity)) {
+//                list.add(entity);
+//            }
+//        });
+//        list.sort();
+//        return list;
+//    }
 
     @Override
-    public boolean exists(IntPredicate... predicates) {
-        for (PrimitiveIterator.OfInt iterator = components.iterator(); iterator.hasNext();) {
-            int entity = iterator.nextInt();
-            if (Util.all(entity, predicates)) {
-                return true;
-            }
-        }
-        return false;
+    public Aggregator query() {
+        return aggregator;
     }
 
 }

@@ -1,4 +1,4 @@
-package com.etherblood.rules.abilities.razorLeaf;
+package com.etherblood.rules.abilities.razorleaf;
 
 import com.etherblood.events.handlers.BinaryHandler;
 import com.etherblood.rules.GameEventHandler;
@@ -22,13 +22,13 @@ public class RazorleafHandler extends GameEventHandler implements BinaryHandler 
 
     @Override
     public void handle(int actor, int target) {
-        int level = data.component(Components.Abilities.RAZORLEAF).get(actor);
+        int level = data.get(actor, Components.Abilities.RAZORLEAF);
         int cost = apCost(level);
-        int ap = data.component(Components.Stats.ActionPoints.ACTIVE).getOrElse(actor, 0);
+        int ap = data.getOptional(actor, Components.Stats.ActionPoints.ACTIVE).orElse(0);
         assert ap >= cost;
         LOG.info("used {} ap of {}", cost, actor);
-        data.component(Components.Stats.ActionPoints.ACTIVE).set(actor, ap - cost);
-        events.response(earthDamageEvent, actor, target, attack(level));
+        data.set(actor, Components.Stats.ActionPoints.ACTIVE, ap - cost);
+        events.response(earthDamageEvent, target, attack(level));
     }
     
     public static int apCost(int level) {

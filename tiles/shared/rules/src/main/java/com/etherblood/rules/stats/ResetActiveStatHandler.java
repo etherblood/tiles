@@ -26,6 +26,6 @@ public class ResetActiveStatHandler extends GameEventHandler implements UnaryHan
     @Override
     public void handle(int entity) {
         LOG.info("resetting {} of {}", statName, entity);
-        events.response(setActiveSupply, entity, data.component(buffed).getOrElse(entity, 0));
+        events.response(setActiveSupply, entity, data.getOptional(entity, buffed).orElse(0));
     }
 }

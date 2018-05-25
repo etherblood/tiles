@@ -17,9 +17,9 @@ public class TurnStartHandler extends GameEventHandler implements UnaryHandler {
 
     @Override
     public void handle(int team) {
-        IntArrayList actors = data.component(Components.MEMBER_OF).entities(x -> data.component(Components.MEMBER_OF).hasValue(x, team));
+        IntArrayList actors = data.query(Components.MEMBER_OF).list(x -> data.hasValue(x, Components.MEMBER_OF, team));
         LOG.info("setting activeTurn for members of team {}: {}", team, actors);
-        actors.forEach(x -> data.component(Components.ACTIVE_TURN).set(x, 0));
+        actors.forEach(x -> data.set(x, Components.ACTIVE_TURN, 0));
     }
 
 }

@@ -24,7 +24,7 @@ public class StartTurnOfRandomTeamHandler extends GameEventHandler implements Nu
 
     @Override
     public void handle() {
-        IntArrayList teams = data.component(Components.NEXT_TEAM).entities();
+        IntArrayList teams = data.query(Components.NEXT_TEAM).list();
         int team = teams.get(random.applyAsInt(teams.size()));
         LOG.info("selected {} as starting team", team);
         events.response(turnStart.id(), team);

@@ -1,6 +1,6 @@
 package com.etherblood.sandbox;
 
-import com.etherblood.entities.EntityData;
+import com.etherblood.entities.SimpleEntityData;
 import com.etherblood.rules.components.Components;
 
 /**
@@ -9,40 +9,40 @@ import com.etherblood.rules.components.Components;
  */
 public class Pokemons {
 
-    private final EntityData data;
+    private final SimpleEntityData data;
 
-    public Pokemons(EntityData data) {
+    public Pokemons(SimpleEntityData data) {
         this.data = data;
     }
 
     public void bulbasaur(int entity) {
-        data.component(Components.SPRITE).set(entity, 0);
-        data.component(Components.Stats.Health.BASE).set(entity, 20);
-        data.component(Components.Stats.ActionPoints.BASE).set(entity, 4);
-        data.component(Components.Stats.MovePoints.BASE).set(entity, 2);
-        data.component(Components.Stats.Power.Earth.BASE).set(entity, 50);
-        data.component(Components.Stats.Toughness.Earth.BASE).set(entity, 50);
-        data.component(Components.Stats.Toughness.Fire.BASE).set(entity, -100);
+        data.set(entity, Components.SPRITE, 0);
+        data.set(entity, Components.Stats.Health.BASE, 20);
+        data.set(entity, Components.Stats.ActionPoints.BASE, 4);
+        data.set(entity, Components.Stats.MovePoints.BASE, 2);
+        data.set(entity, Components.Stats.Power.Earth.BASE, 50);
+        data.set(entity, Components.Stats.Toughness.Earth.BASE, 50);
+        data.set(entity, Components.Stats.Toughness.Fire.BASE, -100);
     }
 
     public void charmander(int entity) {
-        data.component(Components.SPRITE).set(entity, 3);
-        data.component(Components.Stats.Health.BASE).set(entity, 20);
-        data.component(Components.Stats.ActionPoints.BASE).set(entity, 4);
-        data.component(Components.Stats.MovePoints.BASE).set(entity, 2);
-        data.component(Components.Stats.Power.Fire.BASE).set(entity, 50);
-        data.component(Components.Stats.Toughness.Fire.BASE).set(entity, 50);
-        data.component(Components.Stats.Toughness.Water.BASE).set(entity, -100);
+        data.set(entity, Components.SPRITE, 3);
+        data.set(entity, Components.Stats.Health.BASE, 20);
+        data.set(entity, Components.Stats.ActionPoints.BASE, 4);
+        data.set(entity, Components.Stats.MovePoints.BASE, 2);
+        data.set(entity, Components.Stats.Power.Fire.BASE, 50);
+        data.set(entity, Components.Stats.Toughness.Fire.BASE, 50);
+        data.set(entity, Components.Stats.Toughness.Water.BASE, -100);
     }
 
     public void squirtle(int entity) {
-        data.component(Components.SPRITE).set(entity, 6);
-        data.component(Components.Stats.Health.BASE).set(entity, 20);
-        data.component(Components.Stats.ActionPoints.BASE).set(entity, 4);
-        data.component(Components.Stats.MovePoints.BASE).set(entity, 2);
-        data.component(Components.Stats.Power.Water.BASE).set(entity, 50);
-        data.component(Components.Stats.Toughness.Water.BASE).set(entity, 50);
-        data.component(Components.Stats.Toughness.Earth.BASE).set(entity, -100);
+        data.set(entity, Components.SPRITE, 6);
+        data.set(entity, Components.Stats.Health.BASE, 20);
+        data.set(entity, Components.Stats.ActionPoints.BASE, 4);
+        data.set(entity, Components.Stats.MovePoints.BASE, 2);
+        data.set(entity, Components.Stats.Power.Water.BASE, 50);
+        data.set(entity, Components.Stats.Toughness.Water.BASE, 50);
+        data.set(entity, Components.Stats.Toughness.Earth.BASE, -100);
     }
 
 }

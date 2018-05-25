@@ -1,5 +1,6 @@
 package com.etherblood.rules.stats;
 
+import com.etherblood.collections.IntArrayList;
 import com.etherblood.collections.IntSet;
 import com.etherblood.events.handlers.NullaryHandler;
 import com.etherblood.rules.GameEventHandler;
@@ -32,25 +33,29 @@ public class RefreshAllStatHandler extends GameEventHandler implements NullaryHa
     @Override
     public void handle() {
         IntSet entities = new IntSet();
-        for (int entity : data.component(base).entities()) {
+        for (int entity : data.query(base).list()) {
             entities.set(entity);
         }
-        for (int entity : data.component(active).entities()) {
+        for (int entity : data.query(active).list()) {
             entities.set(entity);
         }
-        for (int entity : data.component(buffed).entities()) {
+        for (int entity : data.query(buffed).list()) {
             entities.set(entity);
         }
-        for (int entity : data.component(additive).entities()) {
-            entities.set(data.component(Components.BUFF_ON).get(entity));
+        for (int entity : data.query(additive).list()) {
+            entities.set(data.get(entity, Components.BUFF_ON));
         }
 
-        LOG.info("refreshing {} for {}", statName, entities);
+        IntArrayList list = new IntArrayList(entities.size());
+        entities.foreach(list::add);
+        list.sort();
+        
+        LOG.info("refreshing {} for {}", statName, list);
 
-        entities.foreach(entity -> {
+        list.foreach(entity -> {
             events.trigger(updateBuffedSupply, entity);
         });
-        entities.foreach(entity -> {
+        list.foreach(entity -> {
             events.trigger(resetActiveSupply, entity);
         });
     }

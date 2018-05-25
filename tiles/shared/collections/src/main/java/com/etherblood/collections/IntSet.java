@@ -163,6 +163,10 @@ public final class IntSet implements Iterable<Integer> {
             uncheckedSet(key);
         }
     }
+    
+    public void clear() {
+        count = 0;
+    }
 
     public int[] toArray() {
         int[] array = new int[size()];

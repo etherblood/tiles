@@ -26,15 +26,10 @@ public class UpdateBuffedStatHandler extends GameEventHandler implements UnaryHa
 
     @Override
     public void handle(int entity) {
-        int buffedStat = data.component(base).getOrElse(entity, 0);
-        LOG.debug("updating buffed {} of {}, base is {}", statName, entity, buffedStat);
-        for (int buff : data.component(additive).entities(x -> data.component(Components.BUFF_ON).hasValue(x, entity))) {
-            int additiveStat = data.component(additive).get(buff);
-            LOG.debug("adding {} for additive-{}-buff: {}", additiveStat, statName, buff);
-            buffedStat += additiveStat;
-        }
-        LOG.info("setting buffed {} of {} to {}", statName, entity, buffedStat);
-        events.response(setBuffedSupply, entity, buffedStat);
+        int baseValue = data.getOptional(entity, base).orElse(0);
+        int additiveValue = data.query(additive).compute(Integer::sum, x -> data.hasValue(x, Components.BUFF_ON, entity)).orElse(0);
+        LOG.info("updating buffed {} of {} to {}, base is {}, additive is {}", statName, entity, baseValue + additiveValue, baseValue, additiveValue);
+        events.response(setBuffedSupply, entity, baseValue + additiveValue);
     }
 
 }

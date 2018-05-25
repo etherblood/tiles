@@ -1,7 +1,6 @@
 package com.etherblood.entities;
 
-import com.etherblood.collections.IntArrayList;
-import java.util.function.IntPredicate;
+import java.util.OptionalInt;
 
 /**
  *
@@ -9,21 +8,18 @@ import java.util.function.IntPredicate;
  */
 public interface ComponentMapView {
 
-    IntArrayList entities(IntPredicate... predicates);
-
     boolean has(int entity);
 
     int get(int entity);
-    
+
+    default OptionalInt getOptional(int entity) {
+        return has(entity) ? OptionalInt.of(get(entity)) : OptionalInt.empty();
+    }
+
     default boolean hasValue(int entity, int value) {
         return has(entity) && get(entity) == value;
     }
 
-    default int getOrElse(int entity, int defaultValue) {
-        return has(entity) ? get(entity) : defaultValue;
-    }
+    Aggregator query();
     
-    default boolean exists(IntPredicate... predicates) {
-        return entities(predicates).size() != 0;
-    }
 }

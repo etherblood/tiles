@@ -20,7 +20,7 @@ public class EventDefGenerator {
         elementStat("Toughness", result);
         elementStat("Power", result);
         set("Position", result);
-        event("WalkAction", result, entity("Actor"), simple("From"), simple("To"));
+        event("WalkAction", result, entity("Actor"), simple("To"), simple("From"));
         event("PassTurnAction", result, entity("Actor"));
         event("RazorleafAction", result, entity("Actor"), simple("Target"));
         event("GameStart", result);

@@ -1,6 +1,6 @@
 package com.etherblood.rules.components;
 
-import com.etherblood.entities.EntityData;
+import com.etherblood.entities.SimpleEntityData;
 import com.etherblood.events.EventQueueImpl;
 import com.etherblood.events.handlers.ArrayHandler;
 import com.etherblood.events.handlers.BinaryHandler;
@@ -16,11 +16,11 @@ import java.util.function.IntUnaryOperator;
  */
 public class GameEventDispatcher {
 
-    private final EntityData data;
+    private final SimpleEntityData data;
     private final EventQueueImpl queue;
     private final IntUnaryOperator random;
 
-    public GameEventDispatcher(EntityData data, EventQueueImpl queue, IntUnaryOperator random) {
+    public GameEventDispatcher(SimpleEntityData data, EventQueueImpl queue, IntUnaryOperator random) {
         this.data = data;
         this.queue = queue;
         this.random = random;
