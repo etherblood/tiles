@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Philipp
  */
-public class RazorleafHandler extends GameEventHandler implements BinaryHandler {
+public class RazorleafHandler extends GameEventHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(RazorleafHandler.class);
 
@@ -20,7 +20,6 @@ public class RazorleafHandler extends GameEventHandler implements BinaryHandler 
         this.earthDamageEvent = earthDamageEvent;
     }
 
-    @Override
     public void handle(int actor, int target) {
         int level = data.get(actor, Components.Abilities.RAZORLEAF);
         int cost = apCost(level);

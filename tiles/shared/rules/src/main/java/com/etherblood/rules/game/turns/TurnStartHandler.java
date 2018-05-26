@@ -11,11 +11,10 @@ import org.slf4j.LoggerFactory;
  *
  * @author Philipp
  */
-public class TurnStartHandler extends GameEventHandler implements UnaryHandler {
+public class TurnStartHandler extends GameEventHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(TurnStartHandler.class);
 
-    @Override
     public void handle(int team) {
         IntArrayList actors = data.query(Components.MEMBER_OF).list(x -> data.hasValue(x, Components.MEMBER_OF, team));
         LOG.info("setting activeTurn for members of team {}: {}", team, actors);

@@ -12,6 +12,10 @@ public class Coordinates {
         return of((short) x, (short) y);
     }
 
+    public static int sum(int a, int b) {
+        return of(x(a) + x(b), y(a) + y(b));
+    }
+
     public static int of(short x, short y) {
         return Short.toUnsignedInt(x) | (y << 16);
     }

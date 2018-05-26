@@ -1,5 +1,6 @@
 package com.etherblood.sandbox;
 
+import com.etherblood.collections.IntArrayList;
 import com.etherblood.rules.RandomTracker;
 import com.etherblood.collections.MapBuilder;
 import com.etherblood.entities.EntityData;
@@ -33,12 +34,12 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -96,40 +97,45 @@ public class Main {
         defaultStatHandlers("WaterToughness", dispatcher, eventMap, Components.Stats.Toughness.Water.BASE, Components.Stats.Toughness.Water.BUFFED, Components.Stats.Toughness.Water.ADDITIVE, Components.Stats.Toughness.Water.ACTIVE);
         defaultStatHandlers("EarthToughness", dispatcher, eventMap, Components.Stats.Toughness.Earth.BASE, Components.Stats.Toughness.Earth.BUFFED, Components.Stats.Toughness.Earth.ADDITIVE, Components.Stats.Toughness.Earth.ACTIVE);
 
-        dispatcher.setHandlers(eventMap.get("SetPosition").id(), new SetComponentHandler("position", Components.POSITION));
+        dispatcher.setBinaryHandlers(eventMap.get("SetPosition"),
+                dispatcher.init(new SetComponentHandler("position", Components.POSITION))::handle);
 
-        dispatcher.setHandlers(eventMap.get("EarthDamage").id(),
-                new DamageHandler());
-        dispatcher.setHandlers(eventMap.get("FireDamage").id(),
-                new DamageHandler());
-        dispatcher.setHandlers(eventMap.get("AirDamage").id(),
-                new DamageHandler());
-        dispatcher.setHandlers(eventMap.get("WaterDamage").id(),
-                new DamageHandler());
+        dispatcher.setBinaryHandlers(eventMap.get("EarthDamage"),
+                dispatcher.init(new DamageHandler())::handle);
+        dispatcher.setBinaryHandlers(eventMap.get("FireDamage"),
+                dispatcher.init(new DamageHandler())::handle);
+        dispatcher.setBinaryHandlers(eventMap.get("AirDamage"),
+                dispatcher.init(new DamageHandler())::handle);
+        dispatcher.setBinaryHandlers(eventMap.get("WaterDamage"),
+                dispatcher.init(new DamageHandler())::handle);
 
-        dispatcher.setHandlers(eventMap.get("WalkAction").id(), new WalkHandler(eventMap.get("SetPosition")));
-        dispatcher.setHandlers(eventMap.get("PassTurnAction").id(), new PassTurnHandler(eventMap.get("TurnEnd")));
-        dispatcher.setHandlers(eventMap.get("RazorleafAction").id(), new RazorleafHandler(eventMap.get("EarthDamage").id()));
+        dispatcher.setTernaryHandlers(eventMap.get("WalkAction"),
+                dispatcher.init(new WalkHandler(eventMap.get("SetPosition")))::handle);
+        dispatcher.setUnaryHandlers(eventMap.get("PassTurnAction"),
+                dispatcher.init(new PassTurnHandler(eventMap.get("TurnEnd")))::handle);
+        dispatcher.setBinaryHandlers(eventMap.get("RazorleafAction"),
+                dispatcher.init(new RazorleafHandler(eventMap.get("EarthDamage").id()))::handle);
 
-        dispatcher.setHandlers(eventMap.get("GameStart").id(),
-                new RefreshAllStatHandler("health", Components.Stats.Health.BASE, Components.Stats.Health.ACTIVE, Components.Stats.Health.BUFFED, Components.Stats.Health.ADDITIVE, eventMap.get("UpdateBuffedHealth").id(), eventMap.get("ResetActiveHealth").id()),
-                new RefreshAllStatHandler("movePoints", Components.Stats.MovePoints.BASE, Components.Stats.MovePoints.ACTIVE, Components.Stats.MovePoints.BUFFED, Components.Stats.MovePoints.ADDITIVE, eventMap.get("UpdateBuffedMovePoints").id(), eventMap.get("ResetActiveMovePoints").id()),
-                new RefreshAllStatHandler("actionPoints", Components.Stats.ActionPoints.BASE, Components.Stats.ActionPoints.ACTIVE, Components.Stats.ActionPoints.BUFFED, Components.Stats.ActionPoints.ADDITIVE, eventMap.get("UpdateBuffedActionPoints").id(), eventMap.get("ResetActiveActionPoints").id()),
-                new RefreshAllStatHandler("airPower", Components.Stats.Power.Air.BASE, Components.Stats.Power.Air.ACTIVE, Components.Stats.Power.Air.BUFFED, Components.Stats.Power.Air.ADDITIVE, eventMap.get("UpdateBuffedAirPower").id(), eventMap.get("ResetActiveAirPower").id()),
-                new RefreshAllStatHandler("earthPower", Components.Stats.Power.Earth.BASE, Components.Stats.Power.Earth.ACTIVE, Components.Stats.Power.Earth.BUFFED, Components.Stats.Power.Earth.ADDITIVE, eventMap.get("UpdateBuffedEarthPower").id(), eventMap.get("ResetActiveEarthPower").id()),
-                new RefreshAllStatHandler("firePower", Components.Stats.Power.Fire.BASE, Components.Stats.Power.Fire.ACTIVE, Components.Stats.Power.Fire.BUFFED, Components.Stats.Power.Fire.ADDITIVE, eventMap.get("UpdateBuffedFirePower").id(), eventMap.get("ResetActiveFirePower").id()),
-                new RefreshAllStatHandler("waterPower", Components.Stats.Power.Water.BASE, Components.Stats.Power.Water.ACTIVE, Components.Stats.Power.Water.BUFFED, Components.Stats.Power.Water.ADDITIVE, eventMap.get("UpdateBuffedWaterPower").id(), eventMap.get("ResetActiveWaterPower").id()),
-                new RefreshAllStatHandler("airToughness", Components.Stats.Toughness.Air.BASE, Components.Stats.Toughness.Air.ACTIVE, Components.Stats.Toughness.Air.BUFFED, Components.Stats.Toughness.Air.ADDITIVE, eventMap.get("UpdateBuffedAirToughness").id(), eventMap.get("ResetActiveAirToughness").id()),
-                new RefreshAllStatHandler("earthToughness", Components.Stats.Toughness.Earth.BASE, Components.Stats.Toughness.Earth.ACTIVE, Components.Stats.Toughness.Earth.BUFFED, Components.Stats.Toughness.Earth.ADDITIVE, eventMap.get("UpdateBuffedEarthToughness").id(), eventMap.get("ResetActiveEarthToughness").id()),
-                new RefreshAllStatHandler("fireToughness", Components.Stats.Toughness.Fire.BASE, Components.Stats.Toughness.Fire.ACTIVE, Components.Stats.Toughness.Fire.BUFFED, Components.Stats.Toughness.Fire.ADDITIVE, eventMap.get("UpdateBuffedFireToughness").id(), eventMap.get("ResetActiveFireToughness").id()),
-                new RefreshAllStatHandler("waterToughness", Components.Stats.Toughness.Water.BASE, Components.Stats.Toughness.Water.ACTIVE, Components.Stats.Toughness.Water.BUFFED, Components.Stats.Toughness.Water.ADDITIVE, eventMap.get("UpdateBuffedWaterToughness").id(), eventMap.get("ResetActiveWaterToughness").id()),
-                new StartTurnOfRandomTeamHandler(eventMap.get("TurnStart")));
-        dispatcher.setHandlers(eventMap.get("TurnEnd").id(),
-                new RefreshAllStatHandler("movePoints", Components.Stats.MovePoints.BASE, Components.Stats.MovePoints.ACTIVE, Components.Stats.MovePoints.BUFFED, Components.Stats.MovePoints.ADDITIVE, eventMap.get("UpdateBuffedMovePoints").id(), eventMap.get("ResetActiveMovePoints").id()),
-                new RefreshAllStatHandler("actionPoints", Components.Stats.ActionPoints.BASE, Components.Stats.ActionPoints.ACTIVE, Components.Stats.ActionPoints.BUFFED, Components.Stats.ActionPoints.ADDITIVE, eventMap.get("UpdateBuffedActionPoints").id(), eventMap.get("ResetActiveActionPoints").id()),
-                new TurnEndHandler(eventMap.get("TurnStart")));
+        dispatcher.setNullaryHandlers(eventMap.get("GameStart"),
+                dispatcher.init(new RefreshAllStatHandler("health", Components.Stats.Health.BASE, Components.Stats.Health.ACTIVE, Components.Stats.Health.BUFFED, Components.Stats.Health.ADDITIVE, eventMap.get("UpdateBuffedHealth").id(), eventMap.get("ResetActiveHealth").id()))::handle,
+                dispatcher.init(new RefreshAllStatHandler("movePoints", Components.Stats.MovePoints.BASE, Components.Stats.MovePoints.ACTIVE, Components.Stats.MovePoints.BUFFED, Components.Stats.MovePoints.ADDITIVE, eventMap.get("UpdateBuffedMovePoints").id(), eventMap.get("ResetActiveMovePoints").id()))::handle,
+                dispatcher.init(new RefreshAllStatHandler("actionPoints", Components.Stats.ActionPoints.BASE, Components.Stats.ActionPoints.ACTIVE, Components.Stats.ActionPoints.BUFFED, Components.Stats.ActionPoints.ADDITIVE, eventMap.get("UpdateBuffedActionPoints").id(), eventMap.get("ResetActiveActionPoints").id()))::handle,
+                dispatcher.init(new RefreshAllStatHandler("airPower", Components.Stats.Power.Air.BASE, Components.Stats.Power.Air.ACTIVE, Components.Stats.Power.Air.BUFFED, Components.Stats.Power.Air.ADDITIVE, eventMap.get("UpdateBuffedAirPower").id(), eventMap.get("ResetActiveAirPower").id()))::handle,
+                dispatcher.init(new RefreshAllStatHandler("earthPower", Components.Stats.Power.Earth.BASE, Components.Stats.Power.Earth.ACTIVE, Components.Stats.Power.Earth.BUFFED, Components.Stats.Power.Earth.ADDITIVE, eventMap.get("UpdateBuffedEarthPower").id(), eventMap.get("ResetActiveEarthPower").id()))::handle,
+                dispatcher.init(new RefreshAllStatHandler("firePower", Components.Stats.Power.Fire.BASE, Components.Stats.Power.Fire.ACTIVE, Components.Stats.Power.Fire.BUFFED, Components.Stats.Power.Fire.ADDITIVE, eventMap.get("UpdateBuffedFirePower").id(), eventMap.get("ResetActiveFirePower").id()))::handle,
+                dispatcher.init(new RefreshAllStatHandler("waterPower", Components.Stats.Power.Water.BASE, Components.Stats.Power.Water.ACTIVE, Components.Stats.Power.Water.BUFFED, Components.Stats.Power.Water.ADDITIVE, eventMap.get("UpdateBuffedWaterPower").id(), eventMap.get("ResetActiveWaterPower").id()))::handle,
+                dispatcher.init(new RefreshAllStatHandler("airToughness", Components.Stats.Toughness.Air.BASE, Components.Stats.Toughness.Air.ACTIVE, Components.Stats.Toughness.Air.BUFFED, Components.Stats.Toughness.Air.ADDITIVE, eventMap.get("UpdateBuffedAirToughness").id(), eventMap.get("ResetActiveAirToughness").id()))::handle,
+                dispatcher.init(new RefreshAllStatHandler("earthToughness", Components.Stats.Toughness.Earth.BASE, Components.Stats.Toughness.Earth.ACTIVE, Components.Stats.Toughness.Earth.BUFFED, Components.Stats.Toughness.Earth.ADDITIVE, eventMap.get("UpdateBuffedEarthToughness").id(), eventMap.get("ResetActiveEarthToughness").id()))::handle,
+                dispatcher.init(new RefreshAllStatHandler("fireToughness", Components.Stats.Toughness.Fire.BASE, Components.Stats.Toughness.Fire.ACTIVE, Components.Stats.Toughness.Fire.BUFFED, Components.Stats.Toughness.Fire.ADDITIVE, eventMap.get("UpdateBuffedFireToughness").id(), eventMap.get("ResetActiveFireToughness").id()))::handle,
+                dispatcher.init(new RefreshAllStatHandler("waterToughness", Components.Stats.Toughness.Water.BASE, Components.Stats.Toughness.Water.ACTIVE, Components.Stats.Toughness.Water.BUFFED, Components.Stats.Toughness.Water.ADDITIVE, eventMap.get("UpdateBuffedWaterToughness").id(), eventMap.get("ResetActiveWaterToughness").id()))::handle,
+                dispatcher.init(new StartTurnOfRandomTeamHandler(eventMap.get("TurnStart")))::handle);
+        dispatcher.setUnaryHandlers(eventMap.get("TurnEnd"),
+//                dispatcher.init(new ResetActiveStatHandler("movePoints", Components.Stats.MovePoints.BUFFED, eventMap.get("SetActiveMovePoints").id()))::handle,
+//                dispatcher.init(new ResetActiveStatHandler("actionPoints", Components.Stats.ActionPoints.BUFFED, eventMap.get("SetActiveActionPoints").id()))::handle,
+                dispatcher.init(new TurnEndHandler(eventMap.get("TurnStart")))::handle);
 
-        dispatcher.setHandlers(eventMap.get("TurnStart").id(), new TurnStartHandler());
+        dispatcher.setUnaryHandlers(eventMap.get("TurnStart"),
+                dispatcher.init(new TurnStartHandler())::handle);
 
         Pokemons pokemons = new Pokemons(data);
 
@@ -197,12 +203,18 @@ public class Main {
     }
 
     private static void defaultStatHandlers(String statName, GameEventDispatcher dispatcher, Map<String, EventDefinition> eventMap, int base, int buffed, int additive, int active) {
-        dispatcher.setHandlers(eventMap.get("SetActive" + statName).id(), new SetComponentHandler("Active" + statName, active));
-        dispatcher.setHandlers(eventMap.get("SetBuffed" + statName).id(), new SetComponentHandler("Buffed" + statName, buffed));
-        dispatcher.setHandlers(eventMap.get("SetAdditive" + statName).id(), new SetComponentHandler("Additive" + statName, additive));
-        dispatcher.setHandlers(eventMap.get("SetBase" + statName).id(), new SetComponentHandler("Base" + statName, base));
-        dispatcher.setHandlers(eventMap.get("UpdateBuffed" + statName).id(), new UpdateBuffedStatHandler(statName, base, additive, eventMap.get("SetBuffed" + statName).id()));
-        dispatcher.setHandlers(eventMap.get("ResetActive" + statName).id(), new ResetActiveStatHandler(statName, Components.Stats.Health.BUFFED, eventMap.get("SetActive" + statName).id()));
+        dispatcher.setBinaryHandlers(eventMap.get("SetActive" + statName),
+                dispatcher.init(new SetComponentHandler("Active" + statName, active))::handle);
+        dispatcher.setBinaryHandlers(eventMap.get("SetBuffed" + statName),
+                dispatcher.init(new SetComponentHandler("Buffed" + statName, buffed))::handle);
+        dispatcher.setBinaryHandlers(eventMap.get("SetAdditive" + statName),
+                dispatcher.init(new SetComponentHandler("Additive" + statName, additive))::handle);
+        dispatcher.setBinaryHandlers(eventMap.get("SetBase" + statName),
+                dispatcher.init(new SetComponentHandler("Base" + statName, base))::handle);
+        dispatcher.setUnaryHandlers(eventMap.get("UpdateBuffed" + statName),
+                dispatcher.init(new UpdateBuffedStatHandler(statName, base, additive, eventMap.get("SetBuffed" + statName).id()))::handle);
+        dispatcher.setUnaryHandlers(eventMap.get("ResetActive" + statName),
+                dispatcher.init(new ResetActiveStatHandler(statName, buffed, eventMap.get("SetActive" + statName).id()))::handle);
     }
 
     private static void logState(Logger log, EntityDebugObjectMapper builder, SimpleEntityData data, Map<Integer, Character> actorShortcuts, int mapWidth, int mapHeight) throws IOException {
@@ -216,16 +228,23 @@ public class Main {
     }
 
     private static Action chooseAction(EntityData data, int activeTurn, ActionGenerator actions, EventDefinition[] events, Map<Integer, Character> actorShortcuts) {
-        for (int actor : data.query(activeTurn).list()) {
-            System.out.println("availableActions of " + actorShortcuts.get(actor) + "(" + actor + "): " + actions.availableActions(actor).stream().map(x -> events[EventDefinition.eventIndex(x.eventId)].lazyString(x.eventArgs)).collect(Collectors.toList()));
-        }
         Scanner scanner = new Scanner(System.in);
         while (true) {
-            System.out.println("actor");
-            int actor = data.query(activeTurn).list().get(scanner.nextInt());
-            System.out.println("action");
+            IntArrayList actors = data.query(activeTurn).list();
+            System.out.println("choose actor:");
+            for (int i = 0; i < actors.size(); i++) {
+                int actor = actors.get(i);
+                System.out.println(i + ": " + actorShortcuts.get(actor) + "(" + actor + ")");
+            }
+            int actor = actors.get(scanner.nextInt());
+            List<Action> availableActions = actions.availableActions(actor);
+            System.out.println("choose action:");
+            for (int i = 0; i < availableActions.size(); i++) {
+                Action action = availableActions.get(i);
+                System.out.println(i + ": " + events[EventDefinition.eventIndex(action.eventId)].lazyString(action.eventArgs));
+            }
             int action = scanner.nextInt();
-            return actions.availableActions(actor).get(action);
+            return availableActions.get(action);
         }
     }
 

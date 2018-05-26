@@ -53,9 +53,10 @@ public class EventDefinition {
                     if (i != 0) {
                         string += ", ";
                     }
-                    string += arguments[i].getName();
+                    ArgumentDefinition argument = arguments[i];
+                    string += argument.getName();
                     string += '=';
-                    string += args[i];
+                    string += argument.toReadable(args[i]);
                 }
                 return string + '}';
             }

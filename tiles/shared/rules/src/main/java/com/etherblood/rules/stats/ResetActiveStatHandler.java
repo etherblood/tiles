@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Philipp
  */
-public class ResetActiveStatHandler extends GameEventHandler implements UnaryHandler {
+public class ResetActiveStatHandler extends GameEventHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(ResetActiveStatHandler.class);
 
@@ -23,7 +23,6 @@ public class ResetActiveStatHandler extends GameEventHandler implements UnaryHan
         this.setActiveSupply = setActiveEvent;
     }
 
-    @Override
     public void handle(int entity) {
         LOG.info("resetting {} of {}", statName, entity);
         events.response(setActiveSupply, entity, data.getOptional(entity, buffed).orElse(0));

@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Philipp
  */
-public class TurnEndHandler extends GameEventHandler implements UnaryHandler{
+public class TurnEndHandler extends GameEventHandler{
 
     private static final Logger LOG = LoggerFactory.getLogger(TurnEndHandler.class);
     private final EventDefinition turnStart;
@@ -20,7 +20,6 @@ public class TurnEndHandler extends GameEventHandler implements UnaryHandler{
         this.turnStart = turnStart;
     }
 
-    @Override
     public void handle(int team) {
         LOG.info("ended turn turn of {}", team);
         events.trigger(turnStart.id(), data.get(team, Components.NEXT_TEAM));

@@ -24,12 +24,13 @@ public class WalkGenerator implements ActionGenerator {
         this.positionAvailability = positionAvailability;
         this.walkAction = walkAction;
     }
+
     @Override
     public void availableActions(int actor, Consumer<Action> consumer) {
         if (data.has(actor, Components.Abilities.WALK) && data.has(actor, Components.POSITION) && data.getOptional(actor, Components.Stats.MovePoints.ACTIVE).orElse(0) >= 1) {
             int from = data.get(actor, Components.POSITION);
             for (int offset : OFFSETS) {
-                int to = from + offset;
+                int to = Coordinates.sum(from, offset);
                 if (positionAvailability.test(to)) {
                     consumer.accept(new Action(walkAction, actor, to, from));
                 }

@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Philipp
  */
-public class UpdateBuffedStatHandler extends GameEventHandler implements UnaryHandler {
+public class UpdateBuffedStatHandler extends GameEventHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(UpdateBuffedStatHandler.class);
     private final String statName;
@@ -24,7 +24,6 @@ public class UpdateBuffedStatHandler extends GameEventHandler implements UnaryHa
         this.setBuffedSupply = setBuffedSupply;
     }
 
-    @Override
     public void handle(int entity) {
         int baseValue = data.getOptional(entity, base).orElse(0);
         int additiveValue = data.query(additive).aggregate(Integer::sum, x -> data.hasValue(x, Components.BUFF_ON, entity)).orElse(0);

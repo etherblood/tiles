@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Philipp
  */
-public class SetComponentHandler extends GameEventHandler implements BinaryHandler {
+public class SetComponentHandler extends GameEventHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(SetComponentHandler.class);
     private final String statName;
@@ -20,7 +20,6 @@ public class SetComponentHandler extends GameEventHandler implements BinaryHandl
         this.component = component;
     }
 
-    @Override
     public void handle(int entity, int value) {
         data.setWithDefault(entity, component, value, 0);
         LOG.info("setting {} of {} to {}", statName, entity, value);

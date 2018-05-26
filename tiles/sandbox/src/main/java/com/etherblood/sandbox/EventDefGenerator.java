@@ -3,6 +3,8 @@ package com.etherblood.sandbox;
 import com.etherblood.events.ArgumentDefinition;
 import com.etherblood.events.EventDefinition;
 import com.etherblood.events.EventDefinition.EventDefinitionBuilder;
+import com.etherblood.rules.movement.Coordinates;
+import java.awt.Point;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,8 +21,9 @@ public class EventDefGenerator {
         stat("MovePoints", result);
         elementStat("Toughness", result);
         elementStat("Power", result);
-        set("Position", result);
-        event("WalkAction", result, entity("Actor"), simple("To"), simple("From"));
+//        set("Position", result);
+        event("SetPosition", result, entity("Target"), position("Position"));
+        event("WalkAction", result, entity("Actor"), position("To"), position("From"));
         event("PassTurnAction", result, entity("Actor"));
         event("RazorleafAction", result, entity("Actor"), simple("Target"));
         event("GameStart", result);
@@ -72,6 +75,10 @@ public class EventDefGenerator {
 
     private ArgumentDefinition simple(String name) {
         return new ArgumentDefinition(name, false);
+    }
+
+    private ArgumentDefinition position(String name) {
+        return new ArgumentDefinition(name, false, x -> "(" + Coordinates.x(x) + ", " + Coordinates.y(x) + ")");
     }
 
     private ArgumentDefinition entity(String name) {

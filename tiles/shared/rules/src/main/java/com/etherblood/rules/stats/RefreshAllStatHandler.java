@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Philipp
  */
-public class RefreshAllStatHandler extends GameEventHandler implements NullaryHandler {
+public class RefreshAllStatHandler extends GameEventHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(RefreshAllStatHandler.class);
 
@@ -30,7 +30,6 @@ public class RefreshAllStatHandler extends GameEventHandler implements NullaryHa
         this.resetActiveSupply = resetActiveSupply;
     }
     
-    @Override
     public void handle() {
         IntSet entities = new IntSet();
         for (int entity : data.query(base).list()) {
