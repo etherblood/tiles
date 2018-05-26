@@ -14,6 +14,14 @@ public class Components {
 
     public static ComponentDefinition[] DEFINITIONS;
 
+    public static int CONTROLLED_BY = -1;
+    public static int NEXT_TEAM = -1;
+    public static int POSITION = -1;
+    public static int BUFF_ON = -1;
+    public static int ACTIVE_TURN = -1;
+    public static int SPRITE = -1;
+    public static int MEMBER_OF = -1;
+
     static {
         List<ComponentDefinition> definitions = new ArrayList<>();
         ToIntFunction<ComponentDefinitionBuilder> generator = builder -> {
@@ -29,7 +37,7 @@ public class Components {
         NEXT_TEAM = generator.applyAsInt(ComponentDefinition.builder().withName("NextTeam"));
         POSITION = generator.applyAsInt(ComponentDefinition.builder().withName("Position"));
         BUFF_ON = generator.applyAsInt(ComponentDefinition.builder().withName("BuffOn"));
-        ACTIVE_TURN = generator.applyAsInt(ComponentDefinition.builder().withName("ActiveTurn"));
+        ACTIVE_TURN = generator.applyAsInt(ComponentDefinition.builder().withName("Active"));
         SPRITE = generator.applyAsInt(ComponentDefinition.builder().withName("Sprite"));
         MEMBER_OF = generator.applyAsInt(ComponentDefinition.builder().withName("MemberOf"));
 
@@ -57,64 +65,64 @@ public class Components {
 
             public static class Fire {
 
-                public static int BASE;
-                public static int ADDITIVE;
-                public static int ACTIVE;
-                public static int BUFFED;
+                public static int BASE = -1;
+                public static int ADDITIVE = -1;
+                public static int ACTIVE = -1;
+                public static int BUFFED = -1;
 
                 private static void init(String baseName, ToIntFunction<ComponentDefinitionBuilder> generator) {
                     BASE = generator.applyAsInt(ComponentDefinition.builder().withName(baseName + "Base"));
                     ADDITIVE = generator.applyAsInt(ComponentDefinition.builder().withName(baseName + "Additive"));
                     ACTIVE = generator.applyAsInt(ComponentDefinition.builder().withName(baseName + "Active"));
-                    BASE = generator.applyAsInt(ComponentDefinition.builder().withName(baseName + "Base"));
+                    BUFFED = generator.applyAsInt(ComponentDefinition.builder().withName(baseName + "Buffed"));
                 }
 
             }
 
             public static class Water {
 
-                public static int BASE;
-                public static int ADDITIVE;
-                public static int ACTIVE;
-                public static int BUFFED;
+                public static int BASE = -1;
+                public static int ADDITIVE = -1;
+                public static int ACTIVE = -1;
+                public static int BUFFED = -1;
 
                 private static void init(String baseName, ToIntFunction<ComponentDefinitionBuilder> generator) {
                     BASE = generator.applyAsInt(ComponentDefinition.builder().withName(baseName + "Base"));
                     ADDITIVE = generator.applyAsInt(ComponentDefinition.builder().withName(baseName + "Additive"));
                     ACTIVE = generator.applyAsInt(ComponentDefinition.builder().withName(baseName + "Active"));
-                    BASE = generator.applyAsInt(ComponentDefinition.builder().withName(baseName + "Base"));
+                    BUFFED = generator.applyAsInt(ComponentDefinition.builder().withName(baseName + "Buffed"));
                 }
 
             }
 
             public static class Earth {
 
-                public static int BASE;
-                public static int ADDITIVE;
-                public static int ACTIVE;
-                public static int BUFFED;
+                public static int BASE = -1;
+                public static int ADDITIVE = -1;
+                public static int ACTIVE = -1;
+                public static int BUFFED = -1;
 
                 private static void init(String baseName, ToIntFunction<ComponentDefinitionBuilder> generator) {
                     BASE = generator.applyAsInt(ComponentDefinition.builder().withName(baseName + "Base"));
                     ADDITIVE = generator.applyAsInt(ComponentDefinition.builder().withName(baseName + "Additive"));
                     ACTIVE = generator.applyAsInt(ComponentDefinition.builder().withName(baseName + "Active"));
-                    BASE = generator.applyAsInt(ComponentDefinition.builder().withName(baseName + "Base"));
+                    BUFFED = generator.applyAsInt(ComponentDefinition.builder().withName(baseName + "Buffed"));
                 }
 
             }
 
             public static class Air {
 
-                public static int BASE;
-                public static int ADDITIVE;
-                public static int ACTIVE;
-                public static int BUFFED;
+                public static int BASE = -1;
+                public static int ADDITIVE = -1;
+                public static int ACTIVE = -1;
+                public static int BUFFED = -1;
 
                 private static void init(String baseName, ToIntFunction<ComponentDefinitionBuilder> generator) {
                     BASE = generator.applyAsInt(ComponentDefinition.builder().withName(baseName + "Base"));
                     ADDITIVE = generator.applyAsInt(ComponentDefinition.builder().withName(baseName + "Additive"));
                     ACTIVE = generator.applyAsInt(ComponentDefinition.builder().withName(baseName + "Active"));
-                    BASE = generator.applyAsInt(ComponentDefinition.builder().withName(baseName + "Base"));
+                    BUFFED = generator.applyAsInt(ComponentDefinition.builder().withName(baseName + "Buffed"));
                 }
 
             }
@@ -131,64 +139,64 @@ public class Components {
 
             public static class Fire {
 
-                public static int BASE;
-                public static int ADDITIVE;
-                public static int ACTIVE;
-                public static int BUFFED;
+                public static int BASE = -1;
+                public static int ADDITIVE = -1;
+                public static int ACTIVE = -1;
+                public static int BUFFED = -1;
 
                 private static void init(String baseName, ToIntFunction<ComponentDefinitionBuilder> generator) {
                     BASE = generator.applyAsInt(ComponentDefinition.builder().withName(baseName + "Base"));
                     ADDITIVE = generator.applyAsInt(ComponentDefinition.builder().withName(baseName + "Additive"));
                     ACTIVE = generator.applyAsInt(ComponentDefinition.builder().withName(baseName + "Active"));
-                    BASE = generator.applyAsInt(ComponentDefinition.builder().withName(baseName + "Base"));
+                    BUFFED = generator.applyAsInt(ComponentDefinition.builder().withName(baseName + "Buffed"));
                 }
 
             }
 
             public static class Water {
 
-                public static int BASE;
-                public static int ADDITIVE;
-                public static int ACTIVE;
-                public static int BUFFED;
+                public static int BASE = -1;
+                public static int ADDITIVE = -1;
+                public static int ACTIVE = -1;
+                public static int BUFFED = -1;
 
                 private static void init(String baseName, ToIntFunction<ComponentDefinitionBuilder> generator) {
                     BASE = generator.applyAsInt(ComponentDefinition.builder().withName(baseName + "Base"));
                     ADDITIVE = generator.applyAsInt(ComponentDefinition.builder().withName(baseName + "Additive"));
                     ACTIVE = generator.applyAsInt(ComponentDefinition.builder().withName(baseName + "Active"));
-                    BASE = generator.applyAsInt(ComponentDefinition.builder().withName(baseName + "Base"));
+                    BUFFED = generator.applyAsInt(ComponentDefinition.builder().withName(baseName + "Buffed"));
                 }
 
             }
 
             public static class Earth {
 
-                public static int BASE;
-                public static int ADDITIVE;
-                public static int ACTIVE;
-                public static int BUFFED;
+                public static int BASE = -1;
+                public static int ADDITIVE = -1;
+                public static int ACTIVE = -1;
+                public static int BUFFED = -1;
 
                 private static void init(String baseName, ToIntFunction<ComponentDefinitionBuilder> generator) {
                     BASE = generator.applyAsInt(ComponentDefinition.builder().withName(baseName + "Base"));
                     ADDITIVE = generator.applyAsInt(ComponentDefinition.builder().withName(baseName + "Additive"));
                     ACTIVE = generator.applyAsInt(ComponentDefinition.builder().withName(baseName + "Active"));
-                    BASE = generator.applyAsInt(ComponentDefinition.builder().withName(baseName + "Base"));
+                    BUFFED = generator.applyAsInt(ComponentDefinition.builder().withName(baseName + "Buffed"));
                 }
 
             }
 
             public static class Air {
 
-                public static int BASE;
-                public static int ADDITIVE;
-                public static int ACTIVE;
-                public static int BUFFED;
+                public static int BASE = -1;
+                public static int ADDITIVE = -1;
+                public static int ACTIVE = -1;
+                public static int BUFFED = -1;
 
                 private static void init(String baseName, ToIntFunction<ComponentDefinitionBuilder> generator) {
                     BASE = generator.applyAsInt(ComponentDefinition.builder().withName(baseName + "Base"));
                     ADDITIVE = generator.applyAsInt(ComponentDefinition.builder().withName(baseName + "Additive"));
                     ACTIVE = generator.applyAsInt(ComponentDefinition.builder().withName(baseName + "Active"));
-                    BASE = generator.applyAsInt(ComponentDefinition.builder().withName(baseName + "Base"));
+                    BUFFED = generator.applyAsInt(ComponentDefinition.builder().withName(baseName + "Buffed"));
                 }
 
             }
@@ -196,48 +204,48 @@ public class Components {
 
         public static class Health {
 
-            public static int BASE;
-            public static int ADDITIVE;
-            public static int ACTIVE;
-            public static int BUFFED;
+            public static int BASE = -1;
+            public static int ADDITIVE = -1;
+            public static int ACTIVE = -1;
+            public static int BUFFED = -1;
 
             private static void init(String baseName, ToIntFunction<ComponentDefinitionBuilder> generator) {
                 BASE = generator.applyAsInt(ComponentDefinition.builder().withName(baseName + "Base"));
                 ADDITIVE = generator.applyAsInt(ComponentDefinition.builder().withName(baseName + "Additive"));
                 ACTIVE = generator.applyAsInt(ComponentDefinition.builder().withName(baseName + "Active"));
-                BASE = generator.applyAsInt(ComponentDefinition.builder().withName(baseName + "Base"));
+                BUFFED = generator.applyAsInt(ComponentDefinition.builder().withName(baseName + "Buffed"));
             }
 
         }
 
         public static class ActionPoints {
 
-            public static int BASE;
-            public static int ADDITIVE;
-            public static int ACTIVE;
-            public static int BUFFED;
+            public static int BASE = -1;
+            public static int ADDITIVE = -1;
+            public static int ACTIVE = -1;
+            public static int BUFFED = -1;
 
             private static void init(String baseName, ToIntFunction<ComponentDefinitionBuilder> generator) {
                 BASE = generator.applyAsInt(ComponentDefinition.builder().withName(baseName + "Base"));
                 ADDITIVE = generator.applyAsInt(ComponentDefinition.builder().withName(baseName + "Additive"));
                 ACTIVE = generator.applyAsInt(ComponentDefinition.builder().withName(baseName + "Active"));
-                BASE = generator.applyAsInt(ComponentDefinition.builder().withName(baseName + "Base"));
+                BUFFED = generator.applyAsInt(ComponentDefinition.builder().withName(baseName + "Buffed"));
             }
 
         }
 
         public static class MovePoints {
 
-            public static int BASE;
-            public static int ADDITIVE;
-            public static int ACTIVE;
-            public static int BUFFED;
+            public static int BASE = -1;
+            public static int ADDITIVE = -1;
+            public static int ACTIVE = -1;
+            public static int BUFFED = -1;
 
             private static void init(String baseName, ToIntFunction<ComponentDefinitionBuilder> generator) {
                 BASE = generator.applyAsInt(ComponentDefinition.builder().withName(baseName + "Base"));
                 ADDITIVE = generator.applyAsInt(ComponentDefinition.builder().withName(baseName + "Additive"));
                 ACTIVE = generator.applyAsInt(ComponentDefinition.builder().withName(baseName + "Active"));
-                BASE = generator.applyAsInt(ComponentDefinition.builder().withName(baseName + "Base"));
+                BUFFED = generator.applyAsInt(ComponentDefinition.builder().withName(baseName + "Base"));
             }
 
         }
@@ -245,9 +253,9 @@ public class Components {
 
     public static class Abilities {
 
-        public static int PASS_TURN;
-        public static int WALK;
-        public static int RAZORLEAF;
+        public static int PASS_TURN = -1;
+        public static int WALK = -1;
+        public static int RAZORLEAF = -1;
 
         private static void init(String baseName, ToIntFunction<ComponentDefinitionBuilder> generator) {
             PASS_TURN = generator.applyAsInt(ComponentDefinition.builder().withName(baseName + "PassTurn"));
@@ -258,8 +266,8 @@ public class Components {
 
     public static class Arena {
 
-        public static int SIZE;
-        public static int OBSTACLE;
+        public static int SIZE = -1;
+        public static int OBSTACLE = -1;
 
         private static void init(String baseName, ToIntFunction<ComponentDefinitionBuilder> generator) {
             SIZE = generator.applyAsInt(ComponentDefinition.builder().withName(baseName + "Size"));
@@ -267,12 +275,4 @@ public class Components {
         }
 
     }
-
-    public static int CONTROLLED_BY;
-    public static int NEXT_TEAM;
-    public static int POSITION;
-    public static int BUFF_ON;
-    public static int ACTIVE_TURN;
-    public static int SPRITE;
-    public static int MEMBER_OF;
 }

@@ -20,7 +20,7 @@ public class EventDefGenerator {
         stat("MovePoints", result);
         elementStat("Toughness", result);
         elementStat("Power", result);
-//        set("Position", result);
+        set("Active", result);
         event("SetPosition", result, entity("Target"), position("Position"));
         event("WalkAction", result, entity("Actor"), position("To"), position("From"));
         event("PassTurnAction", result, entity("Actor"));

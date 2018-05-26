@@ -54,7 +54,7 @@ public class Main {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) throws IOException, IllegalArgumentException, IllegalAccessException {
+    public static void main(String[] args) throws IllegalArgumentException, IOException {
         System.setProperty("org.slf4j.simpleLogger.logFile", "System.out");
         System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "debug");
         String matchName = "matchName";
@@ -99,6 +99,8 @@ public class Main {
 
         dispatcher.setBinaryHandlers(eventMap.get("SetPosition"),
                 dispatcher.init(new SetComponentHandler("position", Components.POSITION))::handle);
+        dispatcher.setBinaryHandlers(eventMap.get("SetActive"),
+                dispatcher.init(new SetComponentHandler("active", Components.ACTIVE_TURN))::handle);
 
         dispatcher.setBinaryHandlers(eventMap.get("EarthDamage"),
                 dispatcher.init(new DamageHandler())::handle);
@@ -130,12 +132,11 @@ public class Main {
                 dispatcher.init(new RefreshAllStatHandler("waterToughness", Components.Stats.Toughness.Water.BASE, Components.Stats.Toughness.Water.ACTIVE, Components.Stats.Toughness.Water.BUFFED, Components.Stats.Toughness.Water.ADDITIVE, eventMap.get("UpdateBuffedWaterToughness").id(), eventMap.get("ResetActiveWaterToughness").id()))::handle,
                 dispatcher.init(new StartTurnOfRandomTeamHandler(eventMap.get("TurnStart")))::handle);
         dispatcher.setUnaryHandlers(eventMap.get("TurnEnd"),
-//                dispatcher.init(new ResetActiveStatHandler("movePoints", Components.Stats.MovePoints.BUFFED, eventMap.get("SetActiveMovePoints").id()))::handle,
-//                dispatcher.init(new ResetActiveStatHandler("actionPoints", Components.Stats.ActionPoints.BUFFED, eventMap.get("SetActiveActionPoints").id()))::handle,
-                dispatcher.init(new TurnEndHandler(eventMap.get("TurnStart")))::handle);
+                dispatcher.init(new TurnEndHandler(eventMap.get("TurnStart").id(), eventMap.get("ResetActiveActionPoints").id(), eventMap.get("ResetActiveMovePoints").id()))::handle);
 
         dispatcher.setUnaryHandlers(eventMap.get("TurnStart"),
-                dispatcher.init(new TurnStartHandler())::handle);
+                dispatcher.init(new TurnStartHandler(
+                        eventMap.get("SetActive").id()))::handle);
 
         Pokemons pokemons = new Pokemons(data);
 
@@ -227,10 +228,10 @@ public class Main {
         }
     }
 
-    private static Action chooseAction(EntityData data, int activeTurn, ActionGenerator actions, EventDefinition[] events, Map<Integer, Character> actorShortcuts) {
+    private static Action chooseAction(EntityData data, int active, ActionGenerator actions, EventDefinition[] events, Map<Integer, Character> actorShortcuts) {
         Scanner scanner = new Scanner(System.in);
         while (true) {
-            IntArrayList actors = data.query(activeTurn).list();
+            IntArrayList actors = data.query(active).list();
             System.out.println("choose actor:");
             for (int i = 0; i < actors.size(); i++) {
                 int actor = actors.get(i);

@@ -14,10 +14,16 @@ public class TurnStartHandler extends GameEventHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(TurnStartHandler.class);
 
+    private final int setActiveEvent;
+
+    public TurnStartHandler(int setActiveEvent) {
+        this.setActiveEvent = setActiveEvent;
+    }
+
     public void handle(int team) {
-        IntArrayList actors = data.query(Components.MEMBER_OF).list(x -> data.hasValue(x, Components.MEMBER_OF, team));
-        LOG.info("setting activeTurn for members of team {}: {}", team, actors);
-        actors.forEach(x -> data.set(x, Components.ACTIVE_TURN, 0));
+        IntArrayList actors = data.query(Components.MEMBER_OF).list(hasValue(Components.MEMBER_OF, team));
+        LOG.info("setting active for members of team {}: {}", team, actors);
+        actors.forEach(x -> events.response(setActiveEvent, x, 1));
     }
 
 }
