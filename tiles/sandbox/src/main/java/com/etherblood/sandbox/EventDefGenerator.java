@@ -4,7 +4,6 @@ import com.etherblood.events.ArgumentDefinition;
 import com.etherblood.events.EventDefinition;
 import com.etherblood.events.EventDefinition.EventDefinitionBuilder;
 import com.etherblood.rules.movement.Coordinates;
-import java.awt.Point;
 import java.util.HashMap;
 import java.util.Map;
 

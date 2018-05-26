@@ -1,6 +1,5 @@
 package com.etherblood.rules.abilities.razorleaf;
 
-import com.etherblood.events.handlers.BinaryHandler;
 import com.etherblood.rules.GameEventHandler;
 import com.etherblood.rules.components.Components;
 import org.slf4j.Logger;

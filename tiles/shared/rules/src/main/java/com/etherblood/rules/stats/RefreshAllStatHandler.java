@@ -2,7 +2,6 @@ package com.etherblood.rules.stats;
 
 import com.etherblood.collections.IntArrayList;
 import com.etherblood.collections.IntSet;
-import com.etherblood.events.handlers.NullaryHandler;
 import com.etherblood.rules.GameEventHandler;
 import com.etherblood.rules.components.Components;
 import org.slf4j.Logger;

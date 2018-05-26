@@ -1,6 +1,5 @@
 package com.etherblood.rules.stats;
 
-import com.etherblood.events.handlers.UnaryHandler;
 import com.etherblood.rules.GameEventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

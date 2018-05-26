@@ -37,7 +37,7 @@ public class GameEventDispatcher {
     public final void setNullaryHandlers(EventDefinition event, NullaryHandler... handlers) {
         int eventId = event.id();
         if (event.argumentCount() != 0) {
-            throw new IllegalArgumentException("tried to register nullary handlers for event " + event.getName() + " which has " + event.argumentCount() + " arguments")
+            throw new IllegalArgumentException("tried to register nullary handlers for event " + event.getName() + " which has " + event.argumentCount() + " arguments");
         }
         queue.registerHandlers(eventId, handlers);
     }
@@ -45,7 +45,7 @@ public class GameEventDispatcher {
     public final void setUnaryHandlers(EventDefinition event, UnaryHandler... handlers) {
         int eventId = event.id();
         if (event.argumentCount() != 1) {
-            throw new IllegalArgumentException("tried to register unary handlers for event " + event.getName() + " which has " + event.argumentCount() + " arguments")
+            throw new IllegalArgumentException("tried to register unary handlers for event " + event.getName() + " which has " + event.argumentCount() + " arguments");
         }
         queue.registerHandlers(eventId, handlers);
     }
@@ -53,7 +53,7 @@ public class GameEventDispatcher {
     public final void setBinaryHandlers(EventDefinition event, BinaryHandler... handlers) {
         int eventId = event.id();
         if (event.argumentCount() != 2) {
-            throw new IllegalArgumentException("tried to register binary handlers for event " + event.getName() + " which has " + event.argumentCount() + " arguments")
+            throw new IllegalArgumentException("tried to register binary handlers for event " + event.getName() + " which has " + event.argumentCount() + " arguments");
         }
         queue.registerHandlers(eventId, handlers);
     }
@@ -61,7 +61,7 @@ public class GameEventDispatcher {
     public final void setTernaryHandlers(EventDefinition event, TernaryHandler... handlers) {
         int eventId = event.id();
         if (event.argumentCount() != 3) {
-            throw new IllegalArgumentException("tried to register ternary handlers for event " + event.getName() + " which has " + event.argumentCount() + " arguments")
+            throw new IllegalArgumentException("tried to register ternary handlers for event " + event.getName() + " which has " + event.argumentCount() + " arguments");
         }
         queue.registerHandlers(eventId, handlers);
     }

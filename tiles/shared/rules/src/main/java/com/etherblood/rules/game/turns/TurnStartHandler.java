@@ -1,7 +1,6 @@
 package com.etherblood.rules.game.turns;
 
 import com.etherblood.collections.IntArrayList;
-import com.etherblood.events.handlers.UnaryHandler;
 import com.etherblood.rules.GameEventHandler;
 import com.etherblood.rules.components.Components;
 import org.slf4j.Logger;

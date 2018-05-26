@@ -1,8 +1,5 @@
 package com.etherblood.rules.components;
 
-import com.etherblood.entities.ComponentDefinition;
-import com.etherblood.rules.stats.Elements;
-
 /**
  *
  * @author Philipp
