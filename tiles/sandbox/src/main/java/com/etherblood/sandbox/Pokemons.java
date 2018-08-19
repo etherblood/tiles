@@ -1,6 +1,6 @@
 package com.etherblood.sandbox;
 
-import com.etherblood.entities.SimpleEntityData;
+import com.etherblood.entities.EntityData;
 import com.etherblood.rules.components.Components;
 
 /**
@@ -9,9 +9,9 @@ import com.etherblood.rules.components.Components;
  */
 public class Pokemons {
 
-    private final SimpleEntityData data;
+    private final EntityData data;
 
-    public Pokemons(SimpleEntityData data) {
+    public Pokemons(EntityData data) {
         this.data = data;
     }
 

@@ -3,7 +3,6 @@ package com.etherblood.entities;
 import com.etherblood.collections.MapBuilder;
 import java.util.Arrays;
 import java.util.Map;
-import java.util.stream.Collectors;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -11,7 +10,7 @@ import org.junit.Test;
  *
  * @author Philipp
  */
-public abstract class EntityQueryTest {
+public abstract class AbstractEntityQueryTest {
 
     protected abstract EntityQuery createInstance(Map<Integer, Integer> map);
 
@@ -96,14 +95,6 @@ public abstract class EntityQueryTest {
         query.unique();
     }
 
-//    @Test
-//    public void list_IntArrayList_IntPredicate() {
-//    }
-//
-//    @Test
-//    public void list_IntArrayList() {
-//    }
-
     @Test
     public void list_IntPredicate() {
         EntityQuery query = createInstance(new MapBuilder<Integer, Integer>()
@@ -111,7 +102,7 @@ public abstract class EntityQueryTest {
                 .with(0, 7)
                 .with(2, 7)
                 .build());
-        Assert.assertEquals(Arrays.asList(0, 1), query.list(x -> x != 2).stream().boxed().collect(Collectors.toList()));
+        Assert.assertEquals(Arrays.asList(0, 1), query.list(x -> x != 2).boxed());
     }
 
     @Test
@@ -120,7 +111,7 @@ public abstract class EntityQueryTest {
                 .with(1, 7)
                 .with(0, 7)
                 .build());
-        Assert.assertEquals(Arrays.asList(0, 1), query.list().stream().boxed().collect(Collectors.toList()));
+        Assert.assertEquals(Arrays.asList(0, 1), query.list().boxed());
     }
 
 }

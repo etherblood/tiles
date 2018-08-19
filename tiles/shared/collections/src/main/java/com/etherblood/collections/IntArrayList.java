@@ -1,9 +1,11 @@
 package com.etherblood.collections;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.PrimitiveIterator;
 import java.util.Random;
 import java.util.function.IntConsumer;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 /**
@@ -108,6 +110,10 @@ public class IntArrayList implements Iterable<Integer> {
 
     public int[] data() {
         return data;
+    }
+    
+    public List<Integer> boxed() {
+        return Arrays.stream(data, 0, size).boxed().collect(Collectors.toList());
     }
 
     public void foreach(IntConsumer consumer) {

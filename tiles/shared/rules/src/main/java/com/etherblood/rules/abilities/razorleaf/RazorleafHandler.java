@@ -1,7 +1,9 @@
 package com.etherblood.rules.abilities.razorleaf;
 
-import com.etherblood.rules.GameEventHandler;
+import com.etherblood.events.handlers.EventHandler;
+import com.etherblood.rules.AbstractGameEventHandler;
 import com.etherblood.rules.components.Components;
+import com.etherblood.rules.events.EntityValueEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -9,7 +11,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Philipp
  */
-public class RazorleafHandler extends GameEventHandler {
+public class RazorleafHandler extends AbstractGameEventHandler implements EventHandler<EntityValueEvent> {
 
     private static final Logger LOG = LoggerFactory.getLogger(RazorleafHandler.class);
 
@@ -26,15 +28,20 @@ public class RazorleafHandler extends GameEventHandler {
         assert ap >= cost;
         LOG.info("used {} ap of {}", cost, actor);
         data.set(actor, Components.Stats.ActionPoints.ACTIVE, ap - cost);
-        events.response(earthDamageEvent, target, attack(level));
+        events.response(new EntityValueEvent(earthDamageEvent, target, attack(level)));
     }
-    
+
     public static int apCost(int level) {
         return 3;
     }
-    
+
     public static int attack(int level) {
         return level;
+    }
+
+    @Override
+    public void handle(EntityValueEvent event) {
+        handle(event.entity, event.value);
     }
 
 }

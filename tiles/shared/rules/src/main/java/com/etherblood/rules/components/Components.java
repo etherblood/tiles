@@ -18,7 +18,8 @@ public class Components {
     public static int NEXT_TEAM = -1;
     public static int POSITION = -1;
     public static int BUFF_ON = -1;
-    public static int ACTIVE_TURN = -1;
+    public static int ACTIVE_PLAYER = -1;
+    public static int ACTIVE_TEAM = -1;
     public static int SPRITE = -1;
     public static int MEMBER_OF = -1;
 
@@ -37,7 +38,8 @@ public class Components {
         NEXT_TEAM = generator.applyAsInt(ComponentDefinition.builder().withName("NextTeam"));
         POSITION = generator.applyAsInt(ComponentDefinition.builder().withName("Position"));
         BUFF_ON = generator.applyAsInt(ComponentDefinition.builder().withName("BuffOn"));
-        ACTIVE_TURN = generator.applyAsInt(ComponentDefinition.builder().withName("Active"));
+        ACTIVE_PLAYER = generator.applyAsInt(ComponentDefinition.builder().withName("ActivePlayer"));
+        ACTIVE_TEAM = generator.applyAsInt(ComponentDefinition.builder().withName("ActiveTeam"));
         SPRITE = generator.applyAsInt(ComponentDefinition.builder().withName("Sprite"));
         MEMBER_OF = generator.applyAsInt(ComponentDefinition.builder().withName("MemberOf"));
 

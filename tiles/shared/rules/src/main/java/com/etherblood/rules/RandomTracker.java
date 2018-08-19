@@ -7,7 +7,7 @@ import java.util.Random;
  *
  * @author Philipp
  */
-public class RandomTracker {
+public class RandomTracker implements RandomInts {
 
     private final IntArrayList list = new IntArrayList();
     private final Random random;
@@ -16,12 +16,14 @@ public class RandomTracker {
         this.random = random;
     }
 
+    @Override
     public int nextInt() {
         int value = random.nextInt();
         list.add(value);
         return value;
     }
 
+    @Override
     public int nextInt(int bound) {
         int value = random.nextInt(bound);
         list.add(value);

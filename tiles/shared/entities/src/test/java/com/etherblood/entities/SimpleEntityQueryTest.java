@@ -7,7 +7,7 @@ import java.util.Map;
  *
  * @author Philipp
  */
-public class SimpleEntityQueryTest extends EntityQueryTest {
+public class SimpleEntityQueryTest extends AbstractEntityQueryTest {
 
     @Override
     protected EntityQuery createInstance(Map<Integer, Integer> map) {

@@ -1,6 +1,6 @@
 package com.etherblood.rules.abilities;
 
-import java.util.Arrays;
+import com.etherblood.events.Event;
 
 /**
  *
@@ -8,19 +8,16 @@ import java.util.Arrays;
  */
 public class Action {
 
-    public final int eventId;
-    public final int[] eventArgs;
+    public final Event event;
 
-    public Action(int eventId, int... eventArgs) {
-        this.eventId = eventId;
-        this.eventArgs = eventArgs;
+    public Action(Event event) {
+        this.event = event;
     }
 
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 79 * hash + this.eventId;
-        hash = 79 * hash + Arrays.hashCode(this.eventArgs);
+        hash = 79 * hash + this.event.hashCode();
         return hash;
     }
 
@@ -33,6 +30,6 @@ public class Action {
             return false;
         }
         Action other = (Action) obj;
-        return eventId == other.eventId && Arrays.equals(this.eventArgs, other.eventArgs);
+        return event.equals(other.event);
     }
 }

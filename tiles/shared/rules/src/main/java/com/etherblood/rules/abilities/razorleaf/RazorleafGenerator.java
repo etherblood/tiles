@@ -1,9 +1,10 @@
 package com.etherblood.rules.abilities.razorleaf;
 
-import com.etherblood.entities.SimpleEntityData;
+import com.etherblood.entities.EntityData;
 import com.etherblood.rules.abilities.Action;
 import com.etherblood.rules.abilities.ActionGenerator;
 import com.etherblood.rules.components.Components;
+import com.etherblood.rules.events.EntityValueEvent;
 import com.etherblood.rules.movement.Coordinates;
 import java.util.function.Consumer;
 
@@ -13,10 +14,10 @@ import java.util.function.Consumer;
  */
 public class RazorleafGenerator implements ActionGenerator {
 
-    private final SimpleEntityData data;
+    private final EntityData data;
     private final int razorleafAction;
 
-    public RazorleafGenerator(SimpleEntityData data, int razorleafAction) {
+    public RazorleafGenerator(EntityData data, int razorleafAction) {
         this.data = data;
         this.razorleafAction = razorleafAction;
     }
@@ -33,7 +34,7 @@ public class RazorleafGenerator implements ActionGenerator {
                 int targetPosition = data.get(targetCandidate, Components.POSITION);
                 int distance = Coordinates.manhattenDistance(sourcePosition, targetPosition);
                 if (minRange <= distance && distance <= maxRange) {
-                    consumer.accept(new Action(razorleafAction, actor, targetCandidate));
+                    consumer.accept(new Action(new EntityValueEvent(razorleafAction, actor, targetCandidate)));
                 }
             }
         }

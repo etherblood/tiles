@@ -1,9 +1,10 @@
-package com.etherblood.rules.abilities.endTurn;
+package com.etherblood.rules.abilities.passTurn;
 
 import com.etherblood.entities.EntityData;
 import com.etherblood.rules.abilities.Action;
 import com.etherblood.rules.abilities.ActionGenerator;
 import com.etherblood.rules.components.Components;
+import com.etherblood.rules.events.EntityEvent;
 import java.util.function.Consumer;
 
 /**
@@ -23,7 +24,7 @@ public class PassTurnGenerator implements ActionGenerator {
     @Override
     public void availableActions(int actor, Consumer<Action> consumer) {
         if (data.has(actor, Components.Abilities.PASS_TURN)) {
-            consumer.accept(new Action(passTurnAction, actor));
+            consumer.accept(new Action(new EntityEvent(passTurnAction, actor)));
         }
     }
 

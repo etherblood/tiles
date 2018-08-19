@@ -2,8 +2,11 @@ package com.etherblood.rules.stats;
 
 import com.etherblood.collections.IntArrayList;
 import com.etherblood.collections.IntSet;
-import com.etherblood.rules.GameEventHandler;
+import com.etherblood.events.handlers.EventHandler;
+import com.etherblood.rules.AbstractGameEventHandler;
 import com.etherblood.rules.components.Components;
+import com.etherblood.rules.events.EntityEvent;
+import com.etherblood.rules.events.VoidEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,7 +14,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Philipp
  */
-public class RefreshAllStatHandler extends GameEventHandler {
+public class RefreshAllStatHandler extends AbstractGameEventHandler implements EventHandler<VoidEvent> {
 
     private static final Logger LOG = LoggerFactory.getLogger(RefreshAllStatHandler.class);
 
@@ -28,7 +31,7 @@ public class RefreshAllStatHandler extends GameEventHandler {
         this.updateBuffedSupply = updateBuffedSupply;
         this.resetActiveSupply = resetActiveSupply;
     }
-    
+
     public void handle() {
         IntSet entities = new IntSet();
         for (int entity : data.query(base).list()) {
@@ -47,15 +50,20 @@ public class RefreshAllStatHandler extends GameEventHandler {
         IntArrayList list = new IntArrayList(entities.size());
         entities.foreach(list::add);
         list.sort();
-        
+
         LOG.info("refreshing {} for {}", statName, list);
 
         list.foreach(entity -> {
-            events.trigger(updateBuffedSupply, entity);
+            events.sub(new EntityEvent(updateBuffedSupply, entity));
         });
         list.foreach(entity -> {
-            events.trigger(resetActiveSupply, entity);
+            events.sub(new EntityEvent(resetActiveSupply, entity));
         });
+    }
+
+    @Override
+    public void handle(VoidEvent event) {
+        handle();
     }
 
 }

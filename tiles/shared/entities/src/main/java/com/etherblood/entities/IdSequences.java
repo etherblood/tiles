@@ -24,20 +24,22 @@ public class IdSequences {
             }
         };
     }
-    
+
     public static IntSupplier simple1() {
-        return linearCongruentialGenerator(0x01e56038, 69069, 1);
-    }
-    public static IntSupplier simple2() {
-        return linearCongruentialGenerator(0x01e56038, 1664525, 1013904223);
-    }
-    public static IntSupplier simple3() {
-        return linearCongruentialGenerator(0x01e56038, 22695477, 1);
+        return linearCongruentialGenerator(69069, 1);
     }
 
-    private static IntSupplier linearCongruentialGenerator(int initialState, int multiplier, int increment) {
+    public static IntSupplier simple2() {
+        return linearCongruentialGenerator(1664525, 1013904223);
+    }
+
+    public static IntSupplier simple3() {
+        return linearCongruentialGenerator(22695477, 1);
+    }
+
+    private static IntSupplier linearCongruentialGenerator(int multiplier, int increment) {
         return new IntSupplier() {
-            private int state = initialState;
+            private int state = 0;
 
             @Override
             public int getAsInt() {
