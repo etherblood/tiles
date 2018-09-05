@@ -2,7 +2,6 @@ package com.etherblood.entities;
 
 import com.etherblood.collections.IntArrayList;
 import java.util.OptionalInt;
-import java.util.function.IntBinaryOperator;
 import java.util.function.IntPredicate;
 
 /**
@@ -25,10 +24,10 @@ public interface EntityQuery {
         return exists(x -> true);
     }
 
-    OptionalInt aggregate(IntBinaryOperator operator, IntPredicate predicate);
+    int sum(IntPredicate predicate);
 
-    default OptionalInt aggregate(IntBinaryOperator operator) {
-        return aggregate(operator, x -> true);
+    default int sum() {
+        return sum(x -> true);
     }
 
     OptionalInt unique(IntPredicate predicate);

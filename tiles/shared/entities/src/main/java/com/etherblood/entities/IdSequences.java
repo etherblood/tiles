@@ -1,6 +1,7 @@
 package com.etherblood.entities;
 
 import com.etherblood.collections.IntSet;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.IntSupplier;
 
 /**
@@ -23,6 +24,10 @@ public class IdSequences {
                 return id;
             }
         };
+    }
+    
+    public static IntSupplier incremental() {
+        return new AtomicInteger(0)::getAndIncrement;
     }
 
     public static IntSupplier simple1() {

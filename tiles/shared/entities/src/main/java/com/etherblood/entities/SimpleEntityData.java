@@ -12,10 +12,10 @@ public class SimpleEntityData implements EntityData {
     private final IntSupplier idSequence;
     private final ComponentMap[] map;
 
-    public SimpleEntityData(ComponentDefinition[] componentDetails, IntSupplier idSequence) {
+    public SimpleEntityData(int componentCount, IntSupplier idSequence) {
         this.idSequence = idSequence;
-        this.map = new SimpleComponentMap[componentDetails.length];
-        for (int component = 0; component < map.length; component++) {
+        this.map = new SimpleComponentMap[componentCount];
+        for (int component = 0; component < componentCount; component++) {
             map[component] = new SimpleComponentMap();
         }
     }

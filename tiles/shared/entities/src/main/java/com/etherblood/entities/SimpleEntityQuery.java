@@ -4,9 +4,6 @@ import com.etherblood.collections.IntArrayList;
 import com.etherblood.collections.IntToIntMap;
 import java.util.OptionalInt;
 import java.util.PrimitiveIterator;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.IntBinaryOperator;
 import java.util.function.IntPredicate;
 
 /**
@@ -23,13 +20,15 @@ public class SimpleEntityQuery implements EntityQuery {
 
     @Override
     public int count(IntPredicate predicate) {
-        AtomicInteger count = new AtomicInteger(0);
-        source.foreachKey(x -> {
-            if (predicate.test(x)) {
-                count.incrementAndGet();
+        int count = 0;
+        PrimitiveIterator.OfInt iterator = source.iterator();
+        while (iterator.hasNext()) {
+            int key = iterator.nextInt();
+            if (predicate.test(key)) {
+                count++;
             }
-        });
-        return count.get();
+        }
+        return count;
     }
 
     @Override
@@ -54,20 +53,16 @@ public class SimpleEntityQuery implements EntityQuery {
     }
 
     @Override
-    public OptionalInt aggregate(IntBinaryOperator operator, IntPredicate predicate) {
-        AtomicInteger state = new AtomicInteger();
-        AtomicBoolean first = new AtomicBoolean(true);
-        source.foreach((entity, value) -> {
-            if (predicate.test(entity)) {
-                if (first.get()) {
-                    state.set(value);
-                    first.set(false);
-                } else {
-                    state.accumulateAndGet(value, operator);
-                }
+    public int sum(IntPredicate predicate) {
+        int sum = 0;
+        PrimitiveIterator.OfInt iterator = source.iterator();
+        while (iterator.hasNext()) {
+            int key = iterator.nextInt();
+            if (predicate.test(key)) {
+                sum += source.get(key);
             }
-        });
-        return first.get() ? OptionalInt.empty() : OptionalInt.of(state.get());
+        }
+        return sum;
     }
 
     @Override
@@ -83,18 +78,20 @@ public class SimpleEntityQuery implements EntityQuery {
 
     @Override
     public OptionalInt unique(IntPredicate predicate) {
-        AtomicInteger state = new AtomicInteger();
-        AtomicBoolean found = new AtomicBoolean(false);
-        source.foreach((entity, value) -> {
-            if (predicate.test(entity)) {
-                if (found.get()) {
+        int result = -1;
+        boolean found = false;
+        PrimitiveIterator.OfInt iterator = source.iterator();
+        while (iterator.hasNext()) {
+            int key = iterator.nextInt();
+            if (predicate.test(key)) {
+                if (found) {
                     throw new IllegalStateException("multiple results found for unique query");
                 } else {
-                    state.set(entity);
-                    found.set(true);
+                    result = key;
+                    found = true;
                 }
             }
-        });
-        return found.get() ? OptionalInt.of(state.get()) : OptionalInt.empty();
+        }
+        return found ? OptionalInt.of(result) : OptionalInt.empty();
     }
 }

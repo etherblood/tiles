@@ -52,22 +52,22 @@ public abstract class AbstractEntityQueryTest {
     }
 
     @Test
-    public void aggregate_IntPredicate() {
+    public void sum_IntPredicate() {
         EntityQuery query = createInstance(new MapBuilder<Integer, Integer>()
                 .with(0, 5)
                 .with(1, 7)
                 .with(2, 19)
                 .build());
-        Assert.assertEquals(12, query.aggregate(Integer::sum, x -> x != 2).getAsInt());
+        Assert.assertEquals(12, query.sum(x -> x != 2));
     }
 
     @Test
-    public void aggregate() {
+    public void sum() {
         EntityQuery query = createInstance(new MapBuilder<Integer, Integer>()
                 .with(0, 5)
                 .with(1, 7)
                 .build());
-        Assert.assertEquals(12, query.aggregate(Integer::sum).getAsInt());
+        Assert.assertEquals(12, query.sum());
     }
 
     @Test

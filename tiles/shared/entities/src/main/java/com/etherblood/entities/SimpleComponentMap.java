@@ -1,7 +1,6 @@
 package com.etherblood.entities;
 
 import com.etherblood.collections.IntToIntMap;
-import java.util.OptionalInt;
 
 /**
  *
@@ -19,8 +18,7 @@ public class SimpleComponentMap implements ComponentMap {
 
     @Override
     public boolean hasValue(int entity, int value) {
-        OptionalInt optional = getOptional(entity);
-        return optional.isPresent() && optional.getAsInt() == value;
+        return components.getOrElse(entity, ~value) == value;
     }
 
     @Override

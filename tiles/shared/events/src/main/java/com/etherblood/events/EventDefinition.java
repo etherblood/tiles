@@ -6,7 +6,7 @@ import java.util.function.Function;
  *
  * @author Philipp
  */
-public class EventDefinition<T extends Event> {
+public class EventDefinition<T extends Event> implements EventMeta<T> {
 
     private final int id;
     private final String name;
@@ -22,10 +22,12 @@ public class EventDefinition<T extends Event> {
         this.stringify = stringify;
     }
 
-    public String getName() {
+    @Override
+    public String name() {
         return name;
     }
 
+    @Override
     public int id() {
         return id;
     }
