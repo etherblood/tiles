@@ -2,7 +2,7 @@ package com.etherblood.rules.components;
 
 import com.etherblood.entities.EntityData;
 import com.etherblood.events.Event;
-import com.etherblood.events.EventDefinition;
+import com.etherblood.events.EventMeta;
 import com.etherblood.events.EventQueue;
 import com.etherblood.events.handlers.EventHandler;
 import com.etherblood.rules.AbstractGameEventHandler;
@@ -32,7 +32,7 @@ public class GameEventDispatcher {
     }
 
     @SafeVarargs
-    public final <T extends Event> void setHandlers(EventDefinition<T> event, EventHandler<T>... handlers) {
+    public final <T extends Event> void setHandlers(EventMeta<T> event, EventHandler<T>... handlers) {
         queue.setHandlers(event.id(), handlers);
     }
 

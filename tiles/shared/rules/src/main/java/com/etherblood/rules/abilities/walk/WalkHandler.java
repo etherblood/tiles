@@ -1,11 +1,10 @@
 package com.etherblood.rules.abilities.walk;
 
-import com.etherblood.events.EventDefinition;
+import com.etherblood.entities.ComponentMeta;
 import com.etherblood.events.handlers.EventHandler;
 import com.etherblood.rules.AbstractGameEventHandler;
-import com.etherblood.rules.components.Components;
 import com.etherblood.rules.events.EntityMoveEvent;
-import com.etherblood.rules.events.EntityValueEvent;
+import com.etherblood.rules.events.EntityValueEventMeta;
 import com.etherblood.rules.movement.Coordinates;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,20 +16,21 @@ import org.slf4j.LoggerFactory;
 public class WalkHandler extends AbstractGameEventHandler implements EventHandler<EntityMoveEvent> {
 
     private static final Logger LOG = LoggerFactory.getLogger(WalkHandler.class);
-    private final EventDefinition setPosition;
+    private final EntityValueEventMeta setPosition;
+    private final ComponentMeta movePointsComponent;
 
-    public WalkHandler(EventDefinition setPosition) {
+    public WalkHandler(EntityValueEventMeta setPosition, ComponentMeta movePoints) {
         this.setPosition = setPosition;
+        this.movePointsComponent = movePoints;
     }
 
     public void handle(int actor, int from, int to) {
-        assert data.has(actor, Components.ACTIVE_PLAYER);
         assert Coordinates.manhattenDistance(from, to) == 1;
-        int movePoints = data.getOptional(actor, Components.Stats.MovePoints.ACTIVE).orElse(0);
+        int movePoints = data.getOptional(actor, movePointsComponent.id).orElse(0);
         assert movePoints >= 1;
         LOG.info("used 1 mp of {}", actor);
-        data.set(actor, Components.Stats.MovePoints.ACTIVE, movePoints - 1);
-        events.response(new EntityValueEvent(setPosition.id(), actor, to));
+        data.set(actor, movePointsComponent.id, movePoints - 1);
+        events.response(setPosition.create(actor, to));
     }
 
     @Override

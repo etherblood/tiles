@@ -1,9 +1,10 @@
 package com.etherblood.rules.stats;
 
+import com.etherblood.entities.ComponentMeta;
 import com.etherblood.events.handlers.EventHandler;
 import com.etherblood.rules.AbstractGameEventHandler;
 import com.etherblood.rules.events.EntityEvent;
-import com.etherblood.rules.events.EntityValueEvent;
+import com.etherblood.rules.events.EntityValueEventMeta;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,10 +17,10 @@ public class ResetActiveStatHandler extends AbstractGameEventHandler implements 
     private static final Logger LOG = LoggerFactory.getLogger(ResetActiveStatHandler.class);
 
     private final String statName;
-    private final int buffed;
-    private final int setActiveSupply;
+    private final ComponentMeta buffed;
+    private final EntityValueEventMeta setActiveSupply;
 
-    public ResetActiveStatHandler(String statName, int buffed, int setActiveEvent) {
+    public ResetActiveStatHandler(String statName, ComponentMeta buffed, EntityValueEventMeta setActiveEvent) {
         this.statName = statName;
         this.buffed = buffed;
         this.setActiveSupply = setActiveEvent;
@@ -27,7 +28,7 @@ public class ResetActiveStatHandler extends AbstractGameEventHandler implements 
 
     public void handle(int entity) {
         LOG.info("resetting {} of {}", statName, entity);
-        events.sub(new EntityValueEvent(setActiveSupply, entity, data.getOptional(entity, buffed).orElse(0)));
+        events.sub(setActiveSupply.create(entity, data.getOptional(entity, buffed.id).orElse(0)));
     }
 
     @Override

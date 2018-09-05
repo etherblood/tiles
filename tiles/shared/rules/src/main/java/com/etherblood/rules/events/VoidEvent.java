@@ -8,7 +8,7 @@ import com.etherblood.events.Event;
  */
 public class VoidEvent extends Event {
 
-    public VoidEvent(int id) {
+    VoidEvent(int id) {
         super(id);
     }
 

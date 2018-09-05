@@ -1,11 +1,11 @@
 package com.etherblood.rules.game.turns;
 
 import com.etherblood.collections.IntArrayList;
+import com.etherblood.entities.ComponentMeta;
 import com.etherblood.events.handlers.EventHandler;
 import com.etherblood.rules.AbstractGameEventHandler;
-import com.etherblood.rules.components.Components;
 import com.etherblood.rules.events.EntityEvent;
-import com.etherblood.rules.events.EntityValueEvent;
+import com.etherblood.rules.events.EntityValueEventMeta;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,19 +17,21 @@ public class TurnStartHandler extends AbstractGameEventHandler implements EventH
 
     private static final Logger LOG = LoggerFactory.getLogger(TurnStartHandler.class);
 
-    private final int setActivePlayerEvent, setActiveTeamEvent;
+    private final EntityValueEventMeta setActivePlayerEvent, setActiveTeamEvent;
+    private final ComponentMeta memberOf;
 
-    public TurnStartHandler(int setActivePlayerEvent, int setActiveTeamEvent) {
+    public TurnStartHandler(EntityValueEventMeta setActivePlayerEvent, EntityValueEventMeta setActiveTeamEvent, ComponentMeta memberOf) {
         this.setActivePlayerEvent = setActivePlayerEvent;
         this.setActiveTeamEvent = setActiveTeamEvent;
+        this.memberOf = memberOf;
     }
 
     public void handle(int team) {
-        events.sub(new EntityValueEvent(setActiveTeamEvent, team, 1));
-        IntArrayList actors = data.query(Components.MEMBER_OF).list(hasValue(Components.MEMBER_OF, team));
+        events.sub(setActiveTeamEvent.create(team, 1));
+        IntArrayList actors = data.query(memberOf.id).list(hasValue(memberOf.id, team));
         LOG.info("setting active for members of team {}: {}", team, actors);
         for (int actor : actors) {
-            events.sub(new EntityValueEvent(setActivePlayerEvent, actor, 1));
+            events.sub(setActivePlayerEvent.create(actor, 1));
         }
     }
 

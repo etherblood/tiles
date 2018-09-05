@@ -2,12 +2,13 @@ package com.etherblood.sandbox;
 
 import com.etherblood.collections.IntArrayList;
 import com.etherblood.collections.MapBuilder;
+import com.etherblood.entities.ComponentMeta;
 import com.etherblood.entities.EntityData;
-import com.etherblood.events.EventDefinition;
+import com.etherblood.events.EventMeta;
 import com.etherblood.rules.GameContext;
 import com.etherblood.rules.abilities.Action;
 import com.etherblood.rules.abilities.ActionGenerator;
-import com.etherblood.rules.components.Components;
+import com.etherblood.rules.components.ComponentDefinitions;
 import com.etherblood.rules.movement.Coordinates;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -18,7 +19,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
-import java.util.function.IntFunction;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,54 +44,55 @@ public class Main {
     public static void main(String[] args) throws IllegalArgumentException, IOException {
         GameContext context = new GameContext();
         EntityData data = context.getData();
+        ComponentDefinitions components = context.componentDefs;
 
-        Pokemons pokemons = new Pokemons(data);
+        Pokemons pokemons = new Pokemons(data, components);
 
         int gameState = data.createEntity();
-        data.set(gameState, Components.Arena.SIZE, Coordinates.of(context.mapWidth, context.mapHeight));
+        data.set(gameState, components.arenaSize.id, Coordinates.of(context.mapWidth, context.mapHeight));
 
         int teamA = data.createEntity();
         int teamB = data.createEntity();
-        data.set(teamA, Components.NEXT_TEAM, teamB);
-        data.set(teamB, Components.NEXT_TEAM, teamA);
+        data.set(teamA, components.nextTeam.id, teamB);
+        data.set(teamB, components.nextTeam.id, teamA);
 
         int human1 = 0;
         int human2 = 1;
 
         int bulbasaur = data.createEntity();
         pokemons.bulbasaur(bulbasaur);
-        data.set(bulbasaur, Components.CONTROLLED_BY, human1);
-        data.set(bulbasaur, Components.MEMBER_OF, teamA);
-        data.set(bulbasaur, Components.POSITION, Coordinates.of(1, 1));
-        data.set(bulbasaur, Components.Abilities.WALK, 0);
-        data.set(bulbasaur, Components.Abilities.PASS_TURN, 0);
-        data.set(bulbasaur, Components.Abilities.RAZORLEAF, 4);
+        data.set(bulbasaur, components.controlledBy.id, human1);
+        data.set(bulbasaur, components.memberOf.id, teamA);
+        data.set(bulbasaur, components.position.id, Coordinates.of(1, 1));
+        data.set(bulbasaur, components.walkAbility.id, 0);
+        data.set(bulbasaur, components.passTurnAbility.id, 0);
+        data.set(bulbasaur, components.razorleafAbility.id, 4);
 
         int testBuff = data.createEntity();
-        data.set(testBuff, Components.Stats.Health.ADDITIVE, 700);
-        data.set(testBuff, Components.BUFF_ON, bulbasaur);
+        data.set(testBuff, components.health.additive.id, 700);
+        data.set(testBuff, components.buffOn.id, bulbasaur);
 
         int charmander = data.createEntity();
         pokemons.charmander(charmander);
-        data.set(charmander, Components.CONTROLLED_BY, human2);
-        data.set(charmander, Components.MEMBER_OF, teamB);
-        data.set(charmander, Components.POSITION, Coordinates.of(5, 9));
-        data.set(charmander, Components.Abilities.WALK, 0);
-        data.set(charmander, Components.Abilities.PASS_TURN, 0);
+        data.set(charmander, components.controlledBy.id, human2);
+        data.set(charmander, components.memberOf.id, teamB);
+        data.set(charmander, components.position.id, Coordinates.of(5, 9));
+        data.set(charmander, components.walkAbility.id, 0);
+        data.set(charmander, components.passTurnAbility.id, 0);
 
         int squirtle = data.createEntity();
         pokemons.squirtle(squirtle);
-        data.set(squirtle, Components.CONTROLLED_BY, human1);
-        data.set(squirtle, Components.MEMBER_OF, teamB);
-        data.set(squirtle, Components.POSITION, Coordinates.of(3, 5));
-        data.set(squirtle, Components.Abilities.WALK, 0);
-        data.set(squirtle, Components.Abilities.PASS_TURN, 0);
+        data.set(squirtle, components.controlledBy.id, human1);
+        data.set(squirtle, components.memberOf.id, teamB);
+        data.set(squirtle, components.position.id, Coordinates.of(3, 5));
+        data.set(squirtle, components.walkAbility.id, 0);
+        data.set(squirtle, components.passTurnAbility.id, 0);
 
         for (int y = 4; y < 6; y++) {
             for (int x = 4; x < 6; x++) {
                 int obstacle = data.createEntity();
-                data.set(obstacle, Components.POSITION, Coordinates.of(x, y));
-                data.set(obstacle, Components.Arena.OBSTACLE, 0);
+                data.set(obstacle, components.position.id, Coordinates.of(x, y));
+                data.set(obstacle, components.arenaObstacle.id, 0);
             }
         }
 
@@ -102,24 +104,24 @@ public class Main {
 
         context.startGame();
         while (true) {
-            logState(context.getData(), actorShortcuts, context.mapWidth, context.mapHeight);
-            Action action = chooseAction(data, Components.ACTIVE_PLAYER, context.getActions(), context::getEventDefinition, actorShortcuts);
+            logState(context.getData(), actorShortcuts, context.mapWidth, context.mapHeight, components.position.id, context.componentMetaList);
+            Action action = chooseAction(data, components.activePlayer.id, context.getActions(), actorShortcuts, context.eventMetaList);
             context.action(action.event);
         }
 
     }
 
-    private static void logState(EntityData data, Map<Integer, Character> actorShortcuts, int mapWidth, int mapHeight) throws IOException {
+    private static void logState(EntityData data, Map<Integer, Character> actorShortcuts, int mapWidth, int mapHeight, int position, List<ComponentMeta> componentMetaList) throws IOException {
         if (LOG.isDebugEnabled()) {
-            LOG.debug("{}", GSON.toJson(new EntityDebugObjectMapper().toDebugObjects(data, Components.DEFINITIONS)));
+            LOG.debug("{}", GSON.toJson(new EntityDebugObjectMapper().toDebugObjects(data, componentMetaList)));
             try (ByteArrayOutputStream baos = new ByteArrayOutputStream(); PrintStream ps = new PrintStream(baos, true, StandardCharsets.UTF_8.name())) {
-                new MapPrinter().printMap(actorShortcuts, mapWidth, mapHeight, data, Components.POSITION, ps);
+                new MapPrinter().printMap(actorShortcuts, mapWidth, mapHeight, data, position, ps);
                 LOG.debug("{}", new String(baos.toByteArray(), StandardCharsets.UTF_8));
             }
         }
     }
 
-    private static Action chooseAction(EntityData data, int active, ActionGenerator actions, IntFunction<EventDefinition> events, Map<Integer, Character> actorShortcuts) {
+    private static Action chooseAction(EntityData data, int active, ActionGenerator actions, Map<Integer, Character> actorShortcuts, List<EventMeta> eventMetaList) {
         Scanner scanner = new Scanner(System.in);
         while (true) {
             IntArrayList actors = data.query(active).list();
@@ -133,7 +135,7 @@ public class Main {
             System.out.println("choose action:");
             for (int i = 0; i < availableActions.size(); i++) {
                 Action action = availableActions.get(i);
-                System.out.println(i + ": " + events.apply(action.event.getId()).toString(action.event));
+                System.out.println(i + ": " + eventMetaList.get(action.event.getId()).toString(action.event));
             }
             int action = scanner.nextInt();
             return availableActions.get(action);

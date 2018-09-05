@@ -1,10 +1,10 @@
 package com.etherblood.rules.abilities.razorleaf;
 
+import com.etherblood.entities.ComponentMeta;
 import com.etherblood.entities.EntityData;
 import com.etherblood.rules.abilities.Action;
 import com.etherblood.rules.abilities.ActionGenerator;
-import com.etherblood.rules.components.Components;
-import com.etherblood.rules.events.EntityValueEvent;
+import com.etherblood.rules.events.EntityValueEventMeta;
 import com.etherblood.rules.movement.Coordinates;
 import java.util.function.Consumer;
 
@@ -15,26 +15,30 @@ import java.util.function.Consumer;
 public class RazorleafGenerator implements ActionGenerator {
 
     private final EntityData data;
-    private final int razorleafAction;
+    private final EntityValueEventMeta razorleafAction;
+    private final ComponentMeta razorleaf, position, actionPoints;
 
-    public RazorleafGenerator(EntityData data, int razorleafAction) {
+    public RazorleafGenerator(EntityData data, EntityValueEventMeta razorleafAction, ComponentMeta razorleaf, ComponentMeta position, ComponentMeta actionPoints) {
         this.data = data;
         this.razorleafAction = razorleafAction;
+        this.razorleaf = razorleaf;
+        this.position = position;
+        this.actionPoints = actionPoints;
     }
 
     @Override
     public void availableActions(int actor, Consumer<Action> consumer) {
-        int level = data.getOptional(actor, Components.Abilities.RAZORLEAF).orElse(0);
+        int level = data.getOptional(actor, razorleaf.id).orElse(0);
         int minRange = 0;
         int maxRange = 1 + level / 5;
         int cost = RazorleafHandler.apCost(level);
-        if (level > 0 && data.has(actor, Components.POSITION) && data.getOptional(actor, Components.Stats.ActionPoints.ACTIVE).orElse(0) >= cost) {
-            int sourcePosition = data.get(actor, Components.POSITION);
-            for (int targetCandidate : data.query(Components.POSITION).list()) {
-                int targetPosition = data.get(targetCandidate, Components.POSITION);
+        if (level > 0 && data.has(actor, position.id) && data.getOptional(actor, actionPoints.id).orElse(0) >= cost) {
+            int sourcePosition = data.get(actor, position.id);
+            for (int targetCandidate : data.query(position.id).list()) {
+                int targetPosition = data.get(targetCandidate, position.id);
                 int distance = Coordinates.manhattenDistance(sourcePosition, targetPosition);
                 if (minRange <= distance && distance <= maxRange) {
-                    consumer.accept(new Action(new EntityValueEvent(razorleafAction, actor, targetCandidate)));
+                    consumer.accept(new Action(razorleafAction.create(actor, targetCandidate)));
                 }
             }
         }

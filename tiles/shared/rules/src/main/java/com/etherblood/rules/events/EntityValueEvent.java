@@ -10,7 +10,7 @@ public class EntityValueEvent extends Event {
 
     public int entity, value;
 
-    public EntityValueEvent(int id, int target, int value) {
+    EntityValueEvent(int id, int target, int value) {
         super(id);
         this.entity = target;
         this.value = value;

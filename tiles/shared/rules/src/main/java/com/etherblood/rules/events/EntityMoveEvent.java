@@ -1,6 +1,7 @@
 package com.etherblood.rules.events;
 
 import com.etherblood.events.Event;
+import com.etherblood.rules.movement.Coordinates;
 
 /**
  *
@@ -10,7 +11,7 @@ public class EntityMoveEvent extends Event {
 
     public int entity, from, to;
 
-    public EntityMoveEvent(int id, int entity, int from, int to) {
+    EntityMoveEvent(int id, int entity, int from, int to) {
         super(id);
         this.entity = entity;
         this.from = from;
@@ -43,6 +44,6 @@ public class EntityMoveEvent extends Event {
 
     @Override
     public String toString() {
-        return EntityMoveEvent.class.getSimpleName() + "{entity=" + entity + ", from=" + from + ", to=" + to + ", id=" + id + '}';
+        return EntityMoveEvent.class.getSimpleName() + "{entity=" + entity + ", from=" + Coordinates.toString(from) + ", to=" + Coordinates.toString(to) + ", id=" + id + '}';
     }
 }

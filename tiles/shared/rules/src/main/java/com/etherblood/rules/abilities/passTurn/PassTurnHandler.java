@@ -1,9 +1,8 @@
 package com.etherblood.rules.abilities.passTurn;
 
-import com.etherblood.events.EventDefinition;
+import com.etherblood.entities.ComponentMeta;
 import com.etherblood.events.handlers.EventHandler;
 import com.etherblood.rules.AbstractGameEventHandler;
-import com.etherblood.rules.components.Components;
 import com.etherblood.rules.events.EntityEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,19 +14,16 @@ import org.slf4j.LoggerFactory;
 public class PassTurnHandler extends AbstractGameEventHandler implements EventHandler<EntityEvent> {
 
     private static final Logger LOG = LoggerFactory.getLogger(PassTurnHandler.class);
-    private final EventDefinition endTurn;
+    
+    private final ComponentMeta activePlayer;
 
-    public PassTurnHandler(EventDefinition endTurn) {
-        this.endTurn = endTurn;
+    public PassTurnHandler(ComponentMeta activePlayer) {
+        this.activePlayer = activePlayer;
     }
 
     public void handle(int actor) {
         LOG.info("passed turn of {}", actor);
-        data.remove(actor, Components.ACTIVE_PLAYER);
-//        if (!data.query(Components.ACTIVE_PLAYER).exists()) {
-//            LOG.info("all actors passed, ending turn...", actor);
-//            events.trigger(new EntityEvent(endTurn.id(), data.get(actor, Components.MEMBER_OF)));
-//        }
+        data.remove(actor, activePlayer.id);
     }
 
     @Override

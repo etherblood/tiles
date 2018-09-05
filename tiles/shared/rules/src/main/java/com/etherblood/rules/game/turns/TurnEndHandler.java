@@ -1,11 +1,12 @@
 package com.etherblood.rules.game.turns;
 
 import com.etherblood.collections.IntArrayList;
+import com.etherblood.entities.ComponentMeta;
 import com.etherblood.events.handlers.EventHandler;
 import com.etherblood.rules.AbstractGameEventHandler;
-import com.etherblood.rules.components.Components;
 import com.etherblood.rules.events.EntityEvent;
-import com.etherblood.rules.events.EntityValueEvent;
+import com.etherblood.rules.events.EntityEventMeta;
+import com.etherblood.rules.events.EntityValueEventMeta;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,23 +17,26 @@ import org.slf4j.LoggerFactory;
 public class TurnEndHandler extends AbstractGameEventHandler implements EventHandler<EntityEvent> {
 
     private static final Logger LOG = LoggerFactory.getLogger(TurnEndHandler.class);
-    private final int setActiveTeamEvent, resetActiveActionPointsEvent, resetActiveMovePointsEvent;
+    private final EntityEventMeta resetActiveActionPointsEvent, resetActiveMovePointsEvent;
+    private final EntityValueEventMeta setActiveTeamEvent;
+    private final ComponentMeta memberOf;
 
-    public TurnEndHandler(int resetActiveActionPointsEvent, int resetActiveMovePointsEvent, int setActiveTeamEvent) {
+    public TurnEndHandler(EntityEventMeta resetActiveActionPointsEvent, EntityEventMeta resetActiveMovePointsEvent, EntityValueEventMeta setActiveTeamEvent, ComponentMeta memberOf) {
         this.setActiveTeamEvent = setActiveTeamEvent;
         this.resetActiveActionPointsEvent = resetActiveActionPointsEvent;
         this.resetActiveMovePointsEvent = resetActiveMovePointsEvent;
+        this.memberOf = memberOf;
     }
 
     public void handle(int team) {
         LOG.info("ended turn turn of {}", team);
-        IntArrayList actors = data.query(Components.MEMBER_OF).list(hasValue(Components.MEMBER_OF, team));
+        IntArrayList actors = data.query(memberOf.id).list(hasValue(memberOf.id, team));
         LOG.info("setting active for members of team {}: {}", team, actors);
         actors.forEach(x -> {
-            events.sub(new EntityEvent(resetActiveActionPointsEvent, x));
-            events.sub(new EntityEvent(resetActiveMovePointsEvent, x));
+            events.sub(resetActiveActionPointsEvent.create(x));
+            events.sub(resetActiveMovePointsEvent.create(x));
         });
-        events.sub(new EntityValueEvent(setActiveTeamEvent, team, 0));
+        events.sub(setActiveTeamEvent.create(team, 0));
     }
 
     @Override
