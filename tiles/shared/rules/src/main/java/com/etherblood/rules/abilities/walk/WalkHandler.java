@@ -3,6 +3,7 @@ package com.etherblood.rules.abilities.walk;
 import com.etherblood.entities.ComponentMeta;
 import com.etherblood.events.handlers.EventHandler;
 import com.etherblood.rules.AbstractGameEventHandler;
+import com.etherblood.rules.events.EntityCoordinatesEventMeta;
 import com.etherblood.rules.events.EntityMoveEvent;
 import com.etherblood.rules.events.EntityValueEventMeta;
 import com.etherblood.rules.movement.Coordinates;
@@ -16,10 +17,10 @@ import org.slf4j.LoggerFactory;
 public class WalkHandler extends AbstractGameEventHandler implements EventHandler<EntityMoveEvent> {
 
     private static final Logger LOG = LoggerFactory.getLogger(WalkHandler.class);
-    private final EntityValueEventMeta setPosition;
+    private final EntityCoordinatesEventMeta setPosition;
     private final ComponentMeta movePointsComponent;
 
-    public WalkHandler(EntityValueEventMeta setPosition, ComponentMeta movePoints) {
+    public WalkHandler(EntityCoordinatesEventMeta setPosition, ComponentMeta movePoints) {
         this.setPosition = setPosition;
         this.movePointsComponent = movePoints;
     }
@@ -30,7 +31,7 @@ public class WalkHandler extends AbstractGameEventHandler implements EventHandle
         assert movePoints >= 1;
         LOG.info("used 1 mp of {}", actor);
         data.set(actor, movePointsComponent.id, movePoints - 1);
-        events.response(setPosition.create(actor, to));
+        events.fire(setPosition.create(actor, to));
     }
 
     @Override

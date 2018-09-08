@@ -4,7 +4,7 @@ import com.etherblood.entities.ComponentMeta;
 import com.etherblood.events.handlers.EventHandler;
 import com.etherblood.rules.AbstractGameEventHandler;
 import com.etherblood.rules.events.EntityValueEvent;
-import com.etherblood.rules.events.EntityValueEventMeta;
+import com.etherblood.rules.events.SourceTargetValueEventMeta;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,11 +16,11 @@ public class RazorleafHandler extends AbstractGameEventHandler implements EventH
 
     private static final Logger LOG = LoggerFactory.getLogger(RazorleafHandler.class);
 
-    private final EntityValueEventMeta earthDamageEvent;
+    private final SourceTargetValueEventMeta earthAttack;
     private final ComponentMeta razorleaf, actionPoints;
 
-    public RazorleafHandler(EntityValueEventMeta earthDamageEvent, ComponentMeta razorleaf, ComponentMeta actionPoints) {
-        this.earthDamageEvent = earthDamageEvent;
+    public RazorleafHandler(SourceTargetValueEventMeta earthAttack, ComponentMeta razorleaf, ComponentMeta actionPoints) {
+        this.earthAttack = earthAttack;
         this.razorleaf = razorleaf;
         this.actionPoints = actionPoints;
     }
@@ -30,9 +30,9 @@ public class RazorleafHandler extends AbstractGameEventHandler implements EventH
         int cost = apCost(level);
         int ap = data.getOptional(actor, actionPoints.id).orElse(0);
         assert ap >= cost;
-        LOG.info("used {} ap of {}", cost, actor);
+        LOG.info("used {} ap of #{}", cost, actor);
         data.set(actor, actionPoints.id, ap - cost);
-        events.response(earthDamageEvent.create(target, attack(level)));
+        events.fire(earthAttack.create(actor, target, attack(level)));
     }
 
     public static int apCost(int level) {

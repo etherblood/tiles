@@ -17,7 +17,7 @@ public class EntityDebugObjectMapper {
         for (ComponentMeta componentDetail : components) {
             for (int entity : data.query(componentDetail.id).list()) {
                 int value = data.get(entity, componentDetail.id);
-                result.computeIfAbsent(entity, x -> new TreeMap<>()).put(componentDetail.name, componentDetail.toString(value));
+                result.computeIfAbsent(entity, x -> new TreeMap<>()).put(componentDetail.name, componentDetail.toPojo(value));
             }
         }
         return result;

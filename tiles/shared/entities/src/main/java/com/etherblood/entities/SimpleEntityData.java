@@ -1,6 +1,6 @@
 package com.etherblood.entities;
 
-import com.etherblood.collections.CollectionUtil;
+import java.util.OptionalInt;
 import java.util.function.IntSupplier;
 
 /**
@@ -56,8 +56,19 @@ public class SimpleEntityData implements EntityData {
 
     @Override
     public void assertEmpty(int entity) {
-        for (ComponentMap componentMap : map) {
-            assert !componentMap.has(entity) : "entity " + entity + " still had a component of type " + CollectionUtil.indexOf(map, componentMap);
+        for (int i = 0; i < map.length; i++) {
+            ComponentMap componentMap = map[i];
+            assert !componentMap.has(entity) : "entity " + entity + " still had a component of type " + i;
         }
+    }
+
+    @Override
+    public OptionalInt getOptional(int entity, int component) {
+        return component(component).getOptional(entity);
+    }
+
+    @Override
+    public boolean hasValue(int entity, int component, int value) {
+        return component(component).hasValue(entity, value);
     }
 }

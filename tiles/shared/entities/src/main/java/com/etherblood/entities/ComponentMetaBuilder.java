@@ -11,14 +11,14 @@ public class ComponentMetaBuilder {
     private Integer id;
     private String name;
     private boolean foreignKey, indexed;
-    private IntFunction<String> stringify;
+    private IntFunction<Object> objectify;
 
     ComponentMetaBuilder() {
         id = null;
         name = null;
         foreignKey = false;
         indexed = false;
-        stringify = Integer::toString;
+        objectify = x -> x;
     }
 
     public ComponentMetaBuilder withId(int id) {
@@ -41,13 +41,13 @@ public class ComponentMetaBuilder {
         return this;
     }
 
-    public ComponentMetaBuilder withStringify(IntFunction<String> stringify) {
-        this.stringify = stringify;
+    public ComponentMetaBuilder withObjectify(IntFunction<Object> objectify) {
+        this.objectify = objectify;
         return this;
     }
 
     public ComponentMeta build() {
-        return new ComponentMeta(id, name, foreignKey, indexed, stringify);
+        return new ComponentMeta(id, name, foreignKey, indexed, objectify);
     }
 
 }

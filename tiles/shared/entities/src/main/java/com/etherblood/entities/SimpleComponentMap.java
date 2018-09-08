@@ -1,6 +1,6 @@
 package com.etherblood.entities;
 
-import com.etherblood.collections.IntToIntMap;
+import com.etherblood.collections.IntToIntHashMap;
 
 /**
  *
@@ -8,7 +8,7 @@ import com.etherblood.collections.IntToIntMap;
  */
 public class SimpleComponentMap implements ComponentMap {
 
-    private final IntToIntMap components = new IntToIntMap();
+    private final IntToIntHashMap components = new IntToIntHashMap();
     private final SimpleEntityQuery aggregator = new SimpleEntityQuery(components);
 
     @Override

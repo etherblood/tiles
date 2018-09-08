@@ -8,7 +8,7 @@ import com.etherblood.events.Event;
  */
 public class EntityEvent extends Event {
 
-    public int entity;
+    public final int entity;
 
     EntityEvent(int id, int entity) {
         super(id);

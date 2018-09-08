@@ -12,21 +12,21 @@ public class ComponentMeta {
     public final String name;
     private final boolean foreignKey;
     private final boolean indexed;
-    private final IntFunction<String> stringify;
+    private final IntFunction<Object> objectify;
 
-    public ComponentMeta(int id, String name, boolean foreignKey, boolean indexed, IntFunction<String> stringify) {
+    public ComponentMeta(int id, String name, boolean foreignKey, boolean indexed, IntFunction<Object> objectify) {
         this.id = id;
         this.name = name;
         this.foreignKey = foreignKey;
         this.indexed = indexed;
-        this.stringify = stringify;
+        this.objectify = objectify;
     }
 
     public static ComponentMetaBuilder builder() {
         return new ComponentMetaBuilder();
     }
     
-    public String toString(int value) {
-        return stringify.apply(value);
+    public Object toPojo(int value) {
+        return objectify.apply(value);
     }
 }

@@ -19,7 +19,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
-import java.util.concurrent.atomic.AtomicInteger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,7 +33,7 @@ public class Main {
 
     static {
         System.setProperty("org.slf4j.simpleLogger.logFile", "System.out");
-        System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "debug");
+        System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "info");
         LOG = LoggerFactory.getLogger(Main.class);
     }
 
@@ -64,12 +63,12 @@ public class Main {
         data.set(bulbasaur, components.controlledBy.id, human1);
         data.set(bulbasaur, components.memberOf.id, teamA);
         data.set(bulbasaur, components.position.id, Coordinates.of(1, 1));
-        data.set(bulbasaur, components.walkAbility.id, 0);
-        data.set(bulbasaur, components.passTurnAbility.id, 0);
+        data.set(bulbasaur, components.walkAbility.id, 1);
+        data.set(bulbasaur, components.passTurnAbility.id, 1);
         data.set(bulbasaur, components.razorleafAbility.id, 4);
 
         int testBuff = data.createEntity();
-        data.set(testBuff, components.health.additive.id, 700);
+        data.set(testBuff, components.health.additive.id, 3);
         data.set(testBuff, components.buffOn.id, bulbasaur);
 
         int charmander = data.createEntity();
@@ -77,22 +76,22 @@ public class Main {
         data.set(charmander, components.controlledBy.id, human2);
         data.set(charmander, components.memberOf.id, teamB);
         data.set(charmander, components.position.id, Coordinates.of(5, 9));
-        data.set(charmander, components.walkAbility.id, 0);
-        data.set(charmander, components.passTurnAbility.id, 0);
+        data.set(charmander, components.walkAbility.id, 1);
+        data.set(charmander, components.passTurnAbility.id, 1);
 
         int squirtle = data.createEntity();
         pokemons.squirtle(squirtle);
         data.set(squirtle, components.controlledBy.id, human1);
         data.set(squirtle, components.memberOf.id, teamB);
         data.set(squirtle, components.position.id, Coordinates.of(3, 5));
-        data.set(squirtle, components.walkAbility.id, 0);
-        data.set(squirtle, components.passTurnAbility.id, 0);
+        data.set(squirtle, components.walkAbility.id, 1);
+        data.set(squirtle, components.passTurnAbility.id, 1);
 
         for (int y = 4; y < 6; y++) {
             for (int x = 4; x < 6; x++) {
                 int obstacle = data.createEntity();
                 data.set(obstacle, components.position.id, Coordinates.of(x, y));
-                data.set(obstacle, components.arenaObstacle.id, 0);
+                data.set(obstacle, components.arenaObstacle.id, 1);
             }
         }
 
@@ -108,15 +107,14 @@ public class Main {
             Action action = chooseAction(data, components.activePlayer.id, context.getActions(), actorShortcuts, context.eventMetaList);
             context.action(action.event);
         }
-
     }
 
     private static void logState(EntityData data, Map<Integer, Character> actorShortcuts, int mapWidth, int mapHeight, int position, List<ComponentMeta> componentMetaList) throws IOException {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("{}", GSON.toJson(new EntityDebugObjectMapper().toDebugObjects(data, componentMetaList)));
+        if (LOG.isInfoEnabled()) {
+            LOG.info("{}", GSON.toJson(new EntityDebugObjectMapper().toDebugObjects(data, componentMetaList)));
             try (ByteArrayOutputStream baos = new ByteArrayOutputStream(); PrintStream ps = new PrintStream(baos, true, StandardCharsets.UTF_8.name())) {
                 new MapPrinter().printMap(actorShortcuts, mapWidth, mapHeight, data, position, ps);
-                LOG.debug("{}", new String(baos.toByteArray(), StandardCharsets.UTF_8));
+                LOG.info("{}", new String(baos.toByteArray(), StandardCharsets.UTF_8));
             }
         }
     }

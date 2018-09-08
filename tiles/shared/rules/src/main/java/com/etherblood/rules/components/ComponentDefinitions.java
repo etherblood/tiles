@@ -31,6 +31,7 @@ public class ComponentDefinitions {
     public final ComponentMeta memberOf;
 
     public ComponentDefinitions(List<ComponentMeta> components) {
+        Object empty = new Object();
         health = new StatComponents("Health", components);
         actionPoints = new StatComponents("ActionPoints", components);
         movePoints = new StatComponents("MovePoints", components);
@@ -40,7 +41,7 @@ public class ComponentDefinitions {
         walkAbility = create("WalkAbility", components);
         razorleafAbility = create("RazorleafAbility", components);
         arenaSize = create("ArenaSize", Coordinates::toString, components);
-        arenaObstacle = create("ArenaObstacle", components);
+        arenaObstacle = create("ArenaObstacle", x -> empty, components);
         controlledBy = create("ControlledBy", components);
         nextTeam = create("NextTeam", components);
         position = create("Position", Coordinates::toString, components);
@@ -52,11 +53,11 @@ public class ComponentDefinitions {
     }
 
     private static ComponentMeta create(String name, List<ComponentMeta> components) {
-        return create(name, Integer::toString, components);
+        return create(name, x -> x, components);
     }
 
-    private static ComponentMeta create(String name, IntFunction<String> stringify, List<ComponentMeta> components) {
-        ComponentMeta result = ComponentMeta.builder().withName(name).withId(components.size()).withStringify(stringify).build();
+    private static ComponentMeta create(String name, IntFunction<Object> objectify, List<ComponentMeta> components) {
+        ComponentMeta result = ComponentMeta.builder().withName(name).withId(components.size()).withObjectify(objectify).build();
         components.add(result);
         return result;
     }

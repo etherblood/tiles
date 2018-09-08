@@ -22,7 +22,7 @@ public class PassTurnHandler extends AbstractGameEventHandler implements EventHa
     }
 
     public void handle(int actor) {
-        LOG.info("passed turn of {}", actor);
+        LOG.info("passed turn of #{}", actor);
         data.remove(actor, activePlayer.id);
     }
 

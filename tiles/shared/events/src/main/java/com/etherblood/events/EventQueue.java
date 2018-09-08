@@ -10,10 +10,9 @@ public interface EventQueue {
     
     void action(Event event);
 
-    void response(Event event);
-
-    void sub(Event event);
+    void fire(Event event);
     
-    void setHandlers(int eventId, EventHandler[] handlers);
-
+////    void setInlineHandlers(int eventId, EventHandler[] handlers);
+////
+////    void setQueueHandlers(int eventId, EventHandler[] handlers);
 }

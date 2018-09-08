@@ -1,7 +1,7 @@
 package com.etherblood.rules.stats;
 
 import com.etherblood.collections.IntArrayList;
-import com.etherblood.collections.IntSet;
+import com.etherblood.collections.IntHashSet;
 import com.etherblood.entities.ComponentMeta;
 import com.etherblood.events.handlers.EventHandler;
 import com.etherblood.rules.AbstractGameEventHandler;
@@ -34,7 +34,7 @@ public class RefreshAllStatHandler extends AbstractGameEventHandler implements E
     }
 
     public void handle() {
-        IntSet entities = new IntSet();
+        IntHashSet entities = new IntHashSet();
         for (int entity : data.query(base.id).list()) {
             entities.set(entity);
         }
@@ -55,10 +55,10 @@ public class RefreshAllStatHandler extends AbstractGameEventHandler implements E
         LOG.info("refreshing {} for {}", statName, list);
 
         list.foreach(entity -> {
-            events.sub(updateBuffedSupply.create(entity));
+            events.fire(updateBuffedSupply.create(entity));
         });
         list.foreach(entity -> {
-            events.sub(resetActiveSupply.create(entity));
+            events.fire(resetActiveSupply.create(entity));
         });
     }
 

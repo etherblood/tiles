@@ -1,7 +1,7 @@
 package com.etherblood.entities;
 
 import com.etherblood.collections.IntArrayList;
-import com.etherblood.collections.IntToIntMap;
+import com.etherblood.collections.IntToIntHashMap;
 import java.util.OptionalInt;
 import java.util.PrimitiveIterator;
 import java.util.function.IntPredicate;
@@ -12,9 +12,9 @@ import java.util.function.IntPredicate;
  */
 public class SimpleEntityQuery implements EntityQuery {
 
-    private final IntToIntMap source;
+    private final IntToIntHashMap source;
 
-    SimpleEntityQuery(IntToIntMap source) {
+    SimpleEntityQuery(IntToIntHashMap source) {
         this.source = source;
     }
 

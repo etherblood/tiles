@@ -12,27 +12,21 @@ public class SimpleEventQueue implements EventQueue {
 
     private Event activeEvent = null;
     private final Deque<Event> eventQueue = new ArrayDeque<>();
-    private final EventHandler[][] handlers;
-    private int depth = 0;
+    private final EventHandler[][] inlineHandlers, queueHandlers;
 
     public SimpleEventQueue(int eventCount) {
-        this.handlers = new EventHandler[eventCount][];
+        this.inlineHandlers = new EventHandler[eventCount][0];
+        this.queueHandlers = new EventHandler[eventCount][0];
     }
 
-    @Override
-    public void setHandlers(int eventId, EventHandler[] handlers) {
-        assert this.handlers[eventId] == null;
-        this.handlers[eventId] = handlers;
+    public void setInlineHandlers(int eventId, EventHandler[] handlers) {
+        assert this.inlineHandlers[eventId].length == 0;
+        this.inlineHandlers[eventId] = handlers;
     }
 
-    private void handleEvent(Event event) {
-        for (EventHandler handler : handlers[event.getId()]) {
-            LOG.debug("handling {} with handler {}", event, handler);
-            handler.handle(event);
-            if (event.isCancelled()) {
-                return;
-            }
-        }
+    public void setQueueHandlers(int eventId, EventHandler[] handlers) {
+        assert this.queueHandlers[eventId].length == 0;
+        this.queueHandlers[eventId] = handlers;
     }
 
     @Override
@@ -43,28 +37,33 @@ public class SimpleEventQueue implements EventQueue {
         if (activeEvent != null) {
             throw new IllegalStateException();
         }
-        sub(event);
+        fire(event);
         while (!eventQueue.isEmpty()) {
             Event response = eventQueue.removeFirst();
             activeEvent = response;
-            handleEvent(response);
-            activeEvent = null;
+            handleEvent(response, queueHandlers[response.id]);
         }
+        activeEvent = null;
     }
 
     @Override
-    public void response(Event event) {
+    public void fire(Event event) {
         event.setParent(activeEvent);
         eventQueue.addLast(event);
         LOG.debug("enqueued response {}", event);
+        activeEvent = event;
+        handleEvent(event, inlineHandlers[event.id]);
+        activeEvent = event.getParent();
     }
 
-    @Override
-    public void sub(Event event) {
-        event.setParent(activeEvent);
-        activeEvent = event;
-        handleEvent(event);
-        activeEvent = event.getParent();
+    private void handleEvent(Event event, EventHandler[] handlers) {
+        for (EventHandler handler : handlers) {
+            if (event.isCancelled()) {
+                return;
+            }
+            LOG.debug("handling {} with handler {}", event, handler);
+            handler.handle(event);
+        }
     }
 
 }

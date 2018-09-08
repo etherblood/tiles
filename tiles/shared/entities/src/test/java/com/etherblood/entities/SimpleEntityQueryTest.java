@@ -1,6 +1,6 @@
 package com.etherblood.entities;
 
-import com.etherblood.collections.IntToIntMap;
+import com.etherblood.collections.IntToIntHashMap;
 import java.util.Map;
 
 /**
@@ -11,7 +11,7 @@ public class SimpleEntityQueryTest extends AbstractEntityQueryTest {
 
     @Override
     protected EntityQuery createInstance(Map<Integer, Integer> map) {
-        IntToIntMap data = new IntToIntMap();
+        IntToIntHashMap data = new IntToIntHashMap();
         for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
             data.set(entry.getKey(), entry.getValue());
         }

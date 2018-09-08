@@ -1,6 +1,6 @@
 package com.etherblood.entities;
 
-import com.etherblood.collections.IntSet;
+import com.etherblood.collections.IntHashSet;
 import java.security.SecureRandom;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -53,7 +53,7 @@ public class IdSequencesTest {
     private void sequenceTest(String name, IntSupplier sequence) {
         System.out.println(name);
         Random random = new Random(ID_COUNT);
-        IntSet set = new IntSet();
+        IntHashSet set = new IntHashSet();
         for (int i = 0; i < ID_COUNT; i++) {
             while (random.nextInt(ID_RATE) != 0) {
                 sequence.getAsInt();

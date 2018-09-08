@@ -1,4 +1,4 @@
-package com.etherblood.rules.stats;
+package com.etherblood.rules.components;
 
 import com.etherblood.entities.ComponentMeta;
 import com.etherblood.events.handlers.EventHandler;
@@ -11,20 +11,20 @@ import org.slf4j.LoggerFactory;
  *
  * @author Philipp
  */
-public class SetComponentHandler extends AbstractGameEventHandler implements EventHandler<EntityValueEvent> {
+public class SetValueHandler extends AbstractGameEventHandler implements EventHandler<EntityValueEvent> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SetComponentHandler.class);
-    private final String statName;
+    private static final Logger LOG = LoggerFactory.getLogger(SetValueHandler.class);
+    private final String name;
     private final ComponentMeta component;
 
-    public SetComponentHandler(String statName, ComponentMeta component) {
-        this.statName = statName;
+    public SetValueHandler(String name, ComponentMeta component) {
+        this.name = name;
         this.component = component;
     }
 
     public void handle(int entity, int value) {
-        data.setWithDefault(entity, component.id, value, 0);
-        LOG.info("setting {} of {} to {}", statName, entity, value);
+        data.set(entity, component.id, value);
+        LOG.info("setting {} of #{} to {}", name, entity, value);
     }
 
     @Override

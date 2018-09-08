@@ -9,7 +9,7 @@ import com.etherblood.rules.movement.Coordinates;
  */
 public class EntityMoveEvent extends Event {
 
-    public int entity, from, to;
+    public final int entity, from, to;
 
     EntityMoveEvent(int id, int entity, int from, int to) {
         super(id);

@@ -1,6 +1,6 @@
 package com.etherblood.entities;
 
-import com.etherblood.collections.IntSet;
+import com.etherblood.collections.IntHashSet;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.IntSupplier;
 
@@ -12,7 +12,7 @@ public class IdSequences {
 
     public static IntSupplier backingSet(IntSupplier supply) {
         return new IntSupplier() {
-            private final IntSet used = new IntSet();
+            private final IntHashSet used = new IntHashSet();
 
             @Override
             public int getAsInt() {
@@ -27,7 +27,11 @@ public class IdSequences {
     }
     
     public static IntSupplier incremental() {
-        return new AtomicInteger(0)::getAndIncrement;
+        return incremental(0);
+    }
+    
+    public static IntSupplier incremental(int start) {
+        return new AtomicInteger(start)::getAndIncrement;
     }
 
     public static IntSupplier simple1() {

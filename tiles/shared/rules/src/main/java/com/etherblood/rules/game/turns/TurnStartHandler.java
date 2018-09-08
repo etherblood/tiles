@@ -27,11 +27,11 @@ public class TurnStartHandler extends AbstractGameEventHandler implements EventH
     }
 
     public void handle(int team) {
-        events.sub(setActiveTeamEvent.create(team, 1));
+        events.fire(setActiveTeamEvent.create(team, 1));
         IntArrayList actors = data.query(memberOf.id).list(hasValue(memberOf.id, team));
-        LOG.info("setting active for members of team {}: {}", team, actors);
+        LOG.info("setting active for members of team #{}: {}", team, actors);
         for (int actor : actors) {
-            events.sub(setActivePlayerEvent.create(actor, 1));
+            events.fire(setActivePlayerEvent.create(actor, 1));
         }
     }
 

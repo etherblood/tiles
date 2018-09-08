@@ -8,7 +8,7 @@ import java.util.List;
  * @author Philipp
  */
 public class EventDefinitions {
-    
+
     public final StatEvents health;
     public final StatEvents actionPoints;
     public final StatEvents movePoints;
@@ -16,7 +16,7 @@ public class EventDefinitions {
     public final ElementStatEvents toughness;
     public final EntityValueEventMeta setActivePlayer;
     public final EntityValueEventMeta setActiveTeam;
-    public final EntityValueEventMeta setPosition;
+    public final EntityCoordinatesEventMeta setPosition;
     public final EntityMoveEventMeta walkAction;
     public final EntityEventMeta passTurnAction;
     public final EntityValueEventMeta razorleafAction;
@@ -24,7 +24,8 @@ public class EventDefinitions {
     public final EntityEventMeta turnStart;
     public final EntityEventMeta turnEnd;
     public final VoidEventMeta gameOver;
-    public final ElementEvents damage;
+    public final DamageEvents dealDamage;
+    public final ElementAttackEvents attack;
 
     public EventDefinitions(List<EventMeta<?>> events) {
         health = new StatEvents("Health", events);
@@ -34,7 +35,7 @@ public class EventDefinitions {
         toughness = new ElementStatEvents("Toughness", events);
         setActivePlayer = entityValueEvent(events, "SetActivePlayer");
         setActiveTeam = entityValueEvent(events, "SetActiveTeam");
-        setPosition = entityValueEvent(events, "SetPosition");
+        setPosition = entityCoordinatesEvent(events, "SetPosition");
         walkAction = entityMoveEvent(events, "WalkAction");
         passTurnAction = entityEvent(events, "PassTurnAction");
         razorleafAction = entityValueEvent(events, "RazorleafAction");
@@ -42,27 +43,40 @@ public class EventDefinitions {
         turnStart = entityEvent(events, "TurnStart");
         turnEnd = entityEvent(events, "TurnEnd");
         gameOver = voidEvent(events, "GameOver");
-        damage = new ElementEvents("Damage", events);
+        dealDamage = new DamageEvents("DealElementalDamage", events);
+        attack = new ElementAttackEvents("Attack", events);
     }
-    
+
     private static VoidEventMeta voidEvent(List<EventMeta<?>> events, String name) {
         VoidEventMeta event = new VoidEventMeta(events.size(), name);
         events.add(event);
         return event;
     }
-    
+
     private static EntityEventMeta entityEvent(List<EventMeta<?>> events, String name) {
         EntityEventMeta event = new EntityEventMeta(events.size(), name);
         events.add(event);
         return event;
     }
-    
+
     private static EntityValueEventMeta entityValueEvent(List<EventMeta<?>> events, String name) {
         EntityValueEventMeta event = new EntityValueEventMeta(events.size(), name);
         events.add(event);
         return event;
     }
-    
+
+    private static SourceTargetValueEventMeta sourceTargetValueEvent(List<EventMeta<?>> events, String name) {
+        SourceTargetValueEventMeta event = new SourceTargetValueEventMeta(events.size(), name);
+        events.add(event);
+        return event;
+    }
+
+    private static EntityCoordinatesEventMeta entityCoordinatesEvent(List<EventMeta<?>> events, String name) {
+        EntityCoordinatesEventMeta event = new EntityCoordinatesEventMeta(events.size(), name);
+        events.add(event);
+        return event;
+    }
+
     private static EntityMoveEventMeta entityMoveEvent(List<EventMeta<?>> events, String name) {
         EntityMoveEventMeta event = new EntityMoveEventMeta(events.size(), name);
         events.add(event);
@@ -104,18 +118,33 @@ public class EventDefinitions {
         }
     }
 
-    public static class ElementEvents {
+    public static class DamageEvents {
 
         public final EntityValueEventMeta fire;
         public final EntityValueEventMeta water;
         public final EntityValueEventMeta air;
         public final EntityValueEventMeta earth;
 
-        public ElementEvents(String statName, List<EventMeta<?>> events) {
+        public DamageEvents(String statName, List<EventMeta<?>> events) {
             this.fire = entityValueEvent(events, "Fire" + statName);
             this.water = entityValueEvent(events, "Water" + statName);
             this.air = entityValueEvent(events, "Air" + statName);
             this.earth = entityValueEvent(events, "Earth" + statName);
+        }
+    }
+
+    public static class ElementAttackEvents {
+
+        public final SourceTargetValueEventMeta fire;
+        public final SourceTargetValueEventMeta water;
+        public final SourceTargetValueEventMeta air;
+        public final SourceTargetValueEventMeta earth;
+
+        public ElementAttackEvents(String statName, List<EventMeta<?>> events) {
+            this.fire = sourceTargetValueEvent(events, "Fire" + statName);
+            this.water = sourceTargetValueEvent(events, "Water" + statName);
+            this.air = sourceTargetValueEvent(events, "Air" + statName);
+            this.earth = sourceTargetValueEvent(events, "Earth" + statName);
         }
     }
 
