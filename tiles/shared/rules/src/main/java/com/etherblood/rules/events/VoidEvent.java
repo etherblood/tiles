@@ -14,7 +14,7 @@ public class VoidEvent extends Event {
 
     @Override
     public boolean equals(Object obj) {
-        return obj instanceof VoidEvent;
+        return obj instanceof VoidEvent && this.id == ((VoidEvent) obj).id;
     }
 
     @Override

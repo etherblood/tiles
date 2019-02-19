@@ -3,6 +3,7 @@ package com.etherblood.test.client;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
@@ -22,6 +23,12 @@ public class GridFighterJFrame extends javax.swing.JFrame {
     private final AbilitiesPanel abilitiesPanel;
     public Consumer<AbilityUsage> abilityCallback;
 
+    public static void main(String[] args) {
+        GridFighterJFrame frame = new GridFighterJFrame(10, 10);
+        frame.updateSprites(Arrays.asList(new CharacterDetails(0, "asdf", 148, 20, 4, 2, 3, 7), new CharacterDetails(1, "asdf", 143, 20, 4, 2, 5, 7)));
+        frame.setVisible(true);
+    }
+    
     public GridFighterJFrame(int mapWidth, int mapHeight) {
         initComponents();
 

@@ -32,13 +32,13 @@ public class GameEventDispatcher {
     }
 
     @SafeVarargs
-    public final <T extends Event> void setInlineHandlers(EventMeta<T> event, EventHandler<T>... handlers) {
-        queue.setInlineHandlers(event.id(), handlers);
+    public final <T extends Event> void addInlineHandlers(EventMeta<T> event, EventHandler<T>... handlers) {
+        queue.addInlineHandlers(event.id(), handlers);
     }
 
     @SafeVarargs
-    public final <T extends Event> void setQueueHandlers(EventMeta<T> event, EventHandler<T>... handlers) {
-        queue.setQueueHandlers(event.id(), handlers);
+    public final <T extends Event> void addQueueHandlers(EventMeta<T> event, EventHandler<T>... handlers) {
+        queue.addQueueHandlers(event.id(), handlers);
     }
 
     public EntityData getData() {

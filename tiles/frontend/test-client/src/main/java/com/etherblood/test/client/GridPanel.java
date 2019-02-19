@@ -17,12 +17,12 @@ import javax.swing.JPanel;
 public class GridPanel extends JPanel {
 
     private static final long serialVersionUID = 1L;
-    private final List<CharacterDetails> sprites;
+    private final List<? extends Sprite> sprites;
     private final SpriteSheet pokemons, trees;
     private final int boardTilesX, boardTilesY;
     private final Set<Integer> highlights = new HashSet<>();
 
-    public GridPanel(List<CharacterDetails> sprites, SpriteSheet pokemons, SpriteSheet trees, int boardTilesX, int boardTilesY) {
+    public GridPanel(List<? extends Sprite> sprites, SpriteSheet pokemons, SpriteSheet trees, int boardTilesX, int boardTilesY) {
         this.sprites = sprites;
         this.pokemons = pokemons;
         this.trees = trees;
@@ -53,7 +53,7 @@ public class GridPanel extends JPanel {
             g.drawRect((int)(boardTileWidth * x), (int)(boardTileHeight * y), (int)boardTileWidth, (int)boardTileHeight);
         }
         
-        for (CharacterDetails sprite : sprites) {
+        for (Sprite sprite : sprites) {
             Rectangle source;
             Image image;
             if(sprite.spriteId != null) {

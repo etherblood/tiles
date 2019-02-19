@@ -27,6 +27,7 @@ public class IntArrayList implements Iterable<Integer> {
     }
 
     public int get(int index) {
+        assert index < size;
         return data[index];
     }
 
@@ -71,6 +72,10 @@ public class IntArrayList implements Iterable<Integer> {
         data[index] = data[--size];
     }
 
+    public boolean contains(int value) {
+        return indexOf(value) != -1;
+    }
+
     public int indexOf(int value) {
         for (int i = 0; i < size; i++) {
             if (data[i] == value) {
@@ -104,6 +109,10 @@ public class IntArrayList implements Iterable<Integer> {
         data = nextData;
     }
 
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
     public int size() {
         return size;
     }
@@ -111,7 +120,7 @@ public class IntArrayList implements Iterable<Integer> {
     public int[] data() {
         return data;
     }
-    
+
     public List<Integer> boxed() {
         return Arrays.stream(data, 0, size).boxed().collect(Collectors.toList());
     }

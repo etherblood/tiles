@@ -30,7 +30,7 @@ public class UpdateBuffedStatHandler extends AbstractGameEventHandler implements
     public void handle(int entity) {
         int baseValue = data.getOptional(entity, base.id).orElse(0);
         int additiveValue = data.query(additive.id).sum(hasValue(buffOn.id, entity));
-        LOG.info("updating buffed {} of #{} to {}, base is {}, additive is {}", statName, entity, baseValue + additiveValue, baseValue, additiveValue);
+        LOG.debug("updating buffed {} of #{} to {}, base is {}, additive is {}", statName, entity, baseValue + additiveValue, baseValue, additiveValue);
         events.fire(setBuffedSupply.create(entity, baseValue + additiveValue));
     }
 

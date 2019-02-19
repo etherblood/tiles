@@ -36,18 +36,6 @@ public class SimpleComponentMap implements ComponentMap {
         components.remove(entity);
     }
 
-//    @Deprecated
-//    public IntArrayList entities(IntPredicate predicate) {
-//        IntArrayList list = new IntArrayList(components.size());
-//        components.foreachKey(entity -> {
-//            if (predicate.test(entity)) {
-//                list.add(entity);
-//            }
-//        });
-//        list.sort();
-//        return list;
-//    }
-
     @Override
     public EntityQuery query() {
         return aggregator;

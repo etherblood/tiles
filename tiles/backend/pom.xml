@@ -8,4 +8,6 @@
     </parent>
     <artifactId>backend</artifactId>
     <packaging>pom</packaging>
+    <modules>
+    </modules>
 </project>

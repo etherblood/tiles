@@ -35,7 +35,7 @@ public class SourceTargetValueEvent extends Event {
             return false;
         }
         SourceTargetValueEvent other = (SourceTargetValueEvent) obj;
-        return this.source == other.source && this.target == other.target && this.value == other.value;
+        return this.id == other.id && this.source == other.source && this.target == other.target && this.value == other.value;
     }
 
     @Override

@@ -1,6 +1,5 @@
 package com.etherblood.events;
 
-
 public abstract class AbstractEventMeta<T> implements EventMeta<T> {
 
     private final int id;
@@ -10,7 +9,7 @@ public abstract class AbstractEventMeta<T> implements EventMeta<T> {
         this.id = id;
         this.name = name;
     }
-    
+
     @Override
     public int id() {
         return id;
@@ -19,6 +18,11 @@ public abstract class AbstractEventMeta<T> implements EventMeta<T> {
     @Override
     public String name() {
         return name;
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "{" + "id=" + id + ", name=" + name + '}';
     }
 
 }

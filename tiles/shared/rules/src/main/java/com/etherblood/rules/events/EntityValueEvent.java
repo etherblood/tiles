@@ -33,7 +33,7 @@ public class EntityValueEvent extends Event {
             return false;
         }
         EntityValueEvent other = (EntityValueEvent) obj;
-        return this.entity == other.entity && this.value == other.value;
+        return this.id == other.id && this.entity == other.entity && this.value == other.value;
     }
 
     @Override

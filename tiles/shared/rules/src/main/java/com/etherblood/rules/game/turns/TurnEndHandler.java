@@ -31,7 +31,7 @@ public class TurnEndHandler extends AbstractGameEventHandler implements EventHan
     public void handle(int team) {
         LOG.info("ended turn turn of #{}", team);
         IntArrayList actors = data.query(memberOf.id).list(hasValue(memberOf.id, team));
-        LOG.info("setting active for members of team #{}: {}", team, actors);
+        LOG.info("resetting active for members of team #{}: {}", team, actors);
         for (int actor : actors) {
             events.fire(resetActiveActionPointsEvent.create(actor));
             events.fire(resetActiveMovePointsEvent.create(actor));

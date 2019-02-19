@@ -1,7 +1,7 @@
 package com.etherblood.sandbox;
 
 import com.etherblood.entities.EntityData;
-import com.etherblood.rules.movement.Coordinates;
+import com.etherblood.rules.util.Coordinates;
 import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.Map;

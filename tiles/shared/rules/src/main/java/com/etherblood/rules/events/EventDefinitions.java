@@ -16,16 +16,19 @@ public class EventDefinitions {
     public final ElementStatEvents toughness;
     public final EntityValueEventMeta setActivePlayer;
     public final EntityValueEventMeta setActiveTeam;
+    public final EntityValueEventMeta setAlive;
     public final EntityCoordinatesEventMeta setPosition;
-    public final EntityMoveEventMeta walkAction;
-    public final EntityEventMeta passTurnAction;
-    public final EntityValueEventMeta razorleafAction;
+    public final EntityMoveEventMeta walkToTargetEffect;
+//    public final EntityEventMeta passTurnAction;
+//    public final EntityValueEventMeta razorleafAction;
     public final VoidEventMeta gameStart;
     public final EntityEventMeta turnStart;
     public final EntityEventMeta turnEnd;
     public final VoidEventMeta gameOver;
     public final DamageEvents dealDamage;
     public final ElementAttackEvents attack;
+    public final EntityEventMeta useSkill;
+    public final EntityCoordinatesEventMeta useTargetedSkill;
 
     public EventDefinitions(List<EventMeta<?>> events) {
         health = new StatEvents("Health", events);
@@ -35,16 +38,19 @@ public class EventDefinitions {
         toughness = new ElementStatEvents("Toughness", events);
         setActivePlayer = entityValueEvent(events, "SetActivePlayer");
         setActiveTeam = entityValueEvent(events, "SetActiveTeam");
+        setAlive = entityValueEvent(events, "SetAlive");
         setPosition = entityCoordinatesEvent(events, "SetPosition");
-        walkAction = entityMoveEvent(events, "WalkAction");
-        passTurnAction = entityEvent(events, "PassTurnAction");
-        razorleafAction = entityValueEvent(events, "RazorleafAction");
+        walkToTargetEffect = entityMoveEvent(events, "WalkToTargetEffect");
+//        passTurnAction = entityEvent(events, "PassTurnAction");
+//        razorleafAction = entityValueEvent(events, "RazorleafAction");
         gameStart = voidEvent(events, "GameStart");
         turnStart = entityEvent(events, "TurnStart");
         turnEnd = entityEvent(events, "TurnEnd");
         gameOver = voidEvent(events, "GameOver");
         dealDamage = new DamageEvents("DealElementalDamage", events);
         attack = new ElementAttackEvents("Attack", events);
+        useSkill = entityEvent(events, "UseSkill");
+        useTargetedSkill = entityCoordinatesEvent(events, "UseTargetedSkill");
     }
 
     private static VoidEventMeta voidEvent(List<EventMeta<?>> events, String name) {

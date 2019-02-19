@@ -33,5 +33,11 @@ public abstract class Event {
     public int getId() {
         return id;
     }
+    
+    @Override
+    public abstract boolean equals(Object obj);
+    
+    @Override
+    public abstract int hashCode();
 
 }

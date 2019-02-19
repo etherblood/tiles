@@ -28,13 +28,5 @@ public interface EntityData {
 
     void remove(int entity, int component);
 
-    default void setWithDefault(int entity, int component, int value, int defaultValue) {
-        if (value == defaultValue) {
-            remove(entity, component);
-        } else {
-            set(entity, component, value);
-        }
-    }
-
     EntityQuery query(int component);
 }

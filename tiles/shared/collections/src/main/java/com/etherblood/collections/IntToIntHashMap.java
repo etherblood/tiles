@@ -1,7 +1,7 @@
 package com.etherblood.collections;
 
 import java.util.Arrays;
-import java.util.PrimitiveIterator;
+import java.util.NoSuchElementException;
 import java.util.function.IntConsumer;
 
 /**
@@ -79,12 +79,12 @@ public class IntToIntHashMap implements IntToIntMap {
     }
 
     @Override
-    public int get(int key) {
+    public int get(int key) throws NoSuchElementException {
         if (key == FREE_KEY) {
             if (hasFreeKey) {
                 return freeValue;
             }
-            throw new NullPointerException();
+            throw new NoSuchElementException();
         }
         int index = key & mask;
         while (true) {
@@ -94,7 +94,7 @@ public class IntToIntHashMap implements IntToIntMap {
                 return value(keyValue);
             }
             if (keyCandidate == FREE_KEY) {
-                throw new NullPointerException();
+                throw new NoSuchElementException();
             }
             index = (index + 1) & mask;
         }
@@ -225,6 +225,11 @@ public class IntToIntHashMap implements IntToIntMap {
 
     public int capacity() {
         return data.length;
+    }
+
+    public void clear() {
+        hasFreeKey = false;
+        Arrays.fill(data, FREE_KEYVALUE);
     }
 
     @Override

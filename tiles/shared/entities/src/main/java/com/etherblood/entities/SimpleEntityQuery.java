@@ -49,7 +49,7 @@ public class SimpleEntityQuery implements EntityQuery {
 
     @Override
     public boolean exists() {
-        return source.size() != 0;
+        return !source.isEmpty();
     }
 
     @Override

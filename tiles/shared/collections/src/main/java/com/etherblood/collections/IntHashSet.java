@@ -2,7 +2,6 @@ package com.etherblood.collections;
 
 import java.util.Arrays;
 import java.util.PrimitiveIterator;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.IntConsumer;
 
 /**
@@ -91,7 +90,7 @@ public final class IntHashSet implements Iterable<Integer> {
             return;
         }
         if (count >= fillLimit) {
-            resize(capacity() << 1);
+            resize(2 * capacity());
         }
         if (uncheckedSet(key)) {
             count++;
@@ -183,10 +182,11 @@ public final class IntHashSet implements Iterable<Integer> {
 
     public int[] toArray() {
         int[] array = new int[size()];
-        AtomicInteger i = new AtomicInteger(0);
-        foreach(x -> {
-            array[i.getAndIncrement()] = x;
-        });
+        int i = 0;
+        PrimitiveIterator.OfInt iterator = iterator();
+        while (iterator.hasNext()) {
+            array[i++] = iterator.nextInt();
+        }
         return array;
     }
 

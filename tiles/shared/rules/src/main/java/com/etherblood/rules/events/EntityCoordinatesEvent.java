@@ -1,7 +1,7 @@
 package com.etherblood.rules.events;
 
 import com.etherblood.events.Event;
-import com.etherblood.rules.movement.Coordinates;
+import com.etherblood.rules.util.Coordinates;
 
 /**
  *
@@ -34,7 +34,7 @@ public class EntityCoordinatesEvent extends Event {
             return false;
         }
         EntityCoordinatesEvent other = (EntityCoordinatesEvent) obj;
-        return this.entity == other.entity && this.coordinates == other.coordinates;
+        return this.id == other.id && this.entity == other.entity && this.coordinates == other.coordinates;
     }
 
     @Override

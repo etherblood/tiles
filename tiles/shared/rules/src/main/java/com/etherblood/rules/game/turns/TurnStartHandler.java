@@ -18,17 +18,18 @@ public class TurnStartHandler extends AbstractGameEventHandler implements EventH
     private static final Logger LOG = LoggerFactory.getLogger(TurnStartHandler.class);
 
     private final EntityValueEventMeta setActivePlayerEvent, setActiveTeamEvent;
-    private final ComponentMeta memberOf;
+    private final int memberOf, alive;
 
-    public TurnStartHandler(EntityValueEventMeta setActivePlayerEvent, EntityValueEventMeta setActiveTeamEvent, ComponentMeta memberOf) {
+    public TurnStartHandler(EntityValueEventMeta setActivePlayerEvent, EntityValueEventMeta setActiveTeamEvent, int memberOf, int alive) {
         this.setActivePlayerEvent = setActivePlayerEvent;
         this.setActiveTeamEvent = setActiveTeamEvent;
         this.memberOf = memberOf;
+        this.alive = alive;
     }
 
     public void handle(int team) {
         events.fire(setActiveTeamEvent.create(team, 1));
-        IntArrayList actors = data.query(memberOf.id).list(hasValue(memberOf.id, team));
+        IntArrayList actors = data.query(memberOf).list(hasValue(memberOf, team).and(has(alive)));
         LOG.info("setting active for members of team #{}: {}", team, actors);
         for (int actor : actors) {
             events.fire(setActivePlayerEvent.create(actor, 1));

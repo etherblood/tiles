@@ -29,4 +29,8 @@ public class ComponentMeta {
     public Object toPojo(int value) {
         return objectify.apply(value);
     }
+    
+    public String toString(int value) {
+        return objectify.apply(value).toString();
+    }
 }

@@ -52,7 +52,7 @@ public class RefreshAllStatHandler extends AbstractGameEventHandler implements E
         entities.foreach(list::add);
         list.sort();
 
-        LOG.info("refreshing {} for {}", statName, list);
+        LOG.debug("refreshing {} for {}", statName, list);
 
         list.foreach(entity -> {
             events.fire(updateBuffedSupply.create(entity));

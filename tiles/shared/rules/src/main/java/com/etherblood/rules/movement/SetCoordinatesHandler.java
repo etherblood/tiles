@@ -1,5 +1,6 @@
 package com.etherblood.rules.movement;
 
+import com.etherblood.rules.util.Coordinates;
 import com.etherblood.entities.ComponentMeta;
 import com.etherblood.events.handlers.EventHandler;
 import com.etherblood.rules.AbstractGameEventHandler;

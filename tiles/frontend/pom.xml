@@ -10,5 +10,6 @@
     <packaging>pom</packaging>
     <modules>
         <module>test-client</module>
+        <module>jme-client</module>
     </modules>
 </project>

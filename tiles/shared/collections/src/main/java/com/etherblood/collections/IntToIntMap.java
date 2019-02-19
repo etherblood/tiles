@@ -1,5 +1,6 @@
 package com.etherblood.collections;
 
+import java.util.NoSuchElementException;
 import java.util.PrimitiveIterator;
 
 /**
@@ -10,7 +11,7 @@ public interface IntToIntMap extends Iterable<Integer> {
 
     boolean hasKey(int key);
 
-    int get(int key) throws NullPointerException;
+    int get(int key) throws NoSuchElementException;
 
     default int getOrElse(int key, int defaultValue) {
         return hasKey(key) ? get(key) : defaultValue;
@@ -21,6 +22,10 @@ public interface IntToIntMap extends Iterable<Integer> {
     void remove(int key);
 
     int size();
+
+    default boolean isEmpty() {
+        return size() == 0;
+    }
 
     IntKeyValueIterator keyValueIterator();
 
@@ -44,4 +49,6 @@ public interface IntToIntMap extends Iterable<Integer> {
             }
         };
     }
+
+    void clear();
 }

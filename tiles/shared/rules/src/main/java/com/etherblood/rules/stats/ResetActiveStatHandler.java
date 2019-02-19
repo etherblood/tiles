@@ -27,7 +27,7 @@ public class ResetActiveStatHandler extends AbstractGameEventHandler implements 
     }
 
     public void handle(int entity) {
-        LOG.info("resetting {} of #{}", statName, entity);
+        LOG.debug("resetting {} of #{}", statName, entity);
         events.fire(setActiveSupply.create(entity, data.getOptional(entity, buffed.id).orElse(0)));
     }
 
