@@ -25,7 +25,6 @@ public class DeathSystem implements GameSystem {
                     LOG.info("#{} died.", actor);
                     core.actor.isStatusOk.remove(actor);
                     core.actor.active.remove(actor);
-                    core.actor.activate.remove(actor);
                     animations.enqueue(new DieAnimation(actor, core.actor.position.get(actor)));
                 }
             });

@@ -18,8 +18,8 @@ public class Main {
     public static void main(String... args) throws IOException, InterruptedException {
         NetworkUtil.initSerializers();
 
-//        startClient(0);
-        startClient(1);
+        startClient(0);
+//        startClient(1);
     }
 
     private static void startClient(int playerIndex) throws IOException {

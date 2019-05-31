@@ -5,7 +5,7 @@ public class Action {
     private final int targetSkill;
     private final Integer targetPosition;
 
-    public Action(int targetSkill, Integer targetPosition) {
+    Action(int targetSkill, Integer targetPosition) {
         this.targetSkill = targetSkill;
         this.targetPosition = targetPosition;
     }

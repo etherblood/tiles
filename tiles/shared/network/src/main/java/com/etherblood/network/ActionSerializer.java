@@ -14,7 +14,7 @@ public class ActionSerializer extends Serializer {
         int target = data.getInt();
         byte notNullFlags = data.get();
         Integer targetPosition = (notNullFlags & TARGET_POSITION_NOT_NULL_FLAG) != 0 ? Serializer.getSerializer(Integer.class).readObject(data, Integer.class) : null;
-        return (T) new Action(target, targetPosition);
+        return (T) Action.builder(target).withTargetPosition(targetPosition).build();
     }
 
     @Override

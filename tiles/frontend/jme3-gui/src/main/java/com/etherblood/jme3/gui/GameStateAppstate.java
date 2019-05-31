@@ -3,7 +3,6 @@ package com.etherblood.jme3.gui;
 import com.etherblood.collections.IntList;
 import com.etherblood.core.GameContext;
 import com.etherblood.core.util.Flags;
-import com.etherblood.game.client.Game;
 import com.etherblood.jme3.gui.util.VersionedMap;
 import com.etherblood.jme3.gui.util.VersionedMapReference;
 import com.etherblood.mods.core.game.components.CoreComponents;

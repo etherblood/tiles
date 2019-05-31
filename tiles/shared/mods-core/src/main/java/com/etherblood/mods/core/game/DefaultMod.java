@@ -173,7 +173,7 @@ public class DefaultMod implements Mod {
                 //
                 new EffectPhaseCleanupSystem(core),
                 //
-                new NextTeamsTurnSystem(core),
+                new NextTeamsTurnSystem(core, entityFactory),
                 new CooldownUpdateSystem(core),
                 new ResetActivatedActorActionPointsSystem(core),
                 new ResetActivatedActorMovePointsSystem(core),

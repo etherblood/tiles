@@ -15,6 +15,7 @@ public class EffectComponents extends ComponentsBase {
 
     public final AnimationComponents animation;
     public final BoolComponent passTurnOfActor;
+    public final BoolComponent startTurnOfTargetActor;
     public final BoolComponent walkToTargetPosition;
     public final BoolComponent targetDeath;
     public final ElementComponents damageToTarget;
@@ -29,6 +30,7 @@ public class EffectComponents extends ComponentsBase {
         targetActor = newIntComponent(name + "TargetActor", registry);
         animation = new AnimationComponents(name + "Animation", registry);
         passTurnOfActor = newBoolComponent("PassTurnOfActor" + name, registry);
+        startTurnOfTargetActor = newBoolComponent("StartTurnOfTargetActor" + name, registry);
         walkToTargetPosition = newBoolComponent("WalkToTarget" + name, registry);
         targetDeath = newBoolComponent("TargetDeath" + name, registry);
         damageToTarget = new ElementComponents("DamageToTarget" + name, registry);

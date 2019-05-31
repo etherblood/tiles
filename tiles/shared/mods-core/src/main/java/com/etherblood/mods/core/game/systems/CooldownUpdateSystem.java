@@ -16,7 +16,8 @@ public class CooldownUpdateSystem implements GameSystem {
 
     @Override
     public void update() {
-        for (int actor : core.actor.activate.query().list()) {
+        for (int effect : core.effect.triggered.query().list(core.effect.startTurnOfTargetActor::has)) {
+            int actor = core.effect.targetActor.get(effect);
             for (int skill : core.skill.cooldown.active.query().list(x -> core.skill.ofActor.hasValue(x, actor))) {
                 int cooldown = core.skill.cooldown.active.get(skill);
                 cooldown--;
@@ -30,5 +31,5 @@ public class CooldownUpdateSystem implements GameSystem {
             }
         }
     }
-
+    
 }

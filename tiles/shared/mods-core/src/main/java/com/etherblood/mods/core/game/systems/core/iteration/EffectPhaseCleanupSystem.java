@@ -8,6 +8,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+//TODO: cleanup should only be required for shared components (eg. core.effect.active), all other effects should be removed by their handlers
 public class EffectPhaseCleanupSystem implements GameSystem {
 
     private static final Logger LOG = LoggerFactory.getLogger(EffectPhaseCleanupSystem.class);
@@ -42,7 +43,7 @@ public class EffectPhaseCleanupSystem implements GameSystem {
         for (int entity : core.effect.active.query().list()) {
             for (Component<?> component : componentsToRemove) {
                 if (LOG.isDebugEnabled() && component.has(entity)) {
-                    LOG.debug("Removed {}={} from #{}.", component.name, component.getGeneric(entity), entity);
+                    LOG.debug("Remove {}={} from #{}.", component.name, component.getGeneric(entity), entity);
                 }
                 component.remove(entity);
             }

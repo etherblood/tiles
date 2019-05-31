@@ -19,9 +19,12 @@ public abstract class ResetActivatedActorStatSystem implements GameSystem {
 
     @Override
     public void update() {
-        for (int actor : core.actor.activate.query().list(stat.buffed::has)) {
-            stat.active.set(actor, stat.buffed.get(actor));
-            LOG.debug("Reset {} of #{}.", stat.active.name, actor);
+        for (int effect : core.effect.triggered.query().list(core.effect.startTurnOfTargetActor::has)) {
+            int actor = core.effect.targetActor.get(effect);
+            if (stat.buffed.has(actor)) {
+                stat.active.set(actor, stat.buffed.get(actor));
+                LOG.debug("Reset {} of #{}.", stat.active.name, actor);
+            }
         }
     }
 }

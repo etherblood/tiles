@@ -16,10 +16,15 @@ public class ActorActivationSystem implements GameSystem {
 
     @Override
     public void update() {
-        for (int actor : core.actor.activate.query().list()) {
-            core.actor.active.set(actor);
-            core.actor.activate.remove(actor);
-            LOG.info("Started turn of actor #{}", actor);
+        for (int effect : core.effect.triggered.query().list(core.effect.startTurnOfTargetActor::has)) {
+            int actor = core.effect.targetActor.get(effect);
+            if (core.actor.isStatusOk.has(actor)) {
+                core.actor.active.set(actor);
+                LOG.info("Started turn of actor #{}", actor);
+            } else {
+                LOG.info("Failed to start turn of actor #{}, status is not OK.", actor);
+            }
+            core.effect.startTurnOfTargetActor.remove(effect);
         }
     }
 
