@@ -11,9 +11,11 @@ import org.slf4j.LoggerFactory;
 public class EffectPhaseCleanupSystem implements GameSystem {
 
     private static final Logger LOG = LoggerFactory.getLogger(EffectPhaseCleanupSystem.class);
+    private final CoreComponents core;
     private final List<Component<?>> componentsToRemove;
 
     public EffectPhaseCleanupSystem(CoreComponents core) {
+        this.core = core;
         componentsToRemove = Arrays.asList(core.effect.active,
                 core.effect.ofActor,
                 core.effect.ofSkill,
@@ -37,8 +39,13 @@ public class EffectPhaseCleanupSystem implements GameSystem {
 
     @Override
     public void update() {
-        for (Component<?> component : componentsToRemove) {
-            component.clear();
+        for (int entity : core.effect.active.query().list()) {
+            for (Component<?> component : componentsToRemove) {
+                if (LOG.isDebugEnabled() && component.has(entity)) {
+                    LOG.debug("Removed {}={} from #{}.", component.name, component.getGeneric(entity), entity);
+                }
+                component.remove(entity);
+            }
         }
         LOG.debug("Cleaned up active effects.");
     }

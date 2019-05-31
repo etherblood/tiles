@@ -5,12 +5,12 @@ import com.etherblood.mods.core.game.components.CoreComponents;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class PassTurnOfTargetSystem implements  GameSystem {
+public class PassTurnOfActorSystem implements  GameSystem {
 
-    private static final Logger LOG = LoggerFactory.getLogger(PassTurnOfTargetSystem.class);
+    private static final Logger LOG = LoggerFactory.getLogger(PassTurnOfActorSystem.class);
     private final CoreComponents core;
 
-    public PassTurnOfTargetSystem(CoreComponents core) {
+    public PassTurnOfActorSystem(CoreComponents core) {
         this.core = core;
     }
 
@@ -19,7 +19,7 @@ public class PassTurnOfTargetSystem implements  GameSystem {
         for (int effect : core.effect.passTurnOfActor.query().list()) {
             int actor = core.effect.ofActor.get(effect);
             core.actor.active.remove(actor);
-            LOG.info("Ended turn of actor #{}.", actor);
+            LOG.info("Passed turn of actor #{}.", actor);
         }
     }
 

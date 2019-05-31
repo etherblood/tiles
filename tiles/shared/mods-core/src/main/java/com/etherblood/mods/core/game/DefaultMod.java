@@ -12,7 +12,7 @@ import com.etherblood.core.random.HistoryRandom;
 import com.etherblood.core.to.GameConfig;
 import com.etherblood.core.util.Coordinates;
 import com.etherblood.core.util.Flags;
-import com.etherblood.mods.core.game.systems.core.iteration.ConvertTriggerToEffectSystem;
+import com.etherblood.mods.core.game.systems.core.iteration.ActivateTriggeredEffectsSystem;
 import com.etherblood.mods.core.game.systems.CooldownUpdateSystem;
 import com.etherblood.mods.core.game.systems.ResetActivatedActorActionPointsSystem;
 import com.etherblood.mods.core.game.systems.ResetActivatedActorMovePointsSystem;
@@ -26,7 +26,7 @@ import com.etherblood.mods.core.game.systems.core.cost.MovePointsCostSystem;
 import com.etherblood.mods.core.game.systems.core.iteration.EffectPhaseCleanupSystem;
 import com.etherblood.mods.core.game.systems.core.turn.ActorActivationSystem;
 import com.etherblood.mods.core.game.systems.core.turn.NextTeamsTurnSystem;
-import com.etherblood.mods.core.game.systems.pass.PassTurnOfTargetSystem;
+import com.etherblood.mods.core.game.systems.pass.PassTurnOfActorSystem;
 import com.etherblood.mods.core.game.systems.pass.PassTurnSkillTriggerSystem;
 import com.etherblood.mods.core.game.systems.walk.WalkToTargetPositionSystem;
 import com.etherblood.mods.core.game.systems.core.condition.EmptyTargetRequiredSystem;
@@ -160,15 +160,14 @@ public class DefaultMod implements Mod {
     }
 
     private static List<GameSystem> initSystems(EntityFactory entityFactory, CoreComponents core, AnimationsController animations, HistoryRandom random) {
-        return Arrays.asList(
-                //
-                new ConvertTriggerToEffectSystem(core),
+        return Arrays.asList(//
+                new ActivateTriggeredEffectsSystem(core),
                 //
                 new AttackAnimationSystem(core, animations),
                 new WalkAnimationSystem(core, animations),
                 new DeathSystem(core, animations),
                 new WalkToTargetPositionSystem(core),
-                new PassTurnOfTargetSystem(core),
+                new PassTurnOfActorSystem(core),
                 new EarthDamageToTargetSystem(core, random),
                 new DieWithoutHealthSystem(core, entityFactory, animations),
                 //

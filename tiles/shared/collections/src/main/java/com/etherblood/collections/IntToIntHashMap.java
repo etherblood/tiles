@@ -229,6 +229,7 @@ public class IntToIntHashMap implements IntToIntMap {
 
     @Override
     public void clear() {
+        count = 0;
         hasFreeKey = false;
         Arrays.fill(data, FREE_KEYVALUE);
     }

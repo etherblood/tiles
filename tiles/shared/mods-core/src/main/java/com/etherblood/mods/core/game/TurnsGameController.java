@@ -33,11 +33,13 @@ public class TurnsGameController implements ActionController {
         LOG.info("Player {} requested action {}.", player, action);
         int skill = action.getTargetSkill();
         int actor = core.skill.ofActor.get(skill);
-        int trigger = createTrigger(skill);
-        core.effect.ofActor.set(trigger, actor);
+        int effect = entityFactory.create();
+        core.effect.triggered.set(effect);
+        core.effect.ofSkill.set(effect, skill);
+        core.effect.ofActor.set(effect, actor);
         Integer targetActor = null;
         if (action.getTargetPosition() != null) {
-            core.effect.targetPosition.set(trigger, action.getTargetPosition());
+            core.effect.targetPosition.set(effect, action.getTargetPosition());
             IntList list = core.actor.position.query().list(x -> core.actor.position.hasValue(x, action.getTargetPosition()));
             if(list.size() == 1) {
                 targetActor = list.get(0);
@@ -46,7 +48,7 @@ public class TurnsGameController implements ActionController {
             throw new IllegalActionException("Action does not have the required target position.");
         }
         if (targetActor != null) {
-            core.effect.targetActor.set(trigger, targetActor);
+            core.effect.targetActor.set(effect, targetActor);
         } else if (core.skill.targeting.actor.required.has(skill)) {
             throw new IllegalActionException("Action does not have the required target actor.");
         }
@@ -57,12 +59,6 @@ public class TurnsGameController implements ActionController {
         runSystemIterations();
     }
 
-    private int createTrigger(int skill) {
-        int trigger = entityFactory.create();
-        core.effect.triggered.set(trigger);
-        core.effect.ofSkill.set(trigger, skill);
-        return trigger;
-    }
 
     private void validateSkillUsagePermitted(int player, int actor) {
         int controlFlags = core.actor.controlledBy.get(actor);

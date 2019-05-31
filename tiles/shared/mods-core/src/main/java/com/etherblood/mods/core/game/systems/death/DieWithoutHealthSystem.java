@@ -25,12 +25,12 @@ public class DieWithoutHealthSystem implements GameSystem {
         for (int actor : core.actor.isStatusOk.query().list()) {
             int health = core.stats.health.active.getOptional(actor).orElse(0);
             if (health <= 0) {
-                int trigger = factory.create();
-                core.effect.triggered.set(trigger);
-                core.effect.targetDeath.set(trigger);
-                core.effect.targetActor.set(trigger, actor);
+                int effect = factory.create();
+                core.effect.triggered.set(effect);
+                core.effect.targetDeath.set(effect);
+                core.effect.targetActor.set(effect, actor);
                 if (animations.isEnabled()) {
-                    core.effect.animation.die.set(trigger);
+                    core.effect.animation.die.set(effect);
                 }
             }
         }

@@ -178,6 +178,8 @@ public final class IntHashSet implements Iterable<Integer> {
 
     public void clear() {
         count = 0;
+        hasFreeKey = false;
+        Arrays.fill(keys, FREE_KEY);
     }
 
     public int[] toArray() {

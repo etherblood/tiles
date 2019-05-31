@@ -16,10 +16,10 @@ public class PassTurnSkillTriggerSystem implements ActionSystem {
 
     @Override
     public void update() {
-        for (int trigger : core.effect.triggered.query().list()) {
-            core.effect.ofSkill.getOptional(trigger).ifPresent(skill -> {
+        for (int effect : core.effect.triggered.query().list()) {
+            core.effect.ofSkill.getOptional(effect).ifPresent(skill -> {
                 if (core.skill.effect.passTurnOfActor.has(skill)) {
-                    core.effect.passTurnOfActor.set(trigger);
+                    core.effect.passTurnOfActor.set(effect);
                 }
             });
         }

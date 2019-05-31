@@ -5,12 +5,12 @@ import com.etherblood.mods.core.game.components.CoreComponents;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ConvertTriggerToEffectSystem implements GameSystem {
+public class ActivateTriggeredEffectsSystem implements GameSystem {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ConvertTriggerToEffectSystem.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ActivateTriggeredEffectsSystem.class);
     private final CoreComponents core;
 
-    public ConvertTriggerToEffectSystem(CoreComponents core) {
+    public ActivateTriggeredEffectsSystem(CoreComponents core) {
         this.core = core;
     }
 
@@ -19,7 +19,7 @@ public class ConvertTriggerToEffectSystem implements GameSystem {
         for (int trigger : core.effect.triggered.query().list()) {
             core.effect.active.set(trigger);
             core.effect.triggered.remove(trigger);
-            LOG.debug("Converted trigger #{} to effect.", trigger);
+            LOG.debug("Activated triggered effect #{}.", trigger);
         }
     }
 
