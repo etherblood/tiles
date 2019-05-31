@@ -12,11 +12,11 @@ import org.junit.Test;
  */
 public abstract class AbstractEntityQueryTest {
 
-    protected abstract EntityQuery createInstance(Map<Integer, Integer> map);
+    protected abstract IntEntityQuery createInstance(Map<Integer, Integer> map);
 
     @Test
     public void count_IntPredicate() {
-        EntityQuery query = createInstance(new MapBuilder<Integer, Integer>()
+        IntEntityQuery query = createInstance(new MapBuilder<Integer, Integer>()
                 .with(0, 7)
                 .with(1, 7)
                 .build());
@@ -25,7 +25,7 @@ public abstract class AbstractEntityQueryTest {
 
     @Test
     public void count() {
-        EntityQuery query = createInstance(new MapBuilder<Integer, Integer>()
+        IntEntityQuery query = createInstance(new MapBuilder<Integer, Integer>()
                 .with(0, 7)
                 .with(1, 7)
                 .build());
@@ -34,7 +34,7 @@ public abstract class AbstractEntityQueryTest {
 
     @Test
     public void exists_IntPredicate() {
-        EntityQuery query = createInstance(new MapBuilder<Integer, Integer>()
+        IntEntityQuery query = createInstance(new MapBuilder<Integer, Integer>()
                 .with(0, 7)
                 .with(1, 7)
                 .build());
@@ -44,7 +44,7 @@ public abstract class AbstractEntityQueryTest {
 
     @Test
     public void exists() {
-        EntityQuery query = createInstance(new MapBuilder<Integer, Integer>()
+        IntEntityQuery query = createInstance(new MapBuilder<Integer, Integer>()
                 .with(0, 7)
                 .with(1, 7)
                 .build());
@@ -53,26 +53,26 @@ public abstract class AbstractEntityQueryTest {
 
     @Test
     public void sum_IntPredicate() {
-        EntityQuery query = createInstance(new MapBuilder<Integer, Integer>()
+        IntEntityQuery query = createInstance(new MapBuilder<Integer, Integer>()
                 .with(0, 5)
                 .with(1, 7)
                 .with(2, 19)
                 .build());
-        Assert.assertEquals(12, query.sum(x -> x != 2));
+        Assert.assertEquals(12, query.sumValues(x -> x != 2));
     }
 
     @Test
     public void sum() {
-        EntityQuery query = createInstance(new MapBuilder<Integer, Integer>()
+        IntEntityQuery query = createInstance(new MapBuilder<Integer, Integer>()
                 .with(0, 5)
                 .with(1, 7)
                 .build());
-        Assert.assertEquals(12, query.sum());
+        Assert.assertEquals(12, query.sumValues());
     }
 
     @Test
     public void unique_IntPredicate() {
-        EntityQuery query = createInstance(new MapBuilder<Integer, Integer>()
+        IntEntityQuery query = createInstance(new MapBuilder<Integer, Integer>()
                 .with(1, 7)
                 .build());
         Assert.assertFalse(query.unique(x -> x == 0).isPresent());
@@ -80,7 +80,7 @@ public abstract class AbstractEntityQueryTest {
 
     @Test
     public void unique() {
-        EntityQuery query = createInstance(new MapBuilder<Integer, Integer>()
+        IntEntityQuery query = createInstance(new MapBuilder<Integer, Integer>()
                 .with(1, 7)
                 .build());
         Assert.assertEquals(1, query.unique().getAsInt());
@@ -88,7 +88,7 @@ public abstract class AbstractEntityQueryTest {
 
     @Test(expected = IllegalStateException.class)
     public void unique_failure() {
-        EntityQuery query = createInstance(new MapBuilder<Integer, Integer>()
+        IntEntityQuery query = createInstance(new MapBuilder<Integer, Integer>()
                 .with(0, 7)
                 .with(1, 7)
                 .build());
@@ -97,7 +97,7 @@ public abstract class AbstractEntityQueryTest {
 
     @Test
     public void list_IntPredicate() {
-        EntityQuery query = createInstance(new MapBuilder<Integer, Integer>()
+        IntEntityQuery query = createInstance(new MapBuilder<Integer, Integer>()
                 .with(1, 7)
                 .with(0, 7)
                 .with(2, 7)
@@ -107,7 +107,7 @@ public abstract class AbstractEntityQueryTest {
 
     @Test
     public void list() {
-        EntityQuery query = createInstance(new MapBuilder<Integer, Integer>()
+        IntEntityQuery query = createInstance(new MapBuilder<Integer, Integer>()
                 .with(1, 7)
                 .with(0, 7)
                 .build());

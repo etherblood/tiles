@@ -9,5 +9,6 @@
     <artifactId>backend</artifactId>
     <packaging>pom</packaging>
     <modules>
+        <module>game-server</module>
     </modules>
 </project>

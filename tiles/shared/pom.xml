@@ -10,8 +10,9 @@
     <packaging>pom</packaging>
     <modules>
         <module>entities</module>
-        <module>events</module>
         <module>collections</module>
-        <module>rules</module>
+        <module>core</module>
+        <module>network</module>
+        <module>mods-core</module>
     </modules>
 </project>

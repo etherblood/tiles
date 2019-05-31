@@ -12,6 +12,10 @@ public interface ComponentMapView {
 
     int get(int entity);
 
+    default int getOrElse(int entity, int defaultValue) {
+        return has(entity) ? get(entity) : defaultValue;
+    }
+
     default OptionalInt getOptional(int entity) {
         return has(entity) ? OptionalInt.of(get(entity)) : OptionalInt.empty();
     }

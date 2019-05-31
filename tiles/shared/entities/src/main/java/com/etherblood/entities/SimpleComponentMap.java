@@ -9,7 +9,7 @@ import com.etherblood.collections.IntToIntHashMap;
 public class SimpleComponentMap implements ComponentMap {
 
     private final IntToIntHashMap components = new IntToIntHashMap();
-    private final SimpleEntityQuery aggregator = new SimpleEntityQuery(components);
+    private final IntEntityQueryImpl aggregator = new IntEntityQueryImpl(components);
 
     @Override
     public boolean has(int entity) {
@@ -39,6 +39,11 @@ public class SimpleComponentMap implements ComponentMap {
     @Override
     public EntityQuery query() {
         return aggregator;
+    }
+
+    @Override
+    public void clear() {
+        components.clear();
     }
 
 }

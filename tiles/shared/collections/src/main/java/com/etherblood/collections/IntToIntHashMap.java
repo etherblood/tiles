@@ -227,6 +227,7 @@ public class IntToIntHashMap implements IntToIntMap {
         return data.length;
     }
 
+    @Override
     public void clear() {
         hasFreeKey = false;
         Arrays.fill(data, FREE_KEYVALUE);
@@ -235,50 +236,36 @@ public class IntToIntHashMap implements IntToIntMap {
     @Override
     public IntKeyValueIterator keyValueIterator() {
         return new IntKeyValueIterator() {
-            private int i;
+            boolean useFreeKey = hasFreeKey;
+            private int i = -1;
             private int key, value;
 
-            {
-                i = -1;
-                if (hasFreeKey) {
+            @Override
+            public boolean next() {
+                if (useFreeKey) {
                     key = FREE_KEY;
                     value = freeValue;
-                } else {
-                    next();
+                    useFreeKey = false;
+                    return true;
                 }
-            }
-
-            @Override
-            public boolean hasItem() {
-                return i < data.length;
-            }
-
-            @Override
-            public void next() {
-                assert hasItem();
-                while (true) {
-                    i++;
-                    if (!hasItem()) {
-                        break;
-                    }
+                while (++i < data.length) {
                     long keyValue = data[i];
                     if (keyValue != FREE_KEYVALUE) {
                         key = IntToIntHashMap.key(keyValue);
                         value = IntToIntHashMap.value(keyValue);
-                        break;
+                        return true;
                     }
                 }
+                return false;
             }
 
             @Override
             public int key() {
-                assert hasItem();
                 return key;
             }
 
             @Override
             public int value() {
-                assert hasItem();
                 return value;
             }
         };
@@ -299,4 +286,25 @@ public class IntToIntHashMap implements IntToIntMap {
     private static long dataKey(int key) {
         return Integer.toUnsignedLong(key);
     }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append('{');
+        boolean isFirst = true;
+        IntKeyValueIterator iterator = keyValueIterator();
+        while (iterator.next()) {
+            if (isFirst) {
+                isFirst = false;
+            } else {
+                builder.append(", ");
+            }
+            builder.append(iterator.key());
+            builder.append("->");
+            builder.append(iterator.value());
+        }
+        builder.append('}');
+        return builder.toString();
+    }
+
 }

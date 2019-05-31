@@ -6,9 +6,7 @@ package com.etherblood.collections;
  */
 public interface IntKeyValueIterator {
 
-    boolean hasItem();
-
-    void next();
+    boolean next();
 
     int key();
 

@@ -9,7 +9,7 @@
     <artifactId>frontend</artifactId>
     <packaging>pom</packaging>
     <modules>
-        <module>test-client</module>
-        <module>jme-client</module>
+        <module>game-client</module>
+        <module>jme3-gui</module>
     </modules>
 </project>

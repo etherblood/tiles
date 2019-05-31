@@ -34,7 +34,7 @@ public final class IntHashSet implements Iterable<Integer> {
     }
 
     public float estimateHashQuality() {
-        long sum = 0;
+        long distanceSum = 0;
         long num = 0;
         for (int i = 0; i < keys.length; i++) {
             int key = keys[i];
@@ -43,11 +43,11 @@ public final class IntHashSet implements Iterable<Integer> {
                 while ((i & mask) != ((key + distance) & mask)) {
                     distance++;
                 }
-                sum += distance;
+                distanceSum += distance;
                 num++;
             }
         }
-        return (float) num / (sum + num);
+        return (float) num / (distanceSum + num);
     }
 
     public void foreach(IntConsumer consumer) {
@@ -197,6 +197,10 @@ public final class IntHashSet implements Iterable<Integer> {
 
     public int size() {
         return count;
+    }
+    
+    public boolean isEmpty() {
+        return count == 0;
     }
 
     public int capacity() {

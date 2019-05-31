@@ -17,4 +17,6 @@ public interface ComponentMap extends ComponentMapView {
             set(entity, value);
         }
     }
+    
+    void clear();
 }

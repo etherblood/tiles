@@ -1,6 +1,7 @@
 package com.etherblood.entities;
 
 import com.etherblood.collections.IntArrayList;
+import com.etherblood.collections.IntList;
 import java.util.OptionalInt;
 import java.util.function.IntPredicate;
 
@@ -24,32 +25,26 @@ public interface EntityQuery {
         return exists(x -> true);
     }
 
-    int sum(IntPredicate predicate);
-
-    default int sum() {
-        return sum(x -> true);
-    }
-
     OptionalInt unique(IntPredicate predicate);
 
     default OptionalInt unique() {
         return unique(x -> true);
     }
 
-    void list(IntArrayList out, IntPredicate predicate);
+    void list(IntList out, IntPredicate predicate);
 
-    default void list(IntArrayList out) {
+    default void list(IntList out) {
         list(out, x -> true);
     }
 
-    default IntArrayList list(IntPredicate predicate) {
-        IntArrayList result = new IntArrayList();
+    default IntList list(IntPredicate predicate) {
+        IntList result = new IntArrayList();
         list(result, predicate);
         return result;
     }
 
-    default IntArrayList list() {
-        IntArrayList result = new IntArrayList();
+    default IntList list() {
+        IntList result = new IntArrayList();
         list(result);
         return result;
     }

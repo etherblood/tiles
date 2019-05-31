@@ -10,12 +10,12 @@ import java.util.Map;
 public class SimpleEntityQueryTest extends AbstractEntityQueryTest {
 
     @Override
-    protected EntityQuery createInstance(Map<Integer, Integer> map) {
+    protected IntEntityQuery createInstance(Map<Integer, Integer> map) {
         IntToIntHashMap data = new IntToIntHashMap();
         for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
             data.set(entry.getKey(), entry.getValue());
         }
-        return new SimpleEntityQuery(data);
+        return new IntEntityQueryImpl(data);
     }
 
 }

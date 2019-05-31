@@ -1,6 +1,7 @@
 package com.etherblood.collections;
 
 import java.util.NoSuchElementException;
+import java.util.OptionalInt;
 import java.util.PrimitiveIterator;
 
 /**
@@ -12,6 +13,10 @@ public interface IntToIntMap extends Iterable<Integer> {
     boolean hasKey(int key);
 
     int get(int key) throws NoSuchElementException;
+
+    default OptionalInt getOptional(int key) {
+        return hasKey(key) ? OptionalInt.of(get(key)) : OptionalInt.empty();
+    }
 
     default int getOrElse(int key, int defaultValue) {
         return hasKey(key) ? get(key) : defaultValue;
@@ -32,20 +37,34 @@ public interface IntToIntMap extends Iterable<Integer> {
     @Override
     default PrimitiveIterator.OfInt iterator() {
         return new PrimitiveIterator.OfInt() {
-            private final IntKeyValueIterator keyValueIterator = keyValueIterator();
+            private final IntKeyValueIterator keyValueIterator;
+            private Integer nextKey;
+
+            {
+                keyValueIterator = keyValueIterator();
+                updateNext();
+            }
 
             @Override
             public int nextInt() {
                 try {
-                    return keyValueIterator.key();
+                    return nextKey;
                 } finally {
-                    keyValueIterator.next();
+                    updateNext();
                 }
             }
 
             @Override
             public boolean hasNext() {
-                return keyValueIterator.hasItem();
+                return nextKey != null;
+            }
+
+            private void updateNext() {
+                if (keyValueIterator.next()) {
+                    nextKey = keyValueIterator.key();
+                } else {
+                    nextKey = null;
+                }
             }
         };
     }
