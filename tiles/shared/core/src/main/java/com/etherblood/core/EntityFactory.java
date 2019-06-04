@@ -10,11 +10,10 @@ public class EntityFactory {
     private int next;
 
     public EntityFactory() {
-        this(1);
+        reset();
     }
 
     public EntityFactory(int next) {
-        this.next = next;
     }
 
     public int create() {
@@ -24,5 +23,9 @@ public class EntityFactory {
 
     public int peek() {
         return next;
+    }
+    
+    public final void reset() {
+        next = 1;
     }
 }

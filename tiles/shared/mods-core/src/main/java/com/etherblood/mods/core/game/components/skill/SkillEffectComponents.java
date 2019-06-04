@@ -17,14 +17,16 @@ public class SkillEffectComponents extends ComponentsBase {
     public final BoolComponent walkToTargetPosition;
     public final ElementComponents damageToTarget;
     public final ElementComponents randomDamageToTarget;
+    public final PushSkillComponents push;
 
     public SkillEffectComponents(String name, ComponentRegistry registry) {
         targetPosition = newIntComponent(name + "TargetPosition", registry);
         targetActor = newIntComponent(name + "TargetActor", registry);
         animation = new AnimationComponents(name + "Animation", registry);
         passTurnOfActor = newBoolComponent("PassTurnOfActor" + name, registry);
-        walkToTargetPosition = newBoolComponent("WalkToTarget" + name, registry);
+        walkToTargetPosition = newBoolComponent("WalkToTargetPosition" + name, registry);
         damageToTarget = new ElementComponents("DamageToTarget" + name, registry);
         randomDamageToTarget = new ElementComponents("RandomDamageToTarget" + name, registry);
+        push = new PushSkillComponents("Push" + name, registry);
     }
 }

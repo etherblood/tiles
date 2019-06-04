@@ -2,7 +2,6 @@ package com.etherblood.mods.core.game.components;
 
 import com.etherblood.core.components.BoolComponent;
 import com.etherblood.core.components.ComponentRegistry;
-import com.etherblood.mods.core.game.components.ComponentsBase;
 
 public class AnimationComponents extends ComponentsBase {
 

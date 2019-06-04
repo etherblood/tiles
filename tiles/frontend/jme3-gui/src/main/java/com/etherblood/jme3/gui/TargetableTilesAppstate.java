@@ -37,7 +37,7 @@ public class TargetableTilesAppstate extends AbstractAppState {
                 int actor = core.skill.ofActor.get(skill);
                 int center = core.actor.position.get(actor);
                 int maxManhattanDistance = core.skill.targeting.position.manhattanRange.getOptional(skill).orElse(Integer.MAX_VALUE);
-                boolean requiresTargetEmpty = core.skill.targeting.position.empty.has(skill);
+                boolean requiresTargetEmpty = core.skill.targeting.actor.none.has(skill);
                 for (int y = 0; y < Coordinates.y(size); y++) {
                     for (int x = 0; x < Coordinates.x(size); x++) {
                         int target = Coordinates.of(x, y);

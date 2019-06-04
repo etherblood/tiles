@@ -33,6 +33,8 @@ import com.etherblood.mods.core.game.systems.core.condition.EmptyTargetRequiredS
 import com.etherblood.mods.core.game.systems.core.condition.ManhattanRangeRequiredSystem;
 import com.etherblood.mods.core.game.systems.core.cost.ActionPointsCostSystem;
 import com.etherblood.mods.core.game.systems.core.cost.CooldownCostSystem;
+import com.etherblood.mods.core.game.systems.push.PushEffectSystem;
+import com.etherblood.mods.core.game.systems.push.PushSkillSystem;
 import com.etherblood.mods.core.game.systems.walk.WalkSkillTriggerSystem;
 import java.security.SecureRandom;
 import java.util.Arrays;
@@ -49,7 +51,8 @@ public class DefaultMod implements Mod {
         HistoryRandom random = new HistoryRandom(new SecureRandom()::nextInt);
         List<GameSystem> systems = initSystems(entityFactory, core, animations, random);
         List<ActionSystem> actionSystems = initActionSystems(core, animations);
-        TurnsGameController controller = new TurnsGameController(systems, entityFactory, core, actionSystems);
+        DefaultActionGenerator actionGenerator = new DefaultActionGenerator(core);
+        TurnsGameController controller = new TurnsGameController(systems, entityFactory, core, actionSystems, actionGenerator);
         List<Object> components = Arrays.asList(core);
         return new GameContext(
                 entityFactory,
@@ -59,7 +62,8 @@ public class DefaultMod implements Mod {
                 controller,
                 new SingleTeamRemaining(core),
                 random,
-                animations);
+                animations,
+                actionGenerator);
     }
 
     @Override
@@ -95,6 +99,7 @@ public class DefaultMod implements Mod {
         passTurnSkill(context, actorA);
         walkSkill(context, actorA);
         razorleafSkill(context, actorA);
+        dragonsRageSkill(context, actorA);
 
         int actorB = entityFactory.create();
         core.name.set(actorB, "ActorB");
@@ -108,6 +113,7 @@ public class DefaultMod implements Mod {
         core.stats.actionPoints.buffed.set(actorB, 6);
         passTurnSkill(context, actorB);
         walkSkill(context, actorB);
+        dragonsRageSkill(context, actorB);
 
         boolean teamAFirst = context.getRandom().nextBoolean();
         core.activeTeam.set(teamAFirst ? teamA : teamB);
@@ -132,7 +138,7 @@ public class DefaultMod implements Mod {
         core.name.set(walk, "Walk");
         core.skill.ofActor.set(walk, actor);
         core.skill.effect.walkToTargetPosition.set(walk);
-        core.skill.targeting.position.empty.set(walk);
+        core.skill.targeting.actor.none.set(walk);
         core.skill.targeting.position.manhattanRange.set(walk, 1);
         core.skill.targeting.position.required.set(walk);
         core.skill.cost.movePoints.set(walk, 1);
@@ -153,10 +159,28 @@ public class DefaultMod implements Mod {
         core.skill.targeting.position.manhattanRange.set(razorleaf, 4);
         core.skill.targeting.position.required.set(razorleaf);
         core.skill.targeting.actor.enemy.set(razorleaf);
-        core.skill.targeting.actor.required.set(razorleaf);
         core.skill.cost.actionPoints.set(razorleaf, 4);
         core.skill.id.set(razorleaf, 3);
         return razorleaf;
+    }
+
+    private static int dragonsRageSkill(GameContext context, int actor) {
+        EntityFactory entityFactory = context.getEntityFactory();
+        CoreComponents core = context.getComponents(CoreComponents.class);
+        int dragonsRage = entityFactory.create();
+        core.name.set(dragonsRage, "DragonsRage");
+        core.skill.ofActor.set(dragonsRage, actor);
+        core.skill.effect.push.pushTargetActor.set(dragonsRage);
+        core.skill.effect.push.strength.set(dragonsRage, 3);
+        core.skill.effect.damageToTarget.fire.set(dragonsRage, 1);
+        core.skill.effect.animation.attack.set(dragonsRage);
+        core.skill.targeting.position.manhattanRange.set(dragonsRage, 1);
+        core.skill.targeting.position.requiresLine.set(dragonsRage);
+        core.skill.targeting.position.required.set(dragonsRage);
+        core.skill.targeting.actor.enemy.set(dragonsRage);
+        core.skill.cost.actionPoints.set(dragonsRage, 2);
+        core.skill.id.set(dragonsRage, 4);
+        return dragonsRage;
     }
 
     private static List<GameSystem> initSystems(EntityFactory entityFactory, CoreComponents core, AnimationsController animations, HistoryRandom random) {
@@ -167,6 +191,7 @@ public class DefaultMod implements Mod {
                 new WalkAnimationSystem(core, animations),
                 new DeathSystem(core, animations),
                 new WalkToTargetPositionSystem(core),
+                new PushEffectSystem(core, entityFactory, animations),
                 new PassTurnOfActorSystem(core),
                 new EarthDamageToTargetSystem(core, random),
                 new DieWithoutHealthSystem(core, entityFactory, animations),
@@ -193,6 +218,7 @@ public class DefaultMod implements Mod {
                 //
                 new PassTurnSkillTriggerSystem(core),
                 new AttackSkillTriggerSystem(core, animations),
+                new PushSkillSystem(core),
                 new WalkSkillTriggerSystem(core, animations));
     }
 }

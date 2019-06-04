@@ -22,7 +22,7 @@ public class EmptyTargetRequiredSystem implements ActionSystem {
             OptionalInt optionalTargetPosition = core.effect.targetPosition.getOptional(trigger);
             optionalTargetPosition.ifPresent(targetPosition -> {
                 int skill = core.effect.ofSkill.get(trigger);
-                if (core.skill.targeting.position.empty.has(skill) && core.actor.position.query().exists(actor -> core.actor.position.get(actor) == targetPosition)) {
+                if (core.skill.targeting.actor.none.has(skill) && core.actor.position.query().exists(actor -> core.actor.position.get(actor) == targetPosition)) {
                     throw new IllegalActionException("Target position is not empty.");
                 }
             });

@@ -9,13 +9,13 @@ public class PositionTargetingComponents extends ComponentsBase {
 
     public final IntComponent manhattanRange;
     public final BoolComponent requiresSight;
-    public final BoolComponent empty;
+    public final BoolComponent requiresLine;
     public final BoolComponent required;
 
     public PositionTargetingComponents(String name, ComponentRegistry registry) {
         manhattanRange = newIntComponent(name + "ManhattanRange", registry);
         requiresSight = newBoolComponent(name + "RequiresSight", registry);
-        empty = newBoolComponent(name + "Empty", registry);
+        requiresLine = newBoolComponent(name + "RequiresLine", registry);
         required = newBoolComponent(name + "Required", registry);
     }
 }

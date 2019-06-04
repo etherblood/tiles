@@ -1,6 +1,7 @@
 package com.etherblood.playground;
 
 import com.etherblood.core.Action;
+import com.etherblood.core.GameContext;
 import com.etherblood.core.to.GameConfig;
 import com.etherblood.core.to.ModConfig;
 import com.etherblood.core.to.PlayerConfig;
@@ -54,9 +55,10 @@ public class Main {
         SecureRandom random = new SecureRandom();
         while (true) {
             Thread.sleep(1000);
-            CoreComponents components = client2.getGame(gameId).getContext().getComponents(CoreComponents.class);
+            GameContext context = client2.getGame(gameId).getContext();
+            CoreComponents components = context.getComponents(CoreComponents.class);
             while (components.actor.active.query().exists(x -> isControlledByPlayer(components.actor.controlledBy.get(x), player))) {
-                Action action = new RandomMover(components, random).randomAction(player);
+                Action action = new RandomMover(context.getActionGenerator(), random).randomAction(player);
                 LOG.debug("Chose action {} randomly.", action);
                 client2.act(gameId, action);
                 Thread.sleep(200);

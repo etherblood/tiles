@@ -1,5 +1,7 @@
 package com.etherblood.core;
 
+import java.util.Objects;
+
 public class Action {
 
     private final int targetSkill;
@@ -16,6 +18,20 @@ public class Action {
 
     public Integer getTargetPosition() {
         return targetPosition;
+    }
+
+    @Override
+    public int hashCode() {
+        return 83 * targetSkill + Objects.hashCode(targetPosition);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(!(obj instanceof Action)) {
+            return false;
+        }
+        final Action other = (Action) obj;
+        return targetSkill == other.targetSkill && Objects.equals(targetPosition, other.targetPosition);
     }
 
     @Override

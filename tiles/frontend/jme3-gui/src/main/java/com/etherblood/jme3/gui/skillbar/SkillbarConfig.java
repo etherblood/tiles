@@ -7,6 +7,7 @@ public class SkillbarConfig {
     public static final int PASS_TURN_ID = 1;
     public static final int WALK_ID = 2;
     public static final int RAZORLEAF_ID = 3;
+    public static final int DRAGONSRAGE_ID = 4;
 
     public List<SkillConfig> skills;
 

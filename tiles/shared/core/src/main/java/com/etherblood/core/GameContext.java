@@ -19,9 +19,10 @@ public class GameContext {
     private final GameResultProvider result;
     private final HistoryRandom random;
     private final AnimationsController animationsController;
+    private final ActionGenerator actionGenerator;
     private transient int version = 0;
 
-    public GameContext(EntityFactory entityFactory, ComponentRegistry registry, List<GameSystem> systems, List<?> components, ActionController controller, GameResultProvider result, HistoryRandom random, AnimationsController animationsController) {
+    public GameContext(EntityFactory entityFactory, ComponentRegistry registry, List<GameSystem> systems, List<?> components, ActionController controller, GameResultProvider result, HistoryRandom random, AnimationsController animationsController, ActionGenerator actionGenerator) {
         this.entityFactory = entityFactory;
         this.registry = registry;
         this.systems = systems;
@@ -30,6 +31,7 @@ public class GameContext {
         this.result = result;
         this.random = random;
         this.animationsController = animationsController;
+        this.actionGenerator = actionGenerator;
     }
 
     public void applyHistoryAction(HistoryAction action) {
@@ -102,6 +104,10 @@ public class GameContext {
         return result;
     }
 
+    public ActionGenerator getActionGenerator() {
+        return actionGenerator;
+    }
+
     public int getVersion() {
         return version;
     }
@@ -115,5 +121,6 @@ public class GameContext {
             }
         }
         random.clear();
+        entityFactory.reset();
     }
 }

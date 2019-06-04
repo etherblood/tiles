@@ -63,7 +63,8 @@ public class SkillbarAppstate extends AbstractAppState {
         config = new SkillbarConfig(Arrays.asList(
                 new SkillConfig(SkillbarConfig.PASS_TURN_ID, null, "pass-turn", null),
                 new SkillConfig(SkillbarConfig.WALK_ID, null, "walk", null),
-                new SkillConfig(SkillbarConfig.RAZORLEAF_ID, "test/icons/grapple.png", "razorleaf", 0)));
+                new SkillConfig(SkillbarConfig.RAZORLEAF_ID, "test/icons/grapple.png", "razorleaf", 0),
+                new SkillConfig(SkillbarConfig.DRAGONSRAGE_ID, "test/icons/grapple.png", "dragonsrage", 1)));
     }
 
     private Command<Button> skillButtonClickCommand(int index) {

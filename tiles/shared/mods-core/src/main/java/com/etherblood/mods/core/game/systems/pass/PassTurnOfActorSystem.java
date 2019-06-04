@@ -5,7 +5,7 @@ import com.etherblood.mods.core.game.components.CoreComponents;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class PassTurnOfActorSystem implements  GameSystem {
+public class PassTurnOfActorSystem implements GameSystem {
 
     private static final Logger LOG = LoggerFactory.getLogger(PassTurnOfActorSystem.class);
     private final CoreComponents core;

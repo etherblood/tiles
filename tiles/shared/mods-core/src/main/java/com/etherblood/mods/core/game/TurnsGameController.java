@@ -4,6 +4,7 @@ import com.etherblood.collections.IntList;
 import com.etherblood.mods.core.game.components.CoreComponents;
 import com.etherblood.core.Action;
 import com.etherblood.core.ActionController;
+import com.etherblood.core.ActionGenerator;
 import com.etherblood.core.ActionSystem;
 import com.etherblood.core.EntityFactory;
 import com.etherblood.core.GameSystem;
@@ -20,37 +21,38 @@ public class TurnsGameController implements ActionController {
     private final List<GameSystem> systems;
     private final EntityFactory entityFactory;
     private final CoreComponents core;
+    private final ActionGenerator actionGenerator;
 
-    public TurnsGameController(List<GameSystem> systems, EntityFactory entityFactory, CoreComponents core, List<ActionSystem> actionSystems) {
+    public TurnsGameController(List<GameSystem> systems, EntityFactory entityFactory, CoreComponents core, List<ActionSystem> actionSystems, ActionGenerator actionGenerator) {
         this.systems = systems;
         this.entityFactory = entityFactory;
         this.core = core;
         this.actionSystems = actionSystems;
+        this.actionGenerator = actionGenerator;
     }
 
     @Override
     public void useAction(int player, Action action) {
         LOG.info("Player {} requested action {}.", player, action);
+        if (!actionGenerator.isValidAction(action)) {
+            throw new IllegalActionException("Action " + action + " is invalid.");
+        }
         int skill = action.getTargetSkill();
         int actor = core.skill.ofActor.get(skill);
         int effect = entityFactory.create();
         core.effect.triggered.set(effect);
         core.effect.ofSkill.set(effect, skill);
         core.effect.ofActor.set(effect, actor);
-        Integer targetActor = null;
         if (action.getTargetPosition() != null) {
             core.effect.targetPosition.set(effect, action.getTargetPosition());
             IntList list = core.actor.position.query().list(x -> core.actor.position.hasValue(x, action.getTargetPosition()));
-            if(list.size() == 1) {
-                targetActor = list.get(0);
+            if (list.size() == 1) {
+                core.effect.targetActor.set(effect, list.get(0));
+//            } else if (!core.skill.targeting.actor.none.has(skill)) {
+//                throw new IllegalActionException("Action does not have the required target actor.");
             }
-        } else if (core.skill.targeting.position.required.has(skill)) {
-            throw new IllegalActionException("Action does not have the required target position.");
-        }
-        if (targetActor != null) {
-            core.effect.targetActor.set(effect, targetActor);
-        } else if (core.skill.targeting.actor.required.has(skill)) {
-            throw new IllegalActionException("Action does not have the required target actor.");
+//        } else if (core.skill.targeting.position.required.has(skill)) {
+//            throw new IllegalActionException("Action does not have the required target position.");
         }
         validateSkillUsagePermitted(player, actor);
         for (ActionSystem actionSystem : actionSystems) {
@@ -58,7 +60,6 @@ public class TurnsGameController implements ActionController {
         }
         runSystemIterations();
     }
-
 
     private void validateSkillUsagePermitted(int player, int actor) {
         int controlFlags = core.actor.controlledBy.get(actor);

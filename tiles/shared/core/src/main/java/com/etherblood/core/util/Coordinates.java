@@ -52,4 +52,11 @@ public class Coordinates {
         return 0 <= x && x < width;
     }
 
+    public static int direction(int from, int to) {
+        int x = x(to) - x(from);
+        int y = y(to) - y(from);
+        assert (x == 0) != (y == 0);
+        return of(Integer.signum(x), Integer.signum(y));
+    }
+
 }

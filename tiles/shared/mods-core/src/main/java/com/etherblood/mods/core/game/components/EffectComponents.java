@@ -20,6 +20,7 @@ public class EffectComponents extends ComponentsBase {
     public final BoolComponent targetDeath;
     public final ElementComponents damageToTarget;
     public final ElementComponents randomDamageToTarget;
+    public final PushComponents push;
 
     public EffectComponents(String name, ComponentRegistry registry) {
         ofActor = newIntComponent(name + "OfActor", registry);
@@ -35,5 +36,6 @@ public class EffectComponents extends ComponentsBase {
         targetDeath = newBoolComponent("TargetDeath" + name, registry);
         damageToTarget = new ElementComponents("DamageToTarget" + name, registry);
         randomDamageToTarget = new ElementComponents("RandomDamageToTarget" + name, registry);
+        push = new PushComponents("Push" + name, registry);
     }
 }

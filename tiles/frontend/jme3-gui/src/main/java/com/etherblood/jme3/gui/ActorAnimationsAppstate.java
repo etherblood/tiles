@@ -8,6 +8,7 @@ import com.etherblood.jme3.gui.state.StateTransitionAppstate;
 import com.etherblood.jme3.gui.state.transitions.SpriteAnimationTransition;
 import com.etherblood.mods.core.game.systems.attack.animation.AttackAnimation;
 import com.etherblood.mods.core.game.systems.death.DieAnimation;
+import com.etherblood.mods.core.game.systems.walk.animation.PushAnimation;
 import com.etherblood.mods.core.game.systems.walk.animation.WalkAnimation;
 import com.jme3.app.Application;
 import com.jme3.app.state.AbstractAppState;
@@ -29,6 +30,7 @@ public class ActorAnimationsAppstate extends AbstractAppState {
         this.animations = animations;
         eventHandlers = new HashMap<>();
         eventHandlers.put(WalkAnimation.class, (Consumer<WalkAnimation>) this::handleWalkAnimation);
+        eventHandlers.put(PushAnimation.class, (Consumer<PushAnimation>) this::handlePushAnimation);
         eventHandlers.put(AttackAnimation.class, (Consumer<AttackAnimation>) this::handleAttackAnimation);
         eventHandlers.put(DieAnimation.class, (Consumer<DieAnimation>) this::handleDieAnimation);
     }
@@ -61,6 +63,19 @@ public class ActorAnimationsAppstate extends AbstractAppState {
             return;
         }
         transitionAppstate.enqueue(new SpriteAnimationTransition(event.from, event.to, sprite, animation));
+    }
+
+    private void handlePushAnimation(PushAnimation event) {
+        Sprite sprite = actorSpritesAppstate.getActorSprite(event.actor);
+        String animation;
+        if (sprite.isAnimationSupported("walk0") && sprite.isAnimationSupported("walk1")) {
+            animation = "walk" + ((Coordinates.x(event.to) + Coordinates.y(event.to)) & 1);
+        } else if (sprite.isAnimationSupported("walk")) {
+            animation = "walk";
+        } else {
+            return;
+        }
+        transitionAppstate.enqueue(new SpriteAnimationTransition(event.from, event.to, sprite, animation, SpriteAnimationTransition.frameType(event.to, event.from, sprite)));
     }
 
     private void handleAttackAnimation(AttackAnimation event) {

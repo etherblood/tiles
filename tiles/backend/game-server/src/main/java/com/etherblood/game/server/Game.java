@@ -61,6 +61,7 @@ public class Game {
         try {
             historyAction = context.applyAction(playerIndex, action);
         } catch (Exception ex) {
+            LOG.error("Rolling back game state due to exception...", ex);
             rollback();
             throw ex;
         }
@@ -74,7 +75,6 @@ public class Game {
     }
 
     private void rollback() {
-        LOG.error("Rolling back game state due to exception...");
         context.clear();
         initialData.toRegistry(context.getRegistry());
         LOG.info("Replaying game up to newest state.");
